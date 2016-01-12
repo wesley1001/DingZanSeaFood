@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Error404";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">首页</a>
+        </li>
+        <li class="active">错误</li>
+    </ul>
+}
+
+@section pageheader{
+}
+
+<div class="error-container">
+    <div class="well">
+        <h1 class="grey lighter smaller">
+            <span class="blue bigger-125">
+                <i class="ace-icon fa fa-sitemap"></i>
+                404
+            </span>
+            页面不存在
+        </h1>
+
+        <hr>
+        <h3 class="lighter smaller">@TempData["error404"]</h3>
+        <hr>
+        <div class="space"></div>
+
+        <div class="center">
+            <a href="javascript:history.back()" class="btn btn-grey">
+                <i class="ace-icon fa fa-arrow-left"></i>
+                返回上一个页面
+            </a>
+        </div>
+    </div>
+</div>

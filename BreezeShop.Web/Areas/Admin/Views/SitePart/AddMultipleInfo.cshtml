@@ -1,0 +1,82 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.AddMultiPeInfoModel
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("AddMultipleInfo", "SitePart", new { moduleFlag = Request.QueryString["moduleflag"] }, FormMethod.Post, new {  @class = "form-horizontal", enctype = "multipart/form-data", Id = "J-ContentForm" }))
+{
+        @Html.HiddenFor(m=>m.CurrentModuleId)
+    @Html.HiddenFor(m => m.ParentId)
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="Title">标题：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Title, new { @class = "input-xlarge", placeholder = "请输入标题" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Title)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="SortOrder">排序：</label>
+        <div class="col-sm-9">
+            <div class="clearfix">
+                @Html.TextBoxFor(m => m.SortOrder, new { @class = "input-mini", placeholder = "排序" })
+            </div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.SortOrder)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="HyperLink">超链接：</label>
+        <div class="col-sm-9">
+            <div class="clearfix">
+                @Html.TextBoxFor(m => m.HyperLink, new { @class = "input-xxlarge", placeholder = "超链接" })
+            </div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.HyperLink)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right">图片上传：</label>
+        <div class="col-sm-6">
+            <input type="file" id="id-input-file-2" name="fileimage" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="AdditionalInfo">附加文本1：</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.AdditionalInfo, new { @class = "col-xs-12 col-sm-5", placeholder = "附加文本1" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="SecondAdditionalInfo">附加文本2：</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.SecondAdditionalInfo, new { @class = "col-xs-12 col-sm-5", placeholder = "附加文本2" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="ThirdAdditionalInfo">附加文本3：</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.ThirdAdditionalInfo, new { @class = "col-xs-12 col-sm-5", placeholder = "附加文本3" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-4 col-sm-offset-3">
+            <label>
+                <input name="Display" id="Display" type="checkbox" class="ace" value="1" checked="" />
+                <span class="lbl">是否显示</span>
+            </label>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $('#id-input-file-2').ace_file_input({
+        no_file: '还没有上传文件哦...',
+        btn_choose: '选择图片',
+        btn_change: '更换图片',
+        droppable: false,
+        onchange: null,
+        thumbnail: false
+    });
+    $("#J-ContentForm").unobtrusiveValidate();
+</script>
+

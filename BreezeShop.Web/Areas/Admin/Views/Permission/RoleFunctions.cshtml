@@ -1,0 +1,49 @@
+﻿@using Yun.User
+@model IList<Yun.User.Function>
+           
+@{
+    var currentFuns = (ViewData["CurrentFunctions"] as IList<Yun.User.Function>) ?? new List<Yun.User.Function>();
+}
+
+@helper MenuHelper(long parentId,IList<Function> selects)
+{
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+
+    <ol class="dd-list">
+        @foreach (var dr in drs)
+        {
+            <li class="dd-item dd2-item @(parentId != 0 ? "item-blue2" : "")" data-id="@dr.Id">
+                <div class="dd-handle dd2-handle">
+                    <input type="checkbox" name="Functions" @(selects.Any(e => e.Id == dr.Id) ? "checked" : "") value="@dr.Id" />
+                </div>
+                <div class="dd-handle dd2-content">
+                    @(dr.Name)(@(dr.Type == 1 ? "系统管理员" : "普通"))
+                </div>
+                @MenuHelper(dr.Id, selects)
+            </li>
+        }
+    </ol>
+}
+
+<div class="inline-functions-list">
+    @using (Html.BeginForm("RoleFunctions", "Permission", new { id = ViewContext.RouteData.Values["id"] }, FormMethod.Post, new { id = "J-Submit-Form" }))
+    {
+        <div id="nestable">
+            @MenuHelper(0, currentFuns)
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $("input[name='Functions']:checkbox").on('click', function () {
+        var that = this;
+        $(this).closest('.dd-item').find(".dd-list input[name='Functions']:checkbox")
+        .each(function () {
+            this.checked = that.checked;
+        });
+    });
+</script>

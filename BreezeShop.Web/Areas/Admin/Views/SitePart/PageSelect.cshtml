@@ -1,0 +1,5 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.PageSelectModel
+   
+    Layout = null;
+}
+@Html.DropDownListFor(m => m.PageId, Model.PageList, new { @class = "input-medium" })

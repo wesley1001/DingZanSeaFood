@@ -1,0 +1,166 @@
+﻿@{
+    Layout = null;
+}
+
+@model Yun.Trade.SnapshotTrade
+
+<table class="table table-bordered dataTable">
+    <thead>
+        <tr class="col-name">
+            <th class="baobei">宝贝</th>
+            <th class="price">单价(元)</th>
+            <th class="quantity">数量</th>
+            <th class="amount">实付款(元)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            <tr class="order-bd" id="@("item"+order.ItemId)">
+                <td class="baobei col-xs-4">
+                    <p class="baobei-name">
+                        <a class="" href="@Url.Action("GoodsDetail", "Home", new { id = order.ItemId, area = "" })" target="_blank">
+                            @order.ItemTitle
+                        </a>
+                    </p>
+                    <div title="" class="spec">
+                        @if (order.SkuNames != null)
+                        {
+                            foreach (var s in order.SkuNames)
+                            {
+                                <span>@s.Value</span>
+                            }
+                        }
+                    </div>
+                </td>
+
+                <td title="@order.Price" class="price col-xs-1">
+                    @order.Price
+                </td>
+                <td title="@order.Quantity" class="quantity special-num col-xs-1">
+                    @order.Quantity
+                </td>
+                <td rowspan="@Model.Orders.Count" class="amount td-last col-xs-2">
+                    <p>
+                        @(Model.Money)
+
+                    </p>
+                    <p>
+                        (含运费：@Model.Fare)
+                    </p>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table><br/>
+    <b>收货地址</b> ：@Model.Address
+<br />
+<br />
+<div class="tabbable">
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#by-express" data-toggle="tab">
+                自己联系物流
+            </a>
+        </li>
+        <li>
+            <a href="#self-created" data-toggle="tab">
+                自提
+            </a>
+        </li>
+        <li>
+            <a href="#by-company" data-toggle="tab">
+                商家配送
+            </a>
+        </li>
+        <li>
+            <a href="#no-express" data-toggle="tab">
+                无需物流
+            </a>
+        </li>
+    </ul>
+    <input type="hidden" class="j-order-id" value="@Model.Id" />
+    <div class="tab-content">
+        <div class="tab-pane in active" id="by-express">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 承运公司 </label>
+
+                    <div class="col-sm-10">
+                        <select class="j-by-express">
+                            <option value="yunda">韵达快递</option>
+                            <option value="huitongkuaidi">汇通快运</option>
+                            <option value="yuantong">圆通速递</option>
+                            <option value="yuntongkuaidi">运通快递</option>
+                            <option value="zhongtong">中通速递</option>
+                            <option value="shentong">申通快递</option>
+                            <option value="shunfeng">顺丰速递</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 单号 </label>
+
+                    <div class="col-sm-10">
+                        <input type="text" value="" class="input-medium j-express-number"/>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input class="btn btn-sm btn-primary j-express" type="button" value="确认" />
+                    </div>
+                </div>
+
+                
+            </div>
+           
+        </div>
+        <div class="tab-pane" id="self-created">
+            如果该商品是用户前来自提，您可以点击 <input class="btn btn-sm btn-primary j-ziti" type="button" value="确认" />
+        </div>
+        <div class="tab-pane" id="by-company">
+            单号：<input type="text" value="" class="j-shangjia-number" /> <input class="btn btn-sm btn-primary j-shangjia" type="button" value="确认" />
+        </div>
+        <div class="tab-pane" id="no-express">
+            如果该商品无需物流运送，您可以点击 <input class="btn btn-sm btn-primary j-not-need" type="button" value="确认" />
+        </div>
+    </div>
+</div>
+<script language="javascript">
+    $(function () {
+        var orderid = $(".j-order-id").val();
+        $(".j-ziti").click(function() {
+            do_delivery(orderid, "自提", "ZITI", "");
+        });
+        $(".j-express").click(function () {
+            if ($(".j-by-express").val().length <= 0 || $(".j-express-number").val().length <= 0) {
+                bootbox.alert("请选择快递公司并填写单号");
+            }else{
+                do_delivery(orderid, $(".j-by-express").find("option:selected").text(), $(".j-by-express").val(), $(".j-express-number").val());
+            }
+        });
+        $(".j-not-need").click(function () {
+            do_delivery(orderid, "无需物流", "NOTNEED", "");
+        });
+        $(".j-shangjia").click(function () {
+            if ($(".j-shangjia-number").val().length <= 0) {
+                bootbox.alert("请填写单号");
+            }else{
+                do_delivery(orderid, "商家配送", "SJPS", $(".j-shangjia-number").val());
+            }
+        });
+    });
+    function do_delivery(orderid, name, enname, number) {
+        $.post("@Url.Action("Delivery",new {area = "Admin"})/" + orderid, { name: name, enname: enname, number: number }, function (r) {
+            if (r.result) {
+                bootbox.alert("操作成功，当前窗口会在一秒钟后自动关闭");
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                bootbox.alert(r.error == null ? "添加失败，请刷新后重试" : r.error);
+            }
+        });
+    }
+</script>

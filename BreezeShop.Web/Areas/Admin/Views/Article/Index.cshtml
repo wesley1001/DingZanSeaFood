@@ -1,0 +1,113 @@
+﻿@using BreezeShop.Web.Helper
+@model BreezeShop.Core.PageModel<Yun.Archive.ArticleDetail>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">文章列表</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        文章列表
+    </h1>
+}
+<p>
+    <a class="btn" href="@Url.Action("Add")">
+        <i class="icon-plus bigger-125"></i>
+        新增文章
+    </a>
+</p>
+<div class="table-header">
+    文章列表
+</div>
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <div class="row">
+            <form method="GET" action="@Url.Action("Index", "Article", new { area = "Admin" })" class="col-sm-12">
+                <div class="form-inline">
+                    <div class="form-group">文章标题：</div>
+                    <div class="form-group"><input type="text" name="title" class="input-large" value="@Request.QueryString["title"]"></div>
+                    <button type="submit" class="btn btn-purple btn-sm">
+                        <i class="icon-search icon-on-right bigger-110"></i>
+                        搜索
+                    </button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped table-bordered table-hover dataTable">
+            <thead>
+            <tr>
+                <th>编码</th>
+                <th>文章名称</th>
+                <th>文章分类</th>
+                <th>排序</th>
+                <th>状态</th>
+                <th>添加日期</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var r in Model.Items)
+            {
+                <tr>
+                    <td>@r.Id</td>
+                    <td>@Html.ActionLink(r.Title, "Article", "NotLogin", new {id = r.Id, area = ""}, new {target = "_blank"})</td>
+                    <td>@string.Join("=>", r.Categorys.Select(e => e.Value))</td>
+                    <td>@r.Sort</td>
+                    <td>@(r.Status != "publish" ? "私有" : "公有")</td>
+                    <td>@r.CreateTime</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-xs btn-info" href="@Url.Action("Edit", new {id = r.Id, returnUrl = Request.Url})">
+                                编辑
+                            </a>
+                            <a class="btn btn-xs btn-danger delete" href="@Url.Action("Delete", new {id = r.Id})">
+                                删除
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 10)
+    </div>
+</div>
+
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+}
+
+
+@section inlinescripts{
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $(".delete").click(function () {
+                var url = $(this).attr("href");
+                var link = this;
+                bootbox.confirm("确定要删除吗?", function (result) {
+                    if (result) {
+                        $.post(url, function (r) {
+                            if (r) {
+                                $(link).closest("tr").remove();
+                            } else {
+                                bootbox.alert("删除失败");
+                            }
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

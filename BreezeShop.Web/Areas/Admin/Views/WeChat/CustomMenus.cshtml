@@ -1,0 +1,115 @@
+﻿@model Senparc.Weixin.MP.Entities.GetMenuResult
+
+@{
+    ViewBag.Title = "自定义菜单";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">自定义菜单</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        自定义菜单
+    </h1>
+}
+<p>
+    @if (Model == null || Model.menu.button.Count <= 0)
+    {
+        <a class="btn" href="@Url.Action("EditCustomMenu", new { type = "add" })">
+            <i class="icon-plus bigger-125"></i>
+            创建自定义菜单
+        </a>
+    }
+
+
+    <a class="btn btn-warning" href="@Url.Action("EditCustomMenu", new {type = "conditional"})">
+        <i class="icon-plus bigger-125"></i>
+        创建个性化菜单
+    </a>
+</p>
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <table class="table table-striped table-bordered table-hover dataTable">
+            <thead>
+            <tr>
+                <th>类型</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model!=null&&Model.menu.button.Count>0)
+            {
+                <tr>
+                    <td>自定义菜单</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-xs btn-info" href="@Url.Action("EditCustomMenu")">
+                                编辑
+                            </a>
+                            <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteCustomMenu")">
+                                删除
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+            @if (Model!=null && Model.conditionalmenu != null && Model.conditionalmenu.Any())
+            {
+                foreach (var c in Model.conditionalmenu)
+                {
+                    <tr>
+                        <td>个性化菜单</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-xs btn-info" href="@Url.Action("EditCustomMenu", new { menuId = c.menuid })">
+                                    编辑
+                                </a>
+                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteCustomMenu", new { menuId = c.menuid})">
+                                    删除
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+}
+
+
+@section inlinescripts{
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $(".delete").click(function () {
+                var url = $(this).attr("href");
+                var link = this;
+                bootbox.confirm("确定要删除吗?", function (result) {
+                    if (result) {
+                        $.post(url, function (r) {
+                            if (!r.error) {
+                                $(link).closest("tr").remove();
+                            } else {
+                                bootbox.alert("删除失败，错误代码："+r.message);
+                            }
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

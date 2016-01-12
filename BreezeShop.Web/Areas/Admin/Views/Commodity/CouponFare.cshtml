@@ -1,0 +1,25 @@
+﻿@model IList<Yun.Coupon.CouponTemplate>
+@{
+    var couponId = Request.QueryString["coupon"];
+}
+
+<div class="form-inline">
+    <div class="inline">
+        <label>
+            <input name="CouponFareType" type="checkbox" class="ace" value="coupon" @((couponId.IsEmpty() || couponId == "0") ? "" : "checked") />
+            <span class="lbl"> 电子凭证交易</span>
+        </label>
+    </div>&nbsp;&nbsp;
+    <div class="input-group J-coupon-hide hide">
+        <select id="CouponTemplate" name="CouponTemplate" class="input-medium select2">
+            <option value="">请选择电子券模板</option>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var m in Model)
+                {
+                    <option value="@m.Id" @(m.Id.ToString() == couponId ? "selected" : "")>@m.Title</option>
+                }
+            }
+        </select>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿
+@using Yun.Item
+@model IList<Yun.Item.ItemSpecInDetail>
+@{
+    var id = Guid.NewGuid().ToString().Substring(0, 8);
+}
+
+@helper CreateTable(string id, IList<ItemSpecValueInCat> nValues, string name)
+{
+    <fieldset>
+        <label>
+            <input type="text" class="input-medium" placeholder="销售属性名称" name="CustomSkuN-@id" maxlength="8" data-map="sku-th-@id" value="@name" />
+            <input type="hidden" value="@id" name="CustomSkuId" />
+            <button class="btn btn-danger btn-xs delete" type="button">
+                <i class="icon-remove"></i>删除当前销售属性
+            </button>
+        </label>
+
+        <div class="sku-props-value">
+            @for (var i = 0; i < 10; i++)
+            {
+                var vid = nValues != null && i < nValues.Count ? nValues[i].Id.ToString() : Guid.NewGuid().ToString().Substring(0, 8);
+                <input type="text" class="input-medium" name="CustomSkuV-@id" maxlength="30" data-map="sku-map-@vid" value="@(nValues != null && i < nValues.Count ? nValues[i].Value : "")" />
+                <input type="hidden" name="CustomSkuV-Id-@id" value="@vid" />
+            }
+        </div>
+        <div class="space-4"></div>
+    </fieldset>
+}
+
+@if (Model != null)
+{
+    foreach (var spec in Model)
+    {
+        @CreateTable(spec.Id.ToString(), spec.Values, spec.Name)
+    }
+}
+else
+{
+    @CreateTable(id, null,"")
+}
+
+

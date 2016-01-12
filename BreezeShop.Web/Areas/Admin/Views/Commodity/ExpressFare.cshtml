@@ -1,0 +1,26 @@
+﻿@model IList<Yun.Logistics.DeliveryTemplate>
+@{
+    var expressid = Request.QueryString["express"];
+}
+
+<div class="form-inline">
+    <label class="inline">
+        <label>
+            <input name="FareType" type="checkbox" class="ace" value="express" @((expressid == "0") ? "" : "checked") />
+            <span class="lbl"> 运费设置</span>
+        </label>
+    </label>&nbsp;&nbsp;
+    <div class="input-group J-express-hide">
+        <select class="input-medium select2" id="FareTemplate" name="FareTemplate">
+            <option value="">请选择运费模板</option>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var m in Model)
+                {
+                    <option value="@m.Id" @(m.Id.ToString() == expressid ? "selected" : "")>@m.Name</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+<div class="space-4"></div>

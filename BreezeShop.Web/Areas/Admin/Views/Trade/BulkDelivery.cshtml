@@ -1,0 +1,160 @@
+﻿
+@model  List<Yun.Trade.SnapshotTrade>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">已卖出的商品</a>
+        </li>
+        <li class="active">批量发货</li>
+    </ul>
+}
+@section headerbeforeace{
+    <style>
+        .lbl {
+            font-size: 12px;
+        }
+    </style>
+}
+@section pageheader{
+    <h1>
+        批量发货
+    </h1>
+}
+<div>
+    <label>
+        物流方式：
+        <input type="radio" class="ace" value="EXPRESS" name="form-field-radio">
+        <span class="lbl">快递</span>
+    </label>
+    <label>
+        <input type="radio" class="ace" value="SELF" name="form-field-radio">
+        <span class="lbl">自提</span>
+    </label>
+    <label>
+        <input type="radio" class="ace" value="BUSINESS" name="form-field-radio">
+        <span class="lbl">商家配送</span>
+    </label>
+    <label>
+        <input type="radio" class="ace" value="NONE" name="form-field-radio">
+        <span class="lbl">无需物流</span>
+    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+    <button id="" type="submit" class="btn btn-sm btn-info">
+        批量发货
+    </button>
+</div>
+<div class="select-express">
+    <label>
+        物流公司：
+    <select name="companyId">
+        <option value="">全部</option>
+        <option value="101">圆通速递</option>
+        <option value="500">中通快递</option>
+        <option value="102">韵达快递</option>
+        <option value="502">百世汇通</option>
+        <option value="505">顺丰速运</option>
+        <option value="100">申通快递</option>
+        <option value="-1">其他</option>
+    </select>
+        </label>
+</div>
+<table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable bought-table">
+    <thead>
+        <tr class="col-name">
+            <th class="baobei" style="width:36%">宝贝</th>
+            <th class="price" style="width:10%">单价(元)</th>
+            <th class="quantity" style="width:6%">数量</th>
+            <th class="amount" style="width:12%">实付款(元)</th>
+        </tr>
+    </thead>
+    @foreach (var trade in Model)
+    {
+        <tbody class="">
+            <tr class="sep-row"><td colspan="4"></td></tr>
+            <tr class="order-hd">
+                <td class="first" colspan="4">
+                    <div class="">
+                        <span class="order-id">订单编号：@trade.Id</span>
+                        <span class="dealtime" title="@trade.CreateTime"> 成交时间：@trade.CreateTime</span>
+                    </div>
+                    <div class="">
+                        <b>收货地址</b> ：@trade.Address
+                    </div>
+                </td>
+            </tr>
+            @foreach (var order in trade.Orders)
+            {
+                <tr class="order-bd" id="@("item"+order.ItemId)">
+                    <td class="baobei">
+                        <a class="pic" style="float: left;" href="@Url.Action("Index", "Item", new { id = order.ItemId })" title="查看宝贝详情" hidefocus="true" target="_blank">
+                            <img class="pic" src="@order.Thumb" alt="查看宝贝详情">
+                        </a>
+                        <div class="desc">
+                            <p class="baobei-name">
+                                <a class="" href="@Url.Action("Index", "Item", new { id = order.ItemId })" target="_blank">
+                                    @order.ItemTitle
+                                </a>
+                            </p>
+                            <div title="" class="spec">
+                                @if (order.SkuNames != null)
+                                {
+                                    foreach (var s in order.SkuNames)
+                                    {
+                                        <span>@s.Value</span>
+                                    }
+                                }
+                            </div>
+                            <span class="good-icons">
+                            </span>
+                        </div>
+                    </td>
+                    <td title="@order.Price" class="price">
+                        <i class="special-num">@order.Price</i>
+                    </td>
+                    <td title="@order.Quantity" class="quantity special-num">
+                        <i class="special-num">@order.Quantity</i>
+                    </td>
+                    <td rowspan="@trade.Orders.Count" class="amount td-last">
+                        <p>
+                            <em class="real-price special-num">
+                                @(trade.Money)
+                            </em>
+                        </p>
+                        <p class="post-type">
+                        </p>
+                        <p>
+                            (含运费：<i class="special-num">@trade.Fare</i>)
+                            <a target="_blank" class="view-logistics J_MakePoint J_Logistics " href="#" style="display: block;">
+                                查看物流
+                            </a>
+                        </p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+
+</table>
+<script language="javascript">
+    jQuery(function ($) {
+        if ($('input[name="form-field-radio"]:checked').val() == "EXPRESS") {
+            $(".select-express").show();
+        } else {
+            $(".select-express").hide();
+        }
+        $('input[name="form-field-radio"]').click(function() {
+            if ($('input[name="form-field-radio"]:checked').val() == "EXPRESS") {
+                $(".select-express").show();
+            } else {
+                $(".select-express").hide();
+            }
+        });
+    });
+</script>

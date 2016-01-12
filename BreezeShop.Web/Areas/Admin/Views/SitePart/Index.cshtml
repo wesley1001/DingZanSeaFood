@@ -1,0 +1,390 @@
+﻿@model List<Yun.Site.SitePage>
+@{
+    ViewBag.Title = "Function";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+
+        <li class="active">页面元素管理</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        页面元素管理
+    </h1>
+}
+
+<div class="alert alert-block alert-success hide" id="J-SuccessInfo">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="icon-remove"></i>
+    </button>
+    <p>
+        <strong>
+            <i class="icon-ok"></i>
+            成功!
+        </strong>
+        您刚才的操作已成功执行,10秒后该提示将会自动消失！
+    </p>
+</div>
+
+
+<div class="form-inline" id="J-Module-Action">
+    <div class="form-group">选择页面：</div>
+    <div class="form-group">
+        @Html.DropDownList("PageId", Model.Select(e => new SelectListItem { Text = e.Name, Value = e.Id.ToString() + "|" + e.Thumb + "|" + e.Remark }), "请选择页面", new { @class = "form-control", url = "1" })
+    </div>
+    <span class="form-group">
+        <button id="J-AddPage" class="btn btn-sm">
+            <i class="icon-plus bigger-125"></i>新增页面
+        </button>
+        <button class="btn btn-sm" id="J-EditPageBtn"><i class="icon-pencil bigger-125"></i>修改页面名字</button>
+        <button class="btn btn-sm" id="J-DeletePageBtn"><i class="icon-trash bigger-125"></i>删除选中页面</button>
+    </span>
+</div>
+<div class="space-4"></div>
+
+<div class="form-inline J-selectedPage hide">
+    <div class="form-group">模块选择：</div>
+    <div class="form-group">
+        @Html.DropDownList("ModuleId", new List<SelectListItem>(), "请选择模块", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <button class="btn btn-sm btn-info" id="J-AddModuleBtn"><i class="icon-plus bigger-125"></i>新增模块</button>
+    </div>
+
+    <div class="form-group J-selectedModule hide">
+        <button class="btn btn-sm btn-info" id="J-EditModuleBtn"><i class="icon-pencil bigger-125"></i>修改模块名字</button>
+        <button class="btn btn-sm btn-info" id="J-DeleteModuleBtn"><i class="icon-trash bigger-125"></i>删除选中模块</button>
+        <button class="btn btn-sm btn-warning J-AddTextBtn"><i class="icon-plus bigger-125"></i>新增内容</button>
+    </div>
+</div>
+<div class="space-8"></div>
+
+<div id="J-DataContent"></div>
+
+@section specificscripts{
+    <script src="@Url.Content("~/Areas/admin/Content/js/bootbox.js")"></script>
+    <script src="@Url.Content("~/Areas/admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Areas/admin/Content/js/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
+    <script type="text/javascript">
+        jQuery.fn.extend({
+            unobtrusiveValidate: function() {
+                return $.validator.unobtrusive.parse(this);
+            }
+        });
+    </script>
+    <script src="@Url.Content("~/Areas/admin/Content/js/jquery.form.js")"></script>
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+
+        function showSuccessMessage() {
+            $("#J-SuccessInfo").removeClass("hide");
+            setTimeout(function() { $("#J-SuccessInfo").addClass("hide"); }, 10000);
+        }
+
+        //页面模块下拉选项更换执行
+        $("#PageId").change(function() {
+            var pageId = $("#PageId").val().split("|")[0];
+            if (pageId != "") {
+                $("#ModuleId").attr("disabled", true);
+                $.get("@Url.Action("ModuleSelect", "SitePart")", { PageId: pageId, r: Math.random() }, function(result) {
+                    $("#ModuleId").html(result);
+                    $("#ModuleId").attr("disabled", false);
+                    $(".J-selectedPage").removeClass("hide");
+                });
+            } else {
+                $(".J-selectedPage").addClass("hide");
+                $(".J-selectedModule").addClass("hide");
+                $("#J-DataContent").empty();
+            }
+        });
+
+        //模块下来更换执行
+        $('#ModuleId').change(function() {
+            var moduleId = $("#ModuleId").val();
+            if (moduleId != "") {
+                $(".J-selectedModule").removeClass("hide");
+                $.get("@Url.Action("SiteData", "SitePart")", { moduleId: moduleId.split('|')[0], r: Math.random(), moduleflag: $("#ModuleId").val().split("|")[4] }, function (data) {
+                    $("#J-DataContent").empty().append(data);
+                });
+            } else {
+                $(".J-selectedModule").addClass("hide");
+                $("#J-DataContent").empty();
+            }
+        });
+
+        //新增页面按钮触发
+        $("#J-AddPage").click(function () {
+            $.get('@Url.Action("AddPage", "SitePart")', { r: Math.random() }, function (html) {
+                bootbox.dialog({
+                    message: html,
+                    title: "新增页面",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function () {
+                                var name = $("#PageNameText").val();
+                                remark=$("textarea[name='remark']").val();
+                                if (name != "") {
+                                    $.post('@Url.Action("AddPage", "SitePart")', { "name": name, "remark": remark, r: Math.random() }, function (r) {
+                                        if (r > 0) {
+                                            location.reload();
+                                                $("#PageId").append("<option value='" + r + "'>" + pageName + "</option>");
+                                                showSuccessMessage();
+                                            } else {
+                                                bootbox.alert("添加”" + name + "“页面失败，请刷新后重试");
+                                            }
+                                        });
+                                } else {
+                                    bootbox.alert("请输入页面名称");
+                                    return false;
+                                }
+
+                                return true;
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+
+        //新增模块按钮触发
+        $("#J-AddModuleBtn").click(function() {
+            var pageId = $("#PageId").val().split("|")[0];
+            $.get('@Url.Action("AddModule", "SitePart")', { "value": pageId, "text": $("#PageId").find("option:selected").text()}, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: "新增页面功能模块",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                var name = $("#ModuleName").val();
+                                var remark = $("textarea[name='remark']").val();
+                                if (name != "") {
+                                    var moduletype = $("#ModuleType").val();
+                                    var moduleflag = $("input[name='ModuleFlag']").val();
+                                    if (moduletype != "") {
+                                        $.post('@Url.Action("AddModule", "SitePart")', { "pageid": pageId, "modulename": name, "moduleFlag": moduleflag, "moduletype": moduletype, "remark": remark, r: Math.random() }, function (r) {
+                                            if (r > 0) {
+                                                $("#ModuleId").append("<option value='" + r + "|" + moduletype + "'>" + name + "</option>");
+                                                showSuccessMessage();
+                                            } else {
+                                                bootbox.alert("添加”" + name + "“功能模块失败，请刷新后重试");
+                                            }
+                                        });
+                                    } else {
+                                        bootbox.alert("请选择功能模块类型");
+                                        return false;
+                                    }
+                                } else {
+                                    bootbox.alert("请输入功能模块名称");
+                                    return false;
+                                }
+
+                                return true;
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+        function delHtmlTag(str) {
+            return str.replace(/<[^>]+>/g, ""); //去掉所有的html标记
+        }
+
+        $("#J-EditModuleBtn").click(function() {
+            var m = $("#ModuleId").val();
+            if (m.indexOf('|') > 0) {
+                var url = m.split("|")[2];
+                var remark = m.split("|")[3];
+                var moduleName = $("#ModuleId").find("option:selected").text();
+                var moduleflag = m.split("|")[4];
+                var q1 = "1";
+                $.get("/admin/sitepart/updatemodule/" + m.split("|")[0], { name: moduleName, url: url, remark: remark, moduleflag: moduleflag, q: q1 }, function (html) {
+                    bootbox.dialog({
+                        message: html,
+                        title: "修改“" + moduleName + "”的内容",
+                        buttons: {
+                            success: {
+                                label: "提交",
+                                className: "btn-success",
+                                callback: function() {
+                                    moduleName = $("#ModuleName").val();
+                                    thumb = $("input[name='thumb']").val() != undefined ? $("input[name='thumb']").val() : "";
+                                    remark = $("textarea[name='remark']").val();
+                                    moduleflag = $("input[name='ModuleFlag']").val();
+                                    if (moduleName != "") {
+                                        $.post("/admin/sitepart/updatemodule/" + m.split("|")[0], { ModuleName: moduleName, Thumb: thumb, Remark: remark, moduleflag: moduleflag, r: Math.random(), oldmoduleflag: $("#ModuleId").val().split("|")[4], }, function (r) {
+                                            if (r) {
+                                                $("#ModuleId").find("option:selected").text(moduleName);
+                                                showSuccessMessage();
+                                                bootbox.hideAll();
+                                            } else {
+                                                alert("修改失败，请刷新后重试");
+                                            }
+                                        });
+                                    }
+
+                                    return false;
+                                }
+                            },
+                            danger:
+                            {
+                                label: "取消",
+                                className: "btn-danger",
+                                callback: function() {}
+                            }
+                        }
+                    });
+                });
+            } else {
+                bootbox.alert("请选择功能模块后再点击");
+            }
+        });
+
+        $("#J-DeleteModuleBtn").click(function() {
+            bootbox.confirm("您确定要删除该模块吗？删除后该模块下的内容也将被删除", function(result) {
+                if (result) {
+                    $.post("/admin/sitepart/deletemodule/" + $("#ModuleId").val().split("|")[0], function(r) {
+                        if (r) {
+                            $("#ModuleId").find("option:selected").remove();
+                            $("#J-DataContent").empty();
+                        } else {
+                            alert("删除失败，请重新尝试");
+                        }
+                    });
+                }
+            });
+        });
+
+        $("#J-DeletePageBtn").click(function() {
+            bootbox.confirm("您确定要删除该页面吗？删除后该页面下的内容也将被删除，请谨慎操作", function(result) {
+                if (result) {
+                    $.post("/admin/sitepart/deletepage/" + $("#PageId").val().split('|')[0], function(r) {
+                        if (r) {
+                            window.location.reload();
+                        } else {
+                            alert("删除失败，请重新尝试");
+                        }
+                    });
+                }
+            });
+        });
+
+        //新增内容按钮触发
+        function addElement() {
+            $(".J-AddTextBtn").unbind().click(function() {
+                var nid = $(this).attr("data-nid");
+                var m = $("#ModuleId").val();
+                var moduleflag = m.split("|")[4];
+                if (m.indexOf('|') > 0) {
+                    $.get('/admin/sitepart/add' + m.split("|")[1], { moduleId: m.split("|")[0], r: Math.random(), p: nid, moduleflag: moduleflag }, function (html) {
+                        bootbox.dialog({
+                            message: html,
+                            title: "新增“" + $("#ModuleId").find("option:selected").text() + "”的内容",
+                            buttons: {
+                                success: {
+                                    label: "提交",
+                                    className: "btn-success",
+                                    callback: function() {
+                                        var options = {
+                                            iframe: true,
+                                            success: function(r) {
+                                                var result = parseInt(delHtmlTag(r));
+                                                if (result > 0) {
+                                                    $.get("@Url.Action("SiteData", "SitePart")", { moduleId: m.split('|')[0], r: Math.random(), moduleflag: moduleflag }, function (data) {
+                                                        $("#J-DataContent").empty().append(data);
+                                                        bootbox.hideAll();
+                                                    });
+                                                } else {
+                                                    alert("添加失败，请刷新后重试");
+                                                }
+                                            }
+                                        };
+                                        if ($("#J-ContentForm").valid()) {
+                                            $('#J-ContentForm').ajaxSubmit(options);
+                                        }
+
+                                        return false;
+                                    }
+                                },
+                                danger:
+                                {
+                                    label: "取消",
+                                    className: "btn-danger",
+                                    callback: function() {}
+                                }
+                            }
+                        });
+                    });
+                } else {
+                    bootbox.alert("请选择功能模块后再点击添加内容");
+                }
+            });
+        }
+
+        addElement();
+
+        $("#J-EditPageBtn").click(function() {
+            var m = $("#PageId").val().split("|")[0];
+            var remark = $("#PageId").val().split("|")[2];
+            var url = $("#PageId").val().split("|")[1];
+            var moduleflag = $("#ModuleId").val().split("|")[4];
+            if (m.length > 0) {
+                var moduleName = $("#PageId").find("option:selected").text();
+                $.get("/admin/sitepart/updatemodule/" + m, { name: moduleName, url: url, remark: remark, moduleflag: moduleflag }, function (html) {
+                    bootbox.dialog({
+                        message: html,
+                        title: "修改“" + moduleName + "”的内容",
+                        buttons: {
+                            success: {
+                                label: "提交",
+                                className: "btn-success",
+                                callback: function () {
+                                    moduleName = $("#ModuleName").val();
+                                    var thumb = $("input[name='thumb']").val() != undefined ? $("input[name='thumb']").val() : "";
+                                    remark = $("textarea[name='remark']").val();
+                                    if (moduleName != "") {
+                                        $.post("/admin/sitepart/updatepage/" + m, { ModuleName: moduleName, Thumb: thumb, Remark: remark, r: Math.random(), moduleflag: moduleflag }, function (r) {
+                                            if (r) {
+                                                $("#PageId").find("option:selected").text(moduleName);
+                                                showSuccessMessage();
+                                                bootbox.hideAll();
+                                            } else {
+                                                alert("修改失败，请刷新后重试");
+                                            }
+                                        });
+                                    }
+
+                                    return false;
+                                }
+                            },
+                            danger:
+                            {
+                                label: "取消",
+                                className: "btn-danger",
+                                callback: function() {}
+                            }
+                        }
+                    });
+                });
+            } else {
+                bootbox.alert("请选择功能模块后再点击");
+            }
+        });
+    </script>
+}

@@ -1,0 +1,111 @@
+﻿@{
+    ViewBag.Title = "运费模板管理";
+}
+
+@model BreezeShop.Core.PageModel<Yun.Logistics.DeliveryTemplate>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">运费模板管理</li>
+    </ul>
+}
+@section pageheader{
+    <h1>
+        运费模板管理
+    </h1>
+}
+<p>
+    <a class="btn" href="@Url.Action("AddTemplate")">
+        <i class="icon-plus bigger-125"></i>
+        新增运费模板
+    </a>
+</p>
+<div class="table-header">
+    运费模板列表
+</div>
+
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        @foreach (var t in Model.Items)
+        {
+            <table class="table table-bordered dataTable">
+                <thead>
+                <tr>
+                    <td colspan="5">
+                        @t.Name <span class="pull-right">
+                                最后编辑时间： @t.ModifyTime
+                                <a type="button" href="@Url.Action("AddTemplate", "Setting", new {id = t.Id})" class="btn btn-minier btn-info">
+                                    修改
+                                </a>
+                                <button type="button" class="btn btn-minier btn-info delete-template" data-id="@t.Id">
+                                    删除
+                                </button>
+                            </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>运送方式</th>
+                    <th>首件（个）</th>
+                    <th>运费（元）</th>
+                    <th>续件（个）</th>
+                    <th>运费（元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (t.Freight != null)
+                {
+                    foreach (var f in t.Freight)
+                    {
+                        <tr>
+                            <td>@f.DeliveryName</td>
+                            <td>@f.BaseQuantity</td>
+                            <td>@f.BasePrice</td>
+                            <td>@f.AddQuantity</td>
+                            <td>@f.AddPrice</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+            <div class="space-4"></div>
+        }
+    </div>
+</div>
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+}
+
+@section inlinescripts{
+
+    <script type="text/javascript">
+        $('[data-rel=tooltip]').tooltip();
+        $(".delete-template").click(function () {
+            var id = $(this).attr("data-id");
+            bootbox.confirm("确定要删除此条数据吗?", function (result) {
+                if (result) {
+                    $.post("@Url.Action("Delete")/" + id, function (r) {
+                        if (r.result) {
+                            bootbox.alert("操作成功，页面将会自动刷新");
+                            setTimeout(function() {
+                                window.location.reload();
+                            } , 1000);
+
+                        } else {
+                            bootbox.alert(r.error == null ? "操作失败，该物流模板正在使用中，请刷新后重试" : r.error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+

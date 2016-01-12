@@ -1,0 +1,101 @@
+﻿@using Yun.Util;
+@{
+    ViewBag.Title = "Publish";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section headerbeforeace{
+    <link rel="stylesheet" href="@Url.Content("~/Areas/Admin/Content/css/dropzone.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Areas/Admin/Content/css/bootstrap-datetimepicker.css")" />
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index", "Commodity")">商品管理</a>
+        </li>
+        <li class="active">发布商品</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        发布商品
+    </h1>
+}
+
+<style type="text/css">
+    .sku-props-value .input-medium {margin-right: 5px;margin-bottom: 3px;}
+    #J-Custom-Props .delete {display: none;}
+    #J-Custom-Props fieldset:hover .delete { display: inline-block;}
+    .dataTables_paginate .pagination {margin-right: 0;}
+    #J-bendishop-modal-table .modal-body{height: 300px; overflow-y: auto;}
+    .fenxiao-opt-hidden{display: none;}
+    form.fenxiao .fenxiao-opt-hidden{display: block;}
+    #J-Shop-Cats-List{max-height: 300px; overflow-y: auto;}
+    #J-Shop-Cats-List .level-2{margin-left: 20px;}
+    .dropzone a.dz-remove, .dropzone-previews a.dz-remove{margin-top: 0;}
+    .dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details{margin-bottom: 2px;}
+</style>
+
+<div class="col-xs-12"  id=" isneedcates">
+
+    @using (Html.BeginForm("Publish", "Commodity", FormMethod.Post, new { id = "J-ItemForm", @class = "form-horizontal", enctype = "multipart/form-data" }))
+    {
+        <div id="J-Goods-Content">
+
+        </div>
+    }
+</div>
+
+<div id="J-bendishop-modal-table" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+        @section specificscripts{
+            <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+            <script src="@Url.Content("~/areas/admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
+            <script src="@Url.Content("~/areas/admin/Content/js/jquery.validation.messages_zh.js")" type="text/javascript"> </script>
+            <script src="@Url.Content("~/areas/admin/Content/js/dropzone.js")"></script>
+            <script src="@Url.Content("~/areas/admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js")"></script>
+            <script src="@Url.Content("~/areas/admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js")"></script>
+            <script src="@Url.Content("~/areas/admin/Content/js/kindeditor/kindeditor-min.js")"></script>
+        }
+
+        @section inlinescripts
+        {
+            <script type="text/javascript">
+                
+                var lastCatId = 0;
+
+                $.get("/admin/commodity/loadaddcommoditytemlate/" + lastCatId, { r: Math.random() }, function(html) {
+                    $("#J-Goods-Content").empty().append(html);
+
+                    $("#J-Submit-All").on("click", function(event) {
+                        var r = $("#J-ItemForm").valid();
+                        if (r) {
+                            $(this).text("正在提交，请稍后...").attr("disabled", true);
+                            $.post("/admin/commodity/publish/" + $(".J-Cats-Select:last").val(), $("#J-ItemForm").serialize(), function(rhtml) {
+                                    if (parseInt(rhtml) > 0) {
+                                        window.location.replace("/admin/commodity/index");
+                                    } else {
+                                        bootbox.alert("商品添加失败，错误内容：" + rhtml);
+                                    }
+                                })
+                                .error(function(error) {
+                                    $("#J-Submit-All").text("提交").attr("disabled", false);
+                                    bootbox.alert("保存失败，商品详情检测到有潜在危险的内容");
+                                });
+                        }
+                    });
+                });
+            </script>
+        }

@@ -1,0 +1,169 @@
+﻿@model  List<Yun.Trade.SnapshotTrade>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">已卖出的商品</a>
+        </li>
+        <li class="active">批量标记</li>
+    </ul>
+}
+@section headerbeforeace{
+    <style>
+.bought-table .order-bd .desc{width: 70%;display: inline;float: left;}
+.bought-table .order-bd .baobei .pic{display: inline;float: left;margin: 0 6px 0 3px;text-align: center;float: left;}
+.bought-table .order-bd .baobei .baobei-name{line-height: 18px;margin-bottom: 5px;overflow: hidden;}
+        .lbl {
+            font-size: 12px;
+        }.memo-editor {
+              width: 50%;
+          }
+.memo-editor th {
+    font-weight: bold;
+    text-align: right;
+    vertical-align: top;
+    font-size: 14px;
+    width: 50px;
+}
+.memo-editor th, .memo-editor td {
+    padding: 5px 0;
+}
+    </style>
+}
+@section pageheader{
+    <h1>
+        批量标记
+    </h1>
+}
+
+<table class="memo-editor">
+    <tbody>
+        <tr class="flag-options">
+            <th>标记：</th>
+            <td>
+                <label>
+                    <input type="radio" class="ace" value="EXPRESS" name="form-field-radio">
+                    <span class="lbl">
+                        <img src="~/Areas/Admin/Content/images/op_memo_1.png" />
+                    </span>
+                </label>
+                <label>
+                    <input type="radio" class="ace" value="SELF" name="form-field-radio">
+                    <span class="lbl">
+                        <img src="~/Areas/Admin/Content/images/op_memo_2.png" />
+                    </span>
+                </label>
+                <label>
+                    <input type="radio" class="ace" value="BUSINESS" name="form-field-radio">
+                    <span class="lbl">
+                        <img src="~/Areas/Admin/Content/images/op_memo_3.png" />
+                    </span>
+                </label>
+                <label>
+                    <input type="radio" class="ace" value="NONE" name="form-field-radio">
+                    <span class="lbl">
+                        <img src="~/Areas/Admin/Content/images/op_memo_4.png" />
+                    </span>
+                </label>
+                <label>
+                    <input type="radio" class="ace" value="NONE" name="form-field-radio">
+                    <span class="lbl">
+                        <img src="~/Areas/Admin/Content/images/op_memo_5.png" />
+                    </span>
+                </label>
+                <button id="" type="submit" class="btn btn-sm btn-info">
+                    批量标记
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <th>备注：</th>
+            <td>
+                <textarea class="form-control" placeholder="请填写备注"></textarea>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable bought-table">
+    <thead>
+        <tr class="col-name">
+            <th class="baobei" style="width:36%">宝贝</th>
+            <th class="price" style="width:10%">单价(元)</th>
+            <th class="quantity" style="width:6%">数量</th>
+            <th class="amount" style="width:12%">实付款(元)</th>
+        </tr>
+    </thead>
+    @foreach (var trade in Model)
+    {
+        <tbody class="">
+            <tr class="sep-row"><td colspan="4"></td></tr>
+            <tr class="order-hd">
+                <td class="first" colspan="4">
+                    <div class="">
+                        <span class="order-id"><b>订单编号</b>：@trade.Id</span>
+                        <span class="dealtime" title="@trade.CreateTime"> 成交时间：@trade.CreateTime</span>
+                    </div>
+                    <div class="">
+                        <b>收货地址</b> ：@trade.Address
+                    </div>
+                </td>
+            </tr>
+            @foreach (var order in trade.Orders)
+            {
+                <tr class="order-bd" id="@("item"+order.ItemId)">
+                    <td class="baobei">
+                        <a class="pic" style="float: left;" href="@Url.Action("Index", "Item", new { id = order.ItemId })" title="查看宝贝详情" hidefocus="true" target="_blank">
+                            <img class="pic" src="@order.Thumb" alt="查看宝贝详情">
+                        </a>
+                        <div class="desc">
+                            <p class="baobei-name">
+                                <a class="" href="@Url.Action("Index", "Item", new { id = order.ItemId })" target="_blank">
+                                    @order.ItemTitle
+                                </a>
+                            </p>
+                            <div title="" class="spec">
+                                @if (order.SkuNames != null)
+                                {
+                                    foreach (var s in order.SkuNames)
+                                    {
+                                        <span>@s.Value</span>
+                                    }
+                                }
+                            </div>
+                            <span class="good-icons">
+                            </span>
+                        </div>
+                    </td>
+                    <td title="@order.Price" class="price">
+                        <i class="special-num">@order.Price</i>
+                    </td>
+                    <td title="@order.Quantity" class="quantity special-num">
+                        <i class="special-num">@order.Quantity</i>
+                    </td>
+                    <td rowspan="@trade.Orders.Count" class="amount td-last">
+                        <p>
+                            <em class="real-price special-num">
+                                @(trade.Money)
+                            </em>
+                        </p>
+                        <p class="post-type">
+                        </p>
+                        <p>
+                            (含运费：<i class="special-num">@trade.Fare</i>)
+                            <a target="_blank" class="view-logistics J_MakePoint J_Logistics " href="#" style="display: block;">
+                                查看物流
+                            </a>
+                        </p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>

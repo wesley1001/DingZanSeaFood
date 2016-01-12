@@ -1,0 +1,80 @@
+﻿@using BreezeShop.Web.Helper
+@model BreezeShop.Core.PageModel<Yun.Archive.Tag>
+
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@helper MenuHelper(long parentId)
+{
+    
+    <ol class="dd-list">
+        @foreach (var dr in Model.Items)
+        {
+            <li class="dd-item" data-id="@dr.Id">
+                <div class="dd-handle">
+                    @(dr.Name)
+                    <div class="pull-right action-buttons">
+                        <a class="red delete" href="@Url.Action("DeleteTag", new { id = dr.Id })">
+                            <i class="glyphicon glyphicon-trash bigger-130"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        }
+    </ol>
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">标签管理</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        标签管理
+    </h1>
+}
+
+
+<div id="nestable">
+    @MenuHelper(0)
+    @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 40)
+</div>
+@Html.Hidden("NestableOutput")
+
+@section specificscripts{
+
+}
+
+
+@section inlinescripts{
+    <script type="text/javascript">
+        jQuery(function ($) {
+
+            $(".delete").click(function () {
+                var link = this;
+                if (confirm("确定要删除吗？")) {
+                    $.post($(this).attr("href"), function (r) {
+                        if (r) {
+                            alert("删除成功");
+                            $(link).closest("li").remove();
+                        }
+                        else {
+                            alert("删除失败");
+                        }
+                    });
+                }
+
+                return false;
+            });
+        });
+    </script>
+}
+

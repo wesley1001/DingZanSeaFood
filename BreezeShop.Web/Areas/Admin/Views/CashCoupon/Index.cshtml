@@ -1,0 +1,105 @@
+﻿@using BreezeShop.Web.Helper
+@model BreezeShop.Core.PageModel<Yun.Marketing.CashCouponDomain>
+
+@{
+    ViewBag.Title = "代金券管理";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">代金券列表</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        代金券列表
+    </h1>
+}
+
+<p>
+    <a class="btn" href="@Url.Action("Add")">
+        <i class="icon-plus bigger-125"></i>
+        新增代金券
+    </a>
+</p>
+
+<div class="table-header">
+    代金券列表
+</div>
+
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <table class="table table-striped table-bordered table-hover dataTable">
+            <thead>
+                <tr>
+                    <th>券名字</th>
+                    <th>面值</th>
+                    <th>券号</th>
+                    <th>绑定用户</th>
+                    <th>使用信息</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Items)
+                {
+                    <tr>
+                        <td>@(r.Name)(@r.CouponType)</td>
+                        <th>@r.Credit</th>
+                        <td>@r.Code</td>
+                        <td>@r.BindUserName<br/>@r.BindTime</td>
+                        <td>@(r.OrderId>0?r.OrderId.ToString():"")</td>
+                        <td>
+                            <div class="btn-group">
+                                @if (r.BindUserId <= 0)
+                                {
+                                    <a class="btn btn-xs btn-info" href="@Url.Action("BindUser", new {id = r.Id})">
+                                        <i class="icon-edit bigger-120">绑定用户</i>
+                                    </a>
+                                }
+
+                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("Delete", new {id = r.Id})">
+                                    <i class="icon-trash bigger-120">删除</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 20)
+    </div>
+</div>
+
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $(".delete").click(function () {
+                var url = $(this).attr("href");
+                var link = this;
+                bootbox.confirm("确定要删除吗?", function (result) {
+                    if (result) {
+                        $.post(url, function (r) {
+                            if (r) {
+                                $(link).closest("tr").remove();
+                            } else {
+                                bootbox.alert("删除失败");
+                            }
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

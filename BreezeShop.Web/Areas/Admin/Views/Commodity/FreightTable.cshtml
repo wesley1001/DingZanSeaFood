@@ -1,0 +1,53 @@
+﻿<div class="j-kuaidi-detail well">
+    <div>
+        <div>
+            默认运费：
+            <input type="text" value="@(ViewBag.Prices.kuaidi1)" class="input-text j-kuaidi-start" data-type="kuaidi-start" data-val-required="首件应输入1至9999的数字" data-val-range-min="1" data-val-range-max="9999" data-val-range="首件应输入1至9999的数字" maxlength="6">件内，
+            <input type="text" value="@(ViewBag.Prices.kuaidi2)" class="input-text j-kuaidi-age" data-type="kuaidi-age" data-val-required="首费应输入0.00至999.99的数字" data-val-range-min="0" data-val-range-max="999.99" data-val-range="首费应输入0.00至999.99的数字" maxlength="6">元，每增加
+            <input type="text" value="@(ViewBag.Prices.kuaidi3)" class="input-text j-kuaidi-plus" data-type="kuaidi-plus" data-val-required="续件应输入1至9999的数字" data-val-range-min="1" data-val-range-max="9999" data-val-range="续件应输入1至9999的数字" maxlength="6">件，增加运费
+            <input type="text" value="@(ViewBag.Prices.kuaidi4)" class="input-text j-kuaidi-plusage" data-type="kuaidi-plusage" data-val-required="续费应输入0.00至999.99的数字" data-val-range-min="0" data-val-range-max="999.99" data-val-range="续费应输入0.00至999.99的数字" maxlength="6">元
+            <div class="j-error-msg">
+                <span class="j-kuaidi-start-error-msg"></span>
+                <span class="j-kuaidi-age-error-msg"></span>
+                <span class="j-kuaidi-plus-error-msg"></span>
+                <span class="j-kuaidi-plusage-error-msg"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable">
+        <thead>
+            <tr>
+                <th class="center hidden-480">运送到</th>
+                <th>首体积</th>
+                <th class="hidden-480">价格</th>
+                <th class="hidden-480">销量</th>
+                <th class="hidden-480">修改时间</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="hidden-480"></td>
+                <td></td>
+                <td class="hidden-480"></td>
+                <td class="hidden-480"></td>
+                <td class="hidden-480"></td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-xs btn-info" href="" target="_blank">
+                            <i class="icon-edit bigger-120">编辑</i>
+                        </a>
+                        <a class="btn btn-xs btn-warning j-off" href="">
+                            <i class="icon-fire bigger-120">下架</i>
+                        </a>
+                        <a class="btn btn-xs btn-danger delete" href="">
+                            <i class="icon-trash bigger-120">删除</i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

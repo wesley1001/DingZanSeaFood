@@ -1,0 +1,35 @@
+﻿@model BreezeShop.Core.PageModel<Yun.Item.ItemPropValue>
+@{
+    var ids = (Request.QueryString["propValues"] ?? "").Split(',');
+}
+
+@if (Model.Items != null && Model.Items.Any())
+{
+    <select class="form-control J-Cats-Select" name="PropValue">
+        <option></option>
+        @foreach (var p in Model.Items)
+        {
+            <option value="@p.Id" data-haschild="@p.HasChild" @(ids.Contains(p.Id.ToString()) ? "selected" : "")>@p.Value</option>
+        }
+    </select>
+}
+<script type="text/javascript">
+    $("select[name='PropValue']").unbind().change(function () {
+            propValue();
+            var valuenum = $("select").length;
+            var t = this;
+            if ($(this).val() == "" || $(this).val() == undefined) {
+                $(t).nextAll().remove();
+            }
+            else
+                {
+                $.get('/admin/commodity/selectpropvalue/' + $(this).val() + "?q=1", function (html) {
+                    $(t).nextAll().remove();
+                    $(t).after(html);
+                    if ($("select").length == valuenum) {
+                        $("#J-submitCat").removeClass("hide");
+                    }
+                });
+            }
+        });
+</script>

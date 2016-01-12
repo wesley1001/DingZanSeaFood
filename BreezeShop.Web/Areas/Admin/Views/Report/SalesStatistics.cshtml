@@ -1,0 +1,101 @@
+﻿@using BreezeShop.Web.Helper
+@model  BreezeShop.Core.PageModel<Yun.Trade.TradeStatistics>
+@{
+    ViewBag.Title = "销售管理";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section headerbeforeace{
+<link href="@Url.Content("~/areas/admin/Content/css/bootstrap-datetimepicker.min.css")" rel="stylesheet" />
+
+}
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">日销售报表</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        日销售报表
+    </h1>
+}
+
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <div class="row">
+            <form method="GET" action="@Url.Action("SalesStatistics", "Report", new { area = "Admin" })" class="col-sm-12">
+                <div class="space-4"></div>
+                <div class="form-inline">
+                    <div class="form-group">时间：</div>
+                    <div class="form-group">
+                        从<input type="text" value="@(Request.QueryString["minDateTime"] ?? DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd"))" n name="minDateTime" class="date-picker" readonly="readonly" data-date-format="yyyy-mm-dd hh:ii" />
+                    </div>
+                    <div class="form-group">
+                        到<input type="text" value="@(Request.QueryString["maxDateTime"] ?? DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"))" n name="maxDateTime" class="date-picker" readonly="readonly" data-date-format="yyyy-mm-dd hh:ii" />
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-inline">
+                    <button class="btn btn-purple btn-sm" type="submit">
+                        <i class="icon-search icon-on-right bigger-110"></i>
+                        搜索
+                    </button>
+                </div>
+            </form>
+        </div>
+        <table id="sample-table-2" class="table table-bordered bought-table dataTable">
+            <thead>
+            <tr>
+                <th>时间</th>
+                <th>交易笔数</th>
+                <th>购买数量</th>
+                <th>在线支付</th>
+                <th>积分卡积分</th>
+                <th>总销售额</th>
+                <th>当日最大客单价</th>
+                <th>日平均客单价</th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model.Items)
+                {
+                    <tr>
+                        <td>@m.StatisticsData</td>
+                        <td>@m.SaleQuantity</td>
+                        <td>@m.SaleNum</td>
+                        <td>@m.OnlinePayment</td>
+                        <td>@m.PrepaidCardPayment</td>
+                        <td>@m.SalePrice</td>
+                        <td>@m.MaxCustomerPrice</td>
+                        <td>@m.CustomerPrice</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 100)
+    </div>
+</div>
+@section specificscripts{
+<script src="@Url.Content("~/areas/admin/content/js/bootbox.js")"></script>
+<script src="@Url.Content("~/areas/admin/content/js/datetimepicker/bootstrap-datetimepicker.min.js")"></script>
+<script src="@Url.Content("~/areas/admin/content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js")"></script>
+
+    <script type="text/javascript">
+        $(".date-picker").datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            format: 'yyyy-mm-dd'
+        });
+    </script>
+}

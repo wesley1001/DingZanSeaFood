@@ -1,0 +1,81 @@
+﻿@using System.Globalization
+@model List<Yun.Distribution.DistributionLevelDomain>
+
+@{
+    ViewBag.Title = "佣金模板";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">编辑佣金模板</li>
+    </ul>
+}
+@section pageheader{
+    <h1>编辑佣金模板</h1>
+}
+
+<h3 class="text-warning">温馨提示</h3>
+<ol>
+    <li>一级佣金，即分销商A发展的下级分销商B销售产品，分销商A获取的佣金；</li>
+    <li>二级佣金，即分销商A的下级分销商B发展的下级分销商C销售产品，分销商A获取的佣金；</li>
+    <li>三级佣金，即分销商B的下级分销商C发展的下级分销商D销售产品，分销商A获取的佣金；</li>
+    <li>除支持全店商品设置统一佣金比例外，还可单独对某一商品设置佣金比例；</li>
+</ol>
+<hr/>
+@using (Html.BeginForm("AddTemplate", "Distribution", new { id = ViewContext.RouteData.Values["id"], isDefault = Request.QueryString["isDefault"] }, FormMethod.Post, new { @class = "form-horizontal", id = "SubmitForm" }))
+{
+    if (Request.QueryString["isDefault"].IsEmpty() || (Model != null && Model.Any(e => e.TemplateId != 0)))
+    {
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="templateName">佣金模板名字：</label>
+            <div class="col-xs-12 col-sm-10">
+                <div class="clearfix">@Html.TextBox("templateName", Model == null ? "" : Model[0].TemplateName, new { @class = "input-large", placeholder = "佣金模板名字" })</div>
+            </div>
+        </div>
+        <div class="space-4"></div>
+    }
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">一级佣金：</label>
+        <div class="col-xs-12 col-sm-10">
+            <input name="level" type="text" class="input-small" placeholder="一级佣金" value="@(Model != null && Model.Count>0?Model[0].Proportion.ToString(CultureInfo.InvariantCulture):"")"/>
+            <input type="hidden" name="level-id" value="@(Model != null && Model.Count>0?Model[0].Id.ToString():"")" />
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">二级佣金：</label>
+        <div class="col-xs-12 col-sm-10">
+            <input name="level" type="text" class="input-small" placeholder="二级佣金" value="@(Model != null && Model.Count > 1 ? Model[1].Proportion.ToString(CultureInfo.InvariantCulture) : "")" />
+            <input type="hidden" name="level-id" value="@(Model != null && Model.Count>1?Model[1].Id.ToString():"")" />
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">三级佣金：</label>
+        <div class="col-xs-12 col-sm-10">
+            <input name="level" type="text" class="input-small" placeholder="三级佣金" value="@(Model != null && Model.Count > 2 ? Model[2].Proportion.ToString(CultureInfo.InvariantCulture) : "")" />
+            <input type="hidden" name="level-id" value="@(Model != null && Model.Count>2?Model[2].Id.ToString():"")" />
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-2 col-md-10">
+            <button class="btn btn-info" type="submit" id="J-Submit-Btn">
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="reset">
+                <i class="icon-undo bigger-110"></i>重置
+            </button>
+        </div>
+    </div>
+}

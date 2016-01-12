@@ -1,0 +1,69 @@
+﻿@using BreezeShop.Web.Areas.Admin.Controllers
+@model BreezeShop.Web.Areas.Admin.Models.AddModuleModel
+@{
+    Layout = null;
+}
+
+
+@using (Html.BeginForm("AddModule", "SitePart", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="PageName">模块名称：</label>
+        <div class="col-xs-12 col-sm-9">
+            <p class="form-control-static">@Model.PageName</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="ModuleName">模块名称：</label>
+        <div class="col-xs-12 col-sm-9">
+            @Html.TextBoxFor(m => m.ModuleName, new { @class = "input-large", placeholder = "请输入模块名称" })
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="ModuleName">模块标识：</label>
+        <div class="col-xs-12 col-sm-9">
+            @Html.TextBoxFor(m => m.ModuleFlag, new { @class = "input-large", placeholder = "请输入模块标识" })
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right">图片上传：</label>
+        <div class="col-sm-5">
+            <input type="file" id="id-input-file-2" name="fileimage" />
+        </div>
+    </div>
+    <div class="space-2"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="ModuleName">备注：</label>
+        <div class="col-xs-12 col-sm-5">
+            <div class="clearfix">
+                <textarea class="input-xxlarge" cols="10" id="remark" name="remark" rows="5"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="ModuleType">模块类型：</label>
+        <div class="col-xs-4">
+            @Html.DropDownListFor(m => m.ModuleType, SitePartController.GetSiteModulesType().Select(e => new SelectListItem
+            {
+                Text = e.Value,
+                Value = e.Key
+            }), "请选择模块类型", new { @class = "form-control" })
+        </div>
+    </div>
+}
+<script>
+    $('#id-input-file-2').ace_file_input({
+        no_file: '还没有上传文件哦...',
+        btn_choose: '选择图片',
+        btn_change: '更换图片',
+        droppable: false,
+        onchange: null,
+        thumbnail: false, //| true | large
+        whitelist: 'gif|png|jpg|jpeg'
+    });
+    $("#J-ContentForm").unobtrusiveValidate();
+</script>

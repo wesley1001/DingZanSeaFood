@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "延期";
+}
+    延期天数：<div class="ace-spinner touch-spinner" style="width: 100px; ">
+        <div class="input-group">
+            <input type="text" id="spinner3" class="input-mini spinner-input form-control j-delay-days" maxlength="3">
+        </div>
+    </div>
+<script src="~/Areas/Admin/Content/js/fuelux/fuelux.spinner.js"></script>
+<script language="javascript">
+    $(function() {
+        $('#spinner3').ace_spinner({ value: 1, min: 1, max: 30, step: 1, on_sides: true, icon_up: 'icon-plus smaller-75', icon_down: 'icon-minus smaller-75', btn_up_class: 'btn-success', btn_down_class: 'btn-danger' });
+    });
+</script>

@@ -1,0 +1,60 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.UpdateTextModel
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="icon-remove"></i>
+        </button>
+        <strong>
+            <i class="icon-remove"></i>
+            错误！
+        </strong>
+        当前模块数据不存在，请关闭并刷新当前页后重新尝试.
+        <br>
+    </div>
+    return;
+}
+
+@using (Html.BeginForm("UpdateText", "SitePart", new { id = ViewContext.RouteData.Values["id"], moduleFlag = Request.QueryString["moduleflag"],moduleId = Request.QueryString["moduleId"] }, FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", Id = "J-ContentForm" }))
+{
+    @Html.HiddenFor(m=>m.IsDisplay)
+    @Html.HiddenFor(m => m.ParentId)
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="Title">标题：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Title, new { @class = "input-xlarge", placeholder = "请输入标题" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Title)</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="SortOrder">排序：</label>
+        <div class="col-sm-9">
+            <div class="clearfix">
+                @Html.TextBoxFor(m => m.SortOrder, new { @class = "input-mini", placeholder = "排序" })
+            </div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.SortOrder)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="HyperLink">超链接：</label>
+        <div class="col-sm-9">
+            <div class="clearfix">
+                @Html.TextBoxFor(m => m.HyperLink, new { @class = "input-xxlarge", placeholder = "超链接" })
+            </div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.HyperLink)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-4 col-sm-offset-3">
+            <label>
+                <input name="Display" id="Display" type="checkbox" class="ace" value="1" @(Model.IsDisplay ? "checked" : "") />
+                <span class="lbl">是否显示</span>
+            </label>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#J-ContentForm").unobtrusiveValidate();
+</script>

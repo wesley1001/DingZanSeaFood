@@ -1,0 +1,47 @@
+﻿@model BreezeShop.Web.Helper.Pager
+
+<div class="row">
+    <div class="col-sm-3"><div class="dataTables_info" id="sample-table-2_info">共@(Model.TotalPage)页,共@(Model.TotalSize)条记录</div></div>
+    <div class="col-sm-9">
+            <div class="dataTables_paginate paging_bootstrap">
+                @if (null != Model.PageList && Model.PageList.Count > 1)
+                {
+                <ul class="pagination" id="J-@Model.PagerId">
+                    @if (Model.CurPage - 1 >= Model.StartPage)
+                    {
+                        <li class="prev">
+                            <a href="@Url.Action(Model.ActionName, Model.ControllerName, Model.CreateUrl(Model.CurPage - 1))">上一页</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="prev disabled"><a href="javascript:;">上一页</a></li>
+                    }
+                    @foreach (var item in Model.PageList)
+                    {
+                        if (item.PageIndex == Model.CurPage)
+                        {
+                            <li class="active">
+                                <a href="javascript:;">@item.PageIndex.ToString()</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Url.Action(Model.ActionName, Model.ControllerName, Model.CreateUrl(item.PageIndex))">@item.PageIndex</a>
+                            </li>
+                        }
+                    }
+                    @if (Model.CurPage + 1 <= Model.EndPage)
+                    {
+                        <li class="next"><a href="@Url.Action(Model.ActionName, Model.ControllerName, Model.CreateUrl(Model.CurPage + 1))">下一页</a></li>
+                    }
+                    else
+                    {
+                        <li class="next disabled"><a href="javascript:;">下一页</a></li>
+                    }
+                </ul>
+                }
+            </div>
+    </div>
+</div>

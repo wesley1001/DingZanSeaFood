@@ -1,0 +1,7 @@
+﻿@model  BreezeShop.Web.Areas.Admin.Models.ModuleSelectModel
+@{
+    Layout = null;
+}
+<div class="form-group">
+    @Html.DropDownListFor(m => m.ModuleId, Model.ModuleList, "请选择模块", new { @class = "form-control" })
+</div>

@@ -1,0 +1,30 @@
+﻿@model  Yun.Trade.MemoModel
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-1 control-label no-padding-right no-padding-top"> 标记 </label>
+        <div class="col-sm-11">
+            @for (var i = 0; i <= 5; i++)
+            {
+                <label>
+                    <input type="radio" value="@i" name="radio-flag" class="flag ace"/>
+                    <span class="lbl"> <i class="fa fa-flag flag-@i"></i></span>
+                </label>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-1 control-label no-padding-right"> 备注 </label>
+
+        <div class="col-sm-11">
+            <textarea class="form-control j-memo-remark" placeholder="请填写备注">@(Model != null ? Model.Remark : "")</textarea>
+        </div>
+    </div>
+</div>
+
+    <script language="javascript">
+        $(function () {
+            $(".flag:radio[value=@(Model!=null?Model.Flag:0)]").attr('checked', 'true');
+        });
+    </script>

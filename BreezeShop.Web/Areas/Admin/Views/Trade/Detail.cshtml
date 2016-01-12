@@ -1,0 +1,648 @@
+﻿
+@model  Yun.Trade.SnapshotTrade
+@{
+    ViewBag.Title = "订单详情";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var coupons = ViewData["Coupons"] as List<Yun.Coupon.CouponDetail>;
+}
+
+@section headerbeforeace{
+    <style>
+.trade-detail{border:1px solid #e5e5e5;margin:15px 0 0 0;padding:10px 0 0 0}
+.trade-detail ul li{list-style:none}
+.bought-table .order-bd .baobei .pic{display:inline;float:left;float:left;margin:0 6px 0 3px;text-align:center;width:60px}
+.bought-table .order-bd .desc{display:inline;float:left;text-align:left;width:70%}
+.bought-table .order-bd .baobei .baobei-name{line-height:18px;margin-bottom:5px;overflow:hidden}
+.bought-table .order-bd td{overflow:hidden;padding:10px 5px;text-align:center;vertical-align:top}
+.bought-table .col-name th{text-align:center;vertical-align:top}
+.lbl{font-size:12px}
+.memo-editor{width:100%}
+.memo-editor th{font-size:14px;font-weight:700;text-align:right;vertical-align:top;width:10%}
+.memo-editor td,.memo-editor th{padding:5px 0}
+.memo-editor td{width:90%}
+.flag-options img{vertical-align:baseline}
+.flag-0{color:#7e7e7e}
+.flag-1{color:#fd0000}
+.flag-2{color:#fcf80e}
+.flag-3{color:#2dfd4f}
+.flag-4{color:#0051fd}
+.flag-5{color:#dc00f8}
+
+    </style>
+}
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")">已卖出的商品</a>
+        </li>
+        <li class="active">订单详情</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        订单详情
+    </h1>
+}
+
+<div class="clearfix">
+    <div class="col-md-9">
+        <button type="button" class="btn btn-sm btn-info mark-trade" href="@Url.Action("Mark", "Trade")" data-id="@Model.Id">
+            标记
+        </button>
+        @if (Model.IsCoupon && Model.TradeStatus == "WAIT_BUYER_CONFIRM_GOODS")
+        {
+            <a href="@Url.Action("Delay", "Trade")" data-id="@Model.Id" class="btn btn-sm btn-info j-delay">
+                延期
+            </a>
+        }
+        @if (Model.TradeStatus == "WAIT_SELLER_SEND_GOODS")
+        {
+            <a class="btn btn-sm btn-info delivery" href="@Url.Action("Delivery", "Trade")" data-id="@Model.Id">
+                发货
+            </a>
+        }
+        @if (!Model.IsCoupon && (Model.TradeStatus == "WAIT_SELLER_SEND_GOODS" || Model.TradeStatus == "WAIT_BUYER_PAY"))
+        {
+            <a class="btn btn-sm btn-info modify-address" href="@Url.Action("ModifyAddress", "Trade")" data-id="@Model.Id">
+                修改收货地址
+            </a>
+        }
+        @if (Model.TradeStatus == "WAIT_BUYER_PAY")
+        {
+            <a class="btn btn-sm btn-info close-trade" href="@Url.Action("CloseTrade", "Trade")" data-id="@Model.Id">
+                关闭交易
+            </a>
+        }
+        @if (Model.TradeStatus == "WAIT_BUYER_PAY")
+        {
+            <a class="btn btn-sm btn-info modify-price" href="@Url.Action("ModifyTradePrice", "Trade")" data-id="@Model.Id">
+                修改价格
+            </a>
+        }
+        @if (Model.CodStatus == "EXPRESS")
+        {
+            <a href="@Url.Action("Delay", "Trade")" data-id="@Model.Id" class="btn btn-sm btn-info j-delay">
+                延长收货日期
+            </a>
+        }
+        @if (!Model.TrackingNumber.IsEmpty())
+        {
+            <a href="@Url.Action("ModifyDelivery", "Trade")" data-id="@Model.Id" class="btn btn-sm btn-info j-modify-delivery">
+                修改物流信息
+            </a>
+        }
+    </div>
+</div>
+
+<div class="trade-detail">
+    <ul>
+        <li class="">
+            <b>订单号</b> ：@Model.Id
+        </li>
+        <li class="">
+            <b>交易状态</b> ：
+            @switch (Model.TradeStatus)
+            {
+                case "EXCEPTIONAL": 
+                    <span>错误状态</span>
+                    break;
+                case "TRADE_CLOSED":
+                    <span>交易关闭</span>
+                    break;
+                case "WAIT_BUYER_PAY":
+                    <span>等待买家付款</span>
+                    break;
+                case "TRADE_CLOSED_BY_SELF":                     
+                <span>交易关闭</span>
+                    break;
+                case "WAIT_SELLER_SEND_GOODS":
+                <span>买家已付款</span>
+                    break;
+                case "WAIT_BUYER_CONFIRM_GOODS":                 
+                <span>卖家已发货</span>
+                    break;
+                case "TRADE_FINISHED":                 
+                <span>交易成功</span>
+                    break;
+            }
+        </li>
+        <li class="">
+            <b>交易号</b> ：@Model.PayId
+        </li>
+        <li class="">
+            <b>成交时间</b> ：@Model.CreateTime
+        </li>
+        <li class="">
+            <b>付款时间</b> ：@Model.PayTime
+        </li>
+    </ul>
+</div>
+<div class="trade-detail">
+    <ul>
+        @if (Model.IsCoupon)
+        {
+            <li class="">
+                <b>接收手机</b> ：@Model.Mobile
+                <button type="button" href="@Url.Action("ModifyMoblie", "Trade")" data-id="@Model.Id" class="btn btn-minier btn-info modify-moblie">
+                    修改手机号
+                </button>
+                <button type="button" class="btn btn-minier btn-info resend-coupon">
+                    重发电子券
+                </button>
+            </li>
+        }
+        else
+        {
+            <li>
+                <b>收货地址</b> ：@Model.Address @Model.RealName @Model.Mobile
+            </li>
+        }
+        <li>
+            <b>买家留言</b> ：@Model.Remark
+        </li>
+        @if (!string.IsNullOrEmpty(Model.DeliveryTime))
+        {
+            <li><b>物流公司</b> ：@Model.DeliveryName</li>
+            <li><b>物流单号</b> ：@Model.TrackingNumber</li>
+        }
+    </ul>
+</div>
+<div class="trade-detail">
+    <ul>
+        <li class="">
+            <b>买家用户名</b> ：@Model.Nick
+        </li>
+        <li class="">
+            <b>联系电话</b> ：@Model.Mobile
+        </li>
+    </ul>
+</div>
+
+@if (coupons != null && coupons.Any())
+{
+<table class="table table-bordered dataTable bought-table">
+    <thead>
+        <tr class="col-name">
+            <th>电子凭证列表</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in coupons)
+         {
+        <tr>
+            <td>@a.CouponId</td>
+            @if (a.IsConsume == true)
+            {
+                <td>已核销 @a.ExpiredTime 过期</td>
+                <td></td>
+            }
+            else
+            {
+                <td>未核销</td>
+                <td><a href="@Url.Action("BuyerCoupon", "Center", new { area="", Id = a.CouponId })">重发</a></td>
+            }
+
+        </tr>
+        }
+    </tbody>
+</table>
+}
+<br />
+<table class="table table-bordered dataTable bought-table">
+    <thead>
+        <tr class="col-name">
+            <th class="baobei">宝贝</th>
+            <th class="price">单价(元)</th>
+            <th class="quantity">数量</th>
+            <th class="amount">实付款(元)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int countnumber = 0;
+            foreach (var order in Model.Orders)
+            {
+                countnumber++;
+                <tr class="order-bd" id="@("item" + order.ItemId)">
+                    <td class="baobei">
+                        <a class="pic" style="float: left;" href="@Url.Action("GoodsDetail", "Home", new { id = order.ItemId,area="" })" title="查看宝贝详情" hidefocus="true" target="_blank">
+                            <img class="pic" src="@order.Thumb" alt="查看宝贝详情">
+                        </a>
+                        <div class="desc">
+                            <p class="baobei-name">
+                                <a class="" href="@Url.Action("GoodsDetail", "Home", new { id = order.ItemId, area = "" })" target="_blank">
+                                    @order.ItemTitle
+                                </a>
+                            </p>
+                            <div title="" class="spec">
+                                @if (order.SkuNames != null)
+                                {
+                                    foreach (var s in order.SkuNames)
+                                    {
+                                        <span>@s.Value</span>
+                                    }
+                                }
+                            </div>
+                            <span class="good-icons">
+                            </span>
+                        </div>
+                    </td>
+                    <td title="@order.Price" class="price">
+                        <span class="special-num">@order.Price</span>
+                    </td>
+                    <td title="@order.Quantity" class="quantity special-num">
+                        <span class="special-num">@order.Quantity</span>
+                    </td>
+                    @if (countnumber <= 1)
+                    {
+                        <td rowspan="@Model.Orders.Count" class="amount">
+                            <p>
+                                <span class="real-price special-num">
+                                    @(Model.Money)
+                                </span>
+                            </p>
+                            <p class="post-type">
+                            </p>
+                            <p>
+                                (含运费：<span class="special-num">@Model.Fare</span>)
+                            </p>
+                        </td>
+                    }
+                </tr>
+            }}
+    </tbody>
+</table>
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+}
+
+
+@section inlinescripts{
+    <script type="text/javascript">
+        $(function() {
+            $(".e-voucher-type").find("a").click(function() {
+                $(this).prop("disabled", true);
+                var url = $(this).attr("href");
+                $.post(url, function(r) {
+                    if (r == 1) {
+                        $(this).prop("disabled", false);
+                        alert("电子卷已发送");
+                    } else {
+                        $(this).prop("disabled", false);
+                        alert("电子卷发送失败");
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+    <script language="javascript">
+        function modifyAddress(e, title, id, submitSuccess) {
+            $.get($(e).attr("href"), { id: id }, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                if ($("#area").val().length <= 0 || $("#city").val().length <= 0) {
+                                    bootbox.alert("请选择区域");
+                                    return false;
+                                }
+
+                                if ($("#j-address").val().length <= 4) {
+                                    bootbox.alert("请输入详细地址");
+                                    return false;
+                                }
+
+                                if ($("#j-realname").val().length <= 0) {
+                                    bootbox.alert("请输入收件人姓名");
+                                    return false;
+                                }
+
+                                if ($("#j-mobile").val().length <= 0) {
+                                    bootbox.alert("请选择收件人联系电话");
+                                    return false;
+                                }
+
+                                $.post("@Url.Action("ModifyAddress", "Trade", new {area = "Admin"})/" + id, $("#j-modify-address-form").serialize(), function(r) {
+                                    if (r.result) {
+                                        submitSuccess();
+                                    } else {
+                                        bootbox.alert(r.error == null ? "修改地址失败，请刷新后重试" : r.error);
+                                    }
+                                });
+
+                                return false;
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".modify-address").click(function() {
+            modifyAddress(this, $(this).text(), $(this).attr("data-id"), function() {
+                bootbox.alert("修改地址成功，页面将会在1秒后刷新");
+
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+
+            });
+            return false;
+        });
+
+        function delay(e, title, id, submitSuccess) {
+            $.get($(e).attr("href"), { id: id }, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                var days = $(".j-delay-days").val();
+                                if (days.length > 0) {
+                                    $.post("/admin/trade/delay/" + id, { days: days }, function(r) {
+                                        if (r.result) {
+                                            submitSuccess();
+                                        } else {
+                                            bootbox.alert(r.error == null ? "操作失败，请刷新后重试" : r.error);
+                                        }
+                                    });
+                                } else {
+                                    bootbox.alert("请输入延长时间");
+                                }
+                                return false;
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".j-delay").click(function() {
+            delay(this, $(this).text(), $(this).attr("data-id"), function() {
+                bootbox.alert("操作成功");
+                window.location.reload();
+            });
+            return false;
+        });
+
+        function modifyPrice(e, title, id, submitSuccess) {
+            $.get($(e).attr("href"), { id: id }, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    className: "dl-modifyprice",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                var price = "";
+                                var num = 1;
+                                var postfee = $("#postfee").val();
+                                $("#tb-modifyprice .J_money").each(function() {
+                                    var name = $(this).val();
+                                    var orderid = $(this).attr("data-orderid");
+                                    if (name != "") {
+                                        if (num > 1 && price.length > 0) {
+                                            price += "#";
+                                        }
+                                        price += orderid + "," + name;
+                                    }
+                                    num++;
+                                });
+                                if (price.length > 0 || postfee.length > 0) {
+                                    $.post("/admin/trade/modifytradeprice/" + id, { price: price, postfee: postfee }, function(r) {
+                                        if (r.result) {
+                                            submitSuccess();
+                                        } else {
+                                            bootbox.alert(r.error == null ? "操作失败，请刷新后重试" : r.error);
+                                        }
+                                    });
+                                } else {
+                                    bootbox.alert("请输入要修改的内容");
+                                }
+
+                                return false;
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".modify-price").click(function() {
+            modifyPrice(this, $(this).text(), $(this).attr("data-id"), function() {
+                parent.bootbox.alert("操作成功");
+                window.location.reload();
+            });
+            return false;
+        });
+
+        function delivery(e, title, id) {
+            $.get($(e).attr("href"), { id: id }, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    className: "dl-modifyprice",
+                    buttons: {
+                        danger:
+                        {
+                            label: "关闭",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".delivery").click(function() {
+            delivery(this, $(this).text(), $(this).attr("data-id"));
+            return false;
+        });
+
+        $(".j-modify-delivery").click(function() {
+            delivery(this, $(this).text(), $(this).attr("data-id"));
+
+            return false;
+        });
+
+        function markTrade(e, title, id, submitSuccess) {
+            $.get($(e).attr("href"), { id: id }, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                var flag = $("input[name='radio-flag']:checked").val();
+                                var remark = $(".j-memo-remark").val();
+                                if (flag.length > 0 || remark.length > 0) {
+                                    $.post("/admin/trade/Mark/" + id, { flag: flag, remark: remark }, function(r) {
+                                        if (r.result) {
+                                            submitSuccess();
+                                        } else {
+                                            bootbox.alert(r.error == null ? "操作失败，请刷新后重试" : r.error);
+                                        }
+                                    });
+                                } else {
+                                    bootbox.alert("请输入标记内容");
+                                }
+
+                                return false;
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".mark-trade").click(function() {
+            markTrade(this, $(this).text(), $(this).attr("data-id"), function() {
+                bootbox.alert("操作成功");
+                window.location.reload();
+            });
+            return false;
+        });
+
+        function modifyMoblie(e, title, id, submitSuccess) {
+            $.get($(e).attr("href"), { id: id }, function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                var moblie = $(".new-moblie").val();
+                                if (moblie != "") {
+                                    $.post("/admin/trade/modifymoblie/" + id, { moblie: moblie }, function(r) {
+                                        if (r.result) {
+                                            submitSuccess();
+                                        } else {
+                                            bootbox.alert(r.error == null ? "操作失败，请刷新后重试" : r.error);
+                                        }
+                                    });
+                                } else {
+                                    bootbox.alert("请输入新的手机号");
+                                }
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".modify-moblie").click(function() {
+            modifyMoblie(this, $(this).text(), $(this).attr("data-id"), function() {
+                bootbox.alert("操作成功");
+                window.location.reload();
+            });
+            return false;
+        });
+        $(".resend-coupon").click(function() {
+            $.post("/admin/trade/resendcoupon/" + @Model.Id, function(r) {
+                if (r.result) {
+                    bootbox.alert("重新发送电子券成功");
+                } else {
+                    bootbox.alert(r.error == null ? "操作失败，请刷新后重试" : r.error);
+                }
+            });
+        });
+
+        function closeTrade(e, title, id, submitSuccess) {
+            $.get($(e).attr("href"), function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: title,
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                var reason = $(".j-close-reason").val();
+                                if (reason != "") {
+                                    $.post("/admin/trade/closetrade/" + id, { reason: reason }, function(r) {
+                                        if (r.result) {
+                                            submitSuccess();
+                                        } else {
+                                            bootbox.alert(r.error == null ? "修改失败，请刷新后重试" : r.error);
+                                        }
+                                    });
+                                } else {
+                                    bootbox.alert("请选择关闭理由");
+                                }
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        }
+
+        $(".close-trade").click(function() {
+            bootbox.confirm("确定要关闭此笔交易吗?", function(result) {
+                if (result) {
+                    closeTrade(this, $(this).text(), $(this).attr("data-id"), function() {
+                        bootbox.alert("操作成功");
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+    </script>
+}

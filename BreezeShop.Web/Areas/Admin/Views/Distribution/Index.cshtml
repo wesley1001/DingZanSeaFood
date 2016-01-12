@@ -1,0 +1,109 @@
+﻿@model List<Yun.Distribution.DistributionLevelDomain>
+@{
+    ViewBag.Title = "佣金比例模板";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">佣金比例模板</li>
+    </ul>
+}
+@section pageheader{
+    <h1>
+        佣金比例模板
+    </h1>
+}
+
+<p>
+    <a class="btn" href="@Url.Action("AddTemplate")">
+        <i class="icon-plus bigger-125"></i>
+        新增佣金模板
+    </a>
+
+    <a class="btn" href="@Url.Action("AddTemplate",new {isDefault = true})">
+        <i class="icon-plus bigger-125"></i>
+        编辑全店统一佣金比例
+    </a>
+</p>
+
+<div class="table-header">
+    佣金模板列表
+</div>
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+        <div class="dataTables_wrapper">
+            @foreach (var template in Model.GroupBy(e => e.TemplateId))
+            {
+                var i = 1;
+                var first = template.First();
+                <table class="table table-bordered dataTable">
+                    <thead>
+                    <tr>
+                        <td colspan="2">
+                            @(first.TemplateName.IsEmpty() ? "全店统一佣金比例-系统" : first.TemplateName)<span class="pull-right">
+                                    <a type="button" href="@Url.Action("AddTemplate", new { id = first.TemplateId, isDefault = first.TemplateId==0?"True":"" })" class="btn btn-minier btn-info">
+                                        修改
+                                    </a>
+                                    <button type="button" class="btn btn-minier btn-info delete-template" data-id="@first.TemplateId">
+                                        删除
+                                    </button>
+                                </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>佣金等级</th>
+                        <th>佣金比例</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var t in template)
+                    {
+                        <tr>
+                            <td>第@(i)级</td>
+                            <td>@(t.Proportion)%</td>
+                        </tr>
+                        
+                        i++;
+                    }
+                    </tbody>
+</table> 
+                
+                <div class="space-6"></div>
+           }
+</div>
+    </div>
+}
+
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/Content/js/bootbox.js")"></script>
+}
+
+@section inlinescripts{
+
+    <script type="text/javascript">
+        $(".delete-template").click(function () {
+            var id = $(this).attr("data-id");
+            bootbox.confirm("确定要删除此条数据吗?", function (result) {
+                if (result) {
+                    $.post("@Url.Action("DeleteTemplate")/" + id, function (r) {
+                        if (r) {
+                            bootbox.alert("操作成功，页面将会自动刷新");
+                            setTimeout(function() {
+                                window.location.reload();
+                            } , 1000);
+                        } else {
+                            bootbox.alert("删除失败，请刷新后重试");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

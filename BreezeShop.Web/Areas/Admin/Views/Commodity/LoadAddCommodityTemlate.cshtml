@@ -1,0 +1,707 @@
+﻿@using Utilities.DataTypes.ExtensionMethods
+@using Yun.Item
+
+@{
+    var loadedItem = ViewData["LoadedItem"] as GoodsDetail;
+}
+
+
+<style type="text/css">
+    .j-expired-time .help-block{display: inline;}
+</style>
+
+<div class="hr hr-dotted"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Product">商品名称：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="clearfix">
+            @Html.TextBox("Product", loadedItem == null ? "" : loadedItem.ItemTitle, new { @class = "input-xxlarge", maxlength = 60 })
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Feature">商品亮点：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="clearfix">
+            @Html.TextArea("Feature", loadedItem == null ? "" : loadedItem.SubTitle, 5, 10, new { @class = "input-xxlarge" })
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+
+<div class="form-group customsku-select-hidden">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Price">价格：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="clearfix">
+            @Html.TextBox("Price", loadedItem == null ? "" : loadedItem.Price.ToString("f2"), new { @class = "input-medium" })
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MarketPrice">原价：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="clearfix">
+            @Html.TextBox("MarketPrice", loadedItem == null ? "" : loadedItem.MarketPrice.ToString("f2"), new { @class = "input-medium" })
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group fenxiao-opt-hidden customsku-select-hidden">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right">分销价范围：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="form-inline">
+            @(Html.TextBox("MinFxPrice", ViewData["MinFxPrice"], new { @class = "input-small" })) -
+            @(Html.TextBox("MaxFxPrice", ViewData["MaxFxPrice"], new { @class = "input-small" }))
+            <span class="help-inline">最小价格至最大价格</span>
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right">商品规则：</label>
+    <div class="col-xs-12 col-sm-9">
+        <div id="J-Custom-Props" data-edit="@ViewData["SpecNames"]">
+            <div>
+                <button class="btn btn-info btn-sm add">添加销售属性</button>
+                <span class="help-inline text-muted">销售属性总数最多4组,组合不要超过600组</span>
+            </div>
+        </div>
+        <div id="J-CustomProps-Table">
+
+        </div>
+        @Html.Hidden("EditSkuData", ViewData["SkuValues"])
+    </div>
+</div>
+
+
+<div class="form-group customsku-select-hidden">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MaxStore">库存：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="clearfix">
+            @Html.TextBox("MaxStore", loadedItem == null ? "" : loadedItem.Stock.ToString(), new { @class = "input-small", maxlength = 6 })
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group">
+    <label class="col-sm-2 control-label no-padding-right" for="SeoKeywords">每账户限购：</label>
+    <div class="col-sm-10">
+        @Html.TextBox("BuyLimit", loadedItem == null ? "" : loadedItem.BuyLimit.ToString(), new {@class = "col-xs-10 col-sm-1", placeholder = "件"})
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group">
+    <label class="col-sm-2 control-label no-padding-right" for="SortOrder">排序：</label>
+    <div class="col-sm-10">
+        @Html.TextBox("SortOrder", loadedItem == null ? "" : loadedItem.SortOrder.ToString(), new { @class = "col-xs-10 col-sm-1", placeholder = "越大越靠前" })
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group customsku-select-hidden">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="OuterId">商品编码：</label>
+    <div class="col-xs-12 col-sm-10">
+        <div class="clearfix">
+            @Html.TextBox("OuterId", loadedItem == null ? "" : loadedItem.ItemCode, new { @class = "input-large" })
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Images">商品图片：</label>
+    <div class="col-xs-12 col-sm-9">
+        <div id="dropzone">
+            <div class="dropzone" id="DropZoneContent">
+                <div class="fallback">
+                    <input name="file" type="file" multiple="" />
+                </div>
+            </div>
+            <input type="hidden" name="Thumbs" id="Thumbs" value="@(loadedItem == null ? "" : loadedItem.Pictures)" data-count="@(loadedItem != null ? (loadedItem.Pictures.Split(new []{","}, StringSplitOptions.RemoveEmptyEntries).Length).ToString() : "0")" />
+        </div>
+        <p class="help-block">上传图片大小不能超过2MB</p>
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="hr hr-dotted"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MaxStore">商品详情：</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="clearfix">
+            @Html.TextArea("Detail", loadedItem == null ? "" : loadedItem.ItemDetail)
+        </div>
+    </div>
+</div>
+<div class="hr hr-dotted"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="ShopCategorys">在店铺中分类：</label>
+    <div class="col-xs-12 col-sm-8">
+        <div class="shop-cat-list" id="J-Shop-Cats-List" data-id="@(loadedItem == null ? "" : loadedItem.ItemShopCats.Select(e => e.Id).ToArray().ContactString(","))">
+        </div>
+    </div>
+</div>
+
+<div class="hr hr-dotted"></div>
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Fare">提取方式：</label>
+    <div class="col-xs-12 col-sm-10" id="J-FareTemplate" data-coupon="@(loadedItem == null ? "" : loadedItem.CouponTemplateId.ToString())" data-express="@(loadedItem == null ? "" : loadedItem.FreightTemplateId.ToString())">
+    </div>
+</div>
+<div class="space-2"></div>
+<div class="J-coupon-hide hide">
+    <div class="form-group j-expired-time">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">电子券有效期设置：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="form-inline">
+                <label class="inline">
+                    <input name="ExpiredType" type="radio" class="ace" value="0" @(loadedItem == null ? "" : (loadedItem.ExpireRule == 0 ? "checked" : "")) />
+                    <span class="lbl"> 购买成功日&nbsp;至&nbsp;</span>
+                </label>
+                <input class="date-picker" id="ExpiredTime" type="text" name="ExpiredTime" data-date-format="yyyy-mm-dd" readonly="readonly" value="@(loadedItem == null || loadedItem.ExpireTime.IsEmpty() || loadedItem.ExpireRule != 0 ? "" : loadedItem.ExpireTime)">
+            </div>
+            <div class="space-4"></div>
+            <div class="form-inline">
+                <label class="inline">
+                    <input name="ExpiredType" type="radio" class="ace" value="1" @(loadedItem == null ? "" : (loadedItem.ExpireRule == 1 ? "checked" : "")) />
+                    <span class="lbl"></span>
+                </label>
+                <input class="date-picker input-small" type="text" name="ExpiredStartTime" readonly="readonly" id="ExpiredStartTime" data-date-format="yyyy-mm-dd" value="@(loadedItem == null || loadedItem.ExpireStart.IsEmpty() || loadedItem.ExpireRule != 1 ? "" : loadedItem.ExpireStart)" />
+                至
+                <input class="date-picker input-small" type="text" name="ExpiredLastTime" readonly="readonly" id="ExpiredLastTime" data-date-format="yyyy-mm-dd" value="@(loadedItem == null || loadedItem.ExpireTime.IsEmpty() || loadedItem.ExpireRule != 1 ? "" : loadedItem.ExpireTime)" />
+            </div>
+            <div class="space-4"></div>
+            <div class="form-inline">
+                <label class="inline">
+                    <input name="ExpiredType" type="radio" class="ace" value="2" @(loadedItem == null ? "" : (loadedItem.ExpireRule == 2 ? "checked" : "")) />
+                    <span class="lbl"> 购买成功 </span>
+                </label>
+                <input class="input-mini select2" type="text" name="DuringDay" value="@(loadedItem == null || loadedItem.ExpireDays == 0 || loadedItem.ExpireRule != 2 ? "" : loadedItem.ExpireDays.ToString())" />
+                天内有效
+            </div>
+            <div class="space-6"></div>
+        </div>
+    </div>
+    <div class="space-2"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MsgTitle">短信发送简称：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">
+                <input type="text" placeholder="短信发送简称，实际发送短信还会加上属性名，不要超过20个字" class="required input-xxlarge" maxlength="20" name="CouponMessage" value="@(loadedItem == null ? "" : loadedItem.MsgTitle)" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="space-2"></div>
+
+<div class="hr hr-dotted"></div>
+<div class="space-2"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">开始时间：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div>
+                <label>
+                    <input name="PostType" value="1" type="radio" class="ace" checked="checked" @(loadedItem == null ? "" : (loadedItem.ItemState == 1 ? "checked" : "")) />
+                    <span class="lbl"> 立即</span>
+                </label>
+            </div>
+            <div class="space-2"></div>
+            <div class="form-inline">
+                <label>
+                    <input name="PostType" value="3" type="radio" class="ace" @(loadedItem == null ? "" : (loadedItem.IsTimed ? "checked" : "")) />
+                    <span class="lbl"> 设定</span>
+                </label>
+                <div class="input-group hide">
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                    <input class="form-control date-picker" id="PostTime" type="text" name="PostTime" data-date-format="yyyy-mm-dd hh:ii" readonly="readonly" value="@(loadedItem == null ? "" : (loadedItem.IsTimed?loadedItem.OnShelfTime.ToString():""))">
+                </div>
+            </div>
+            <div class="space-2"></div>
+            <div>
+                <label>
+                    <input name="PostType" value="2" type="radio" class="ace" @(loadedItem == null ? "" : (loadedItem.ItemState == 2 ? "checked" : "")) />
+                    <span class="lbl"> 放入仓库</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="space-2"></div>
+
+<div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="button" id="J-Submit-All">
+                <i class="fa fa-ok bigger-110"></i>
+                提交
+            </button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        KindEditor.create('#Detail', {
+            width: '100%',
+            height: "360px",
+            uploadJson: '@Url.Action("Upload", "NotLogin",new {area=""})',
+            resizeType: 1,
+            afterBlur: function () { this.sync(); },
+            htmlTags: {
+                font: ['color', 'size', 'face', '.background-color'],
+                span: [
+                        '.color', '.background-color', '.font-size', '.background',
+                        '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.line-height'
+                ],
+                table: [
+                        'border', 'cellspacing', 'cellpadding', 'width', 'height', 'align', 'bordercolor',
+                        '.padding', '.margin', '.border', 'bgcolor', '.text-align', '.color', '.background-color',
+                        '.font-size', '.font-weight', '.font-style', '.text-decoration', '.background',
+                        '.width', '.height', '.border-collapse'
+                ],
+                'td,th': [
+                        'align', 'valign', 'width', 'height', 'colspan', 'rowspan', 'bgcolor',
+                        '.text-align', '.color', '.background-color', '.font-size', '.font-weight',
+                        '.font-style', '.text-decoration', '.vertical-align', '.background', '.border'
+                ],
+                a: ['href', 'target', 'name'],
+                embed: ['src', 'width', 'height', 'type', 'loop', 'autostart', 'quality', '.width', '.height', 'align', 'allowscriptaccess'],
+                img: ['src', 'width', 'height', 'border', 'alt', 'title', 'align', '.width', '.height', '.border'],
+                'p,ol,ul,li,blockquote,h1,h2,h3,h4,h5,h6': [
+                        'align', '.text-align', '.color', '.background-color', '.font-size', '.background',
+                        '.font-weight', '.font-style', '.text-decoration', '.vertical-align', '.text-indent', '.margin-left'
+                ],
+                pre: ['class'],
+                hr: ['class', '.page-break-after'],
+                'br,tbody,tr,strong,b,sub,sup,em,i,u,strike,s,del': []
+            }
+        });
+
+
+        $.get("/admin/commodity/expressfare", { r: Math.random(), express: $("#J-FareTemplate").data("express") }, function (html) {
+            $("#J-FareTemplate").prepend(html);
+            $.get("/admin/commodity/couponfare", { r: Math.random(), coupon: $("#J-FareTemplate").data("coupon") }, function (rhtml) {
+                $("#J-FareTemplate").append(rhtml);
+                $("input[name='CouponFareType']").change(function () {
+                    $(".J-coupon-hide").toggleClass("hide", !$(this).prop('checked'));
+                });
+                $("input[name='FareType']").change(function () {
+                    $(".J-express-hide").toggleClass("hide", !$(this).prop('checked'));
+                });
+                @if (loadedItem != null)
+                {
+                    <text>
+                    $(".J-coupon-hide").toggleClass("hide", !$("input[name='CouponFareType']").prop('checked'));
+                    $(".J-express-hide").toggleClass("hide", !$("input[name='FareType']").prop('checked'));
+                    </text>
+                }
+            });
+        });
+
+    $(".J-custom-btn").click(function () {
+        var parent = $(this).parent();
+        parent.find("* > select[name='PropValue'], .J-custom-btn").addClass("hide");
+        parent.find(".J-custom-cancel-btn, input[name='CustomPropValue']").removeClass("hide");
+    });
+
+    $(".J-custom-cancel-btn").click(function () {
+        var parent = $(this).parent();
+        parent.find("* > select[name='PropValue'], .J-custom-btn").removeClass("hide");
+        parent.find(".J-custom-cancel-btn").addClass("hide");
+        parent.find("input[name='CustomPropValue']").addClass("hide").val("");
+    });
+
+    var pCount = 0;
+
+    function createCustomSkuTable() {
+        $.post("/admin/commodity/createskutable", $("#J-ItemForm").serialize(), function (skuhtml) {
+            $("#J-CustomProps-Table").empty();
+            if (skuhtml.indexOf('false') < 0) {
+                $("#J-CustomProps-Table").append(skuhtml);
+                $(".sku-price").off().change(function () {
+                    var n = new Array();
+                    $(".sku-price").each(function () {
+                        var p = parseFloat($(this).val());
+                        if (p > 0) {
+                            n.push(p);
+                        }
+                    });
+                    if (n.length > 0) {
+                        $("#Price").val(Math.min.apply(null, n));
+                    }
+                });
+            }
+            $(".customsku-select-hidden").toggleClass("hide", $("#J-CustomProps-Table .table-responsive").length > 0);
+        });
+    }
+
+    function bindPropsDelete() {
+        $("#J-Custom-Props .delete").off().click(function () {
+            var delBtn = $(this);
+            bootbox.confirm("您确定要删除该销售属性吗？", function (r) {
+                if (r) {
+                    pCount--;
+                    delBtn.closest("fieldset").remove();
+                    $("#J-Custom-Props .add").attr("disabled", false);
+                    createCustomSkuTable();
+                }
+            });
+            return false;
+        });
+    }
+
+    function bindPropsChange() {
+        $("#J-Custom-Props .input-medium").off().change(function () {
+            var els = $("." + $(this).attr("data-map"));
+            if ($(this).val() != "" && els.length > 0) {
+                $(els).text($(this).val());
+            } else {
+                createCustomSkuTable();
+            }
+        });
+    }
+
+    $("#J-Custom-Props .add").off().click(function () {
+        var btn = $(this);
+        $.get("/admin/commodity/custompropteplate", { r: Math.random() }, function (html) {
+            if (pCount < 4) {
+                if (pCount >= 3) {
+                    btn.attr("disabled", true);
+                }
+                pCount++;
+                $("#J-Custom-Props > div").before(html);
+                bindPropsDelete();
+                bindPropsChange();
+            } else {
+                bootbox.alert("销售属性总数最多4组");
+            }
+        });
+        return false;
+    });
+
+    $('#PostTime').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+
+    $("input[name='PostType']").change(function () {
+        $("#PostTime").closest(".form-inline").find(".input-group").toggleClass("hide", parseInt($(this).val()) != 3);
+    });
+
+    function sortImages(index, position) {
+        if ($("#Thumbs").val().length > 0) {
+            var list = $("#Thumbs").val().split(',');
+            list.splice(list.length - 1, 1);
+            var t = "";
+            if (position == "left") {
+                t = list[index - 1];
+                list[index - 1] = list[index];
+                list[index] = t;
+            } else {
+                t = list[index + 1];
+                list[index + 1] = list[index];
+                list[index] = t;
+            }
+            t = "";
+            for (var i = 0; i < list.length; i++) {
+                t += list[i] + ",";
+            }
+            $("#Thumbs").val(t);
+        }
+    }
+
+    function moveThumbs() {
+        $(".dz-position-message .pull-left").off().on("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var i = $(this).closest(".dz-preview").index() - 1;
+            if (i > 0) {
+                $(".dz-preview:eq(" + i + ")").insertBefore(".dz-preview:eq(" + (i - 1) + ")");
+                sortImages(i, "left");
+            }
+        });
+        $(".dz-position-message .pull-right").off().on("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var aCount = $(".dz-preview").length;
+            var i = $(this).closest(".dz-preview").index() - 1;
+            if (i >= 0 && i < aCount - 1) {
+                $(".dz-preview:eq(" + i + ")").insertAfter(".dz-preview:eq(" + (i + 1) + ")");
+                sortImages(i, "right");
+            }
+        });
+    }
+
+    Dropzone.options.DropZoneContent = {
+        url: "@Url.Action("UpdateImages", "NotLogin", new { area = "" })",
+        uploadMultiple: true,
+        parallelUploads: 1,
+        maxFiles: 1000 - parseInt($("#Thumbs").data("count")),
+        paramName: "file", // The name that will be used to transfer the file
+        addRemoveLinks: true,
+        maxFilesize: 2, // MB
+        acceptedFiles: "image/*",
+        dictDefaultMessage:
+            '<span class="bigger-150 bolder"><i class="fa fa-caret-right red"></i>直接拖入文件</span> 进行上传\
+				<span class="smaller-80 grey">(或者点击后选择文件)</span> <br /> \
+				<i class="upload-icon ace-icon fa fa-cloud-upload blue fa-3x"></i>',
+        dictResponseError: '上传文件错误!',
+        dictMaxFilesExceeded: "本类目下您最多可以上传1000张图片",
+        dictFileTooBig: "上传图片最大不能超过2M",
+        dictRemoveFile: "删除文件",
+        dictInvalidInputType: "请勿上传非图片的文件",
+        dictCancelUpload: "取消上传",
+
+        //change the previewTemplate to use Bootstrap progress bars
+        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n <div class=\"dz-position-message clearfix\"><button class=\"btn btn-minier pull-left\" type=\"button\"><i class=\"bigger-110 fa fa-arrow-left\"></i>左移</button> <button class=\"btn btn-minier  pull-right\" type=\"button\">右移<i class=\"bigger-110 fa fa-arrow-right\"></i></button></div>\n</div>",
+        init: function () {
+            this.on("success", function (file, responseText) {
+                var str = $("#Thumbs").val() + file.name + "^" + responseText + ",";
+                $("#Thumbs").val(str);
+                moveThumbs();
+            });
+            this.on("removedfile", function (file) {
+                if ($(".dz-preview").length < 5) {
+                    $.post("/admin/commodity/deleteitemimage", { Thumbs: $("#Thumbs").val(), DelFile: file.name }, function (r) {
+                        $("#Thumbs").val(r);
+                    });
+                }
+            });
+        }
+    };
+
+    var myDropzone = new Dropzone("#DropZoneContent");
+
+    function initSuitShopData() {
+        $("#J-EditSuitShop").toggleClass("hide", $("#SuitShop").val().length <= 3);
+        if ($("#SuitShop").val().length > 3) {
+            $.post("/admin/commodity/relateshopsresult", { json: $("#SuitShop").val() }, function (h) {
+                if (h.length > 0) {
+                    $("#J-bendishop-modal-table .modal-content").empty().append(h).find("a").click(function () {
+                        $(this).closest("tr").remove();
+                        var id = $(this).data("id");
+                        var shopJson = $("#SuitShop").val();
+                        if (shopJson.length > 0) {
+                            var v = JSON.parse(shopJson);
+                            var r = v;
+                            for (var i = 0; i < v.length; i++) {
+                                if (v[i].Key == id) {
+                                    r.splice(i, 1);
+                                }
+                            }
+                            $("#SuitShop").val(JSON.stringify(r));
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    $("#J-AddSuitShop").click(function () {
+        $.get("/admin/commodity/findpartner", function (html) {
+            bootbox.dialog({
+                message: html,
+                title: "请选择需要关联的本地商户",
+                buttons: {
+                    success: {
+                        label: "确认",
+                        className: "btn-success",
+                        callback: function () { initSuitShopData(); }
+                    },
+                    danger:
+                    {
+                        label: "取消",
+                        className: "btn-danger",
+                        callback: function () { }
+                    }
+                }
+            });
+        });
+    });
+
+    function changeSaleType(element) {
+        var preV = $(element).data("type");
+        $("#J-ItemForm").removeClass(preV).addClass($(element).val());
+        $(element).data("type", $(element).val());
+    }
+
+    changeSaleType("#GoodsType");
+
+    $("#GoodsType").change(function () {
+        changeSaleType(this);
+    });
+
+    function formValidate() {
+        $('#J-ItemForm').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: ".not-required,.hide *",
+            rules: {
+                Product: {
+                    required: true,
+                    maxlength: 60
+                },
+                Price: {
+                    required: true,
+                    number: true,
+                    min: 0.01,
+                    max: 99999999.99
+                },
+                MaxStore: {
+                    required: true,
+                    max: 999999,
+                    min: 0
+                },
+                Thumbs: {
+                    required: true
+                },
+                FareTemplate: 'required',
+                PropValue: 'required',
+                CouponTemplate: 'required'
+            },
+
+            messages: {
+                FareTemplate: {
+                    required: "请选择快递模板.",
+                },
+                CouponTemplate: {
+                    required: "请选择电子券模板.",
+                },
+                ExpiredStartTime: {
+                    required: "请选择起始时间.",
+                },
+                ExpiredLastTime: {
+                    required: "请选择过期时间.",
+                },
+                CouponMessage: {
+                    required: "请输入电子券简称.",
+                    maxlength: "电子券简称最多不能超过20个字符."
+                },
+                Product: {
+                    required: "请输入商品标题.",
+                    maxlength: "商品标题最多不能超过60个字符."
+                },
+                Price: {
+                    required: "请输入商品价格.",
+                    number: "请输入正确的商品价格."
+                },
+                Detail: {
+                    required: "请输入商品详情."
+                },
+                Thumbs: "请至少上传一张产品图片",
+                MaxStore: {
+                    required: "请输入库存.",
+                    min: "库存至少有一件",
+                    max: "库存最多不能超过999999"
+                },
+                FareType: "请选择提货方式",
+                DuringDay: {
+                    required: "请输入有效期.",
+                }
+            },
+
+            highlight: function (e) {
+                $(e).closest('.form-group,.form-inline').removeClass('has-info').addClass('has-error');
+            },
+
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');
+                $(e).remove();
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.is(':checkbox') || element.is(':radio')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if (controls.find(':checkbox, :radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                } else if (element.is('.select2')) {
+                    element.closest('.form-inline').append(error);
+                    //error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                } else if (element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                } else error.insertAfter(element);
+            },
+
+            submitHandler: function (form) {
+            },
+            invalidHandler: function (form) {
+            }
+        });
+    }
+
+    setTimeout(formValidate, 2000);
+
+    $.get("/admin/commodity/categoriesinshop", { ids: $("#J-Shop-Cats-List").data("id") }, function (catHtml) {
+        $("#J-Shop-Cats-List").empty().append(catHtml);
+    });
+
+    $('#ExpiredTime,#ExpiredStartTime,#ExpiredLastTime').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+
+    $("input[name='ExpiredType']:checked").closest(".form-inline").find("input[type='text']").addClass("required");
+
+    $("input[name='ExpiredType']").click(function () {
+        $(".j-expired-time input[type='text']").removeClass("required");
+        $(this).closest(".form-inline").find("input[type='text']").addClass("required");
+    });
+
+    @if (loadedItem!=null)
+    {
+    <text>
+        $.post("/admin/commodity/createeditthumbs", { Thumbs: $("#Thumbs").val() }, function (html) {
+        if (html.length > 0) {
+            $("#DropZoneContent .dz-default").addClass("hide").after(html);
+            moveThumbs();
+            $("#DropZoneContent .dz-remove").click(function () {
+                if ($(".dz-preview").length > 0) {
+                    var wp = $(this).closest(".dz-preview");
+                    $.post("/admin/commodity/deleteitemimage", { Thumbs: $("#Thumbs").val(), DelFile: wp.find("img").attr("alt") }, function (r) {
+                        myDropzone.options.maxFiles = myDropzone.options.maxFiles + 1;
+                        $("#Thumbs").val(r);
+                        wp.remove();
+                        if (r.length <= 0) {
+                            $("#DropZoneContent .dz-default").removeClass("hide")
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+
+    if ($("#J-Custom-Props").data("edit").length > 0) {
+        $.post("/admin/commodity/custompropteplate", { r: Math.random(), edit: $("#J-Custom-Props").attr("data-edit") }, function (html) {
+            $("#J-Custom-Props > div").before(html);
+
+            pCount = $("#J-Custom-Props fieldset").length;
+            if (pCount >= 3) {
+                $("#J-Custom-Props .add").attr("disabled", true);
+            }
+
+            bindPropsDelete();
+            bindPropsChange();
+
+            createCustomSkuTable();
+            $("#EditSkuData").val("");
+        });
+    }
+
+    
+    </text>
+    }
+
+    </script>

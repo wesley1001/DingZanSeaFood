@@ -1,0 +1,33 @@
+﻿@model List<Yun.Archive.ArticleCategory>
+@{
+
+    var ids = ViewData["ids"]!=null?ViewData["ids"].ToString():"";
+    var s = "";
+}
+
+<select name="categoryId" data-id="@ids">
+    @CategoryHelper(0, ids, s)
+</select>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+@helper CategoryHelper(long parentId, string ids, string s)
+{
+
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+
+    s = s + "---";
+    foreach (var dr in drs)
+    {
+
+        <option value="@dr.Id" @(ids.Contains(dr.Id.ToString()) ? "selected" : "")>@Html.Raw(s)@dr.Name</option>
+        @CategoryHelper(dr.Id, ids, s)
+    }
+}
+
+

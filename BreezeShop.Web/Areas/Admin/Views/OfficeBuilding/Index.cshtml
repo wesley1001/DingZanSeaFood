@@ -1,0 +1,71 @@
+﻿@using BreezeShop.Web.Helper
+@model BreezeShop.Core.PageModel<Yun.Site.CityDomain>
+
+@{
+    ViewBag.Title = "写字楼列表";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">写字楼设置</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        写字楼设置
+    </h1>
+}
+
+<p>
+    <a class="btn" href="@Url.Action("Add")">
+        <i class="icon-plus bigger-125"></i>
+        新增写字楼
+    </a>
+</p>
+<div class="table-header">
+    写字楼
+</div>
+
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>写字楼</th>
+                    <th>具体位置</th>
+                    <th>状态</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Items)
+                {
+                    <tr>
+                        <td>@r.Id</td>
+                        <td>@r.Name</td>
+                        <td>@r.Ext</td>
+                        <td>@r.State</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-xs btn-info" href="@Url.Action("Update", new { id = r.Id})">
+                                    <i class="icon-edit bigger-120">编辑</i>
+                                </a>
+                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("Delete", new { id = r.Id })">
+                                    <i class="icon-trash bigger-120">删除</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 20)
+    </div>
+</div>

@@ -1,0 +1,302 @@
+﻿@{
+    ViewBag.Title = "添加图文消息回复";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var ruleDetail = ViewData["ruleDetail"] as Yun.WeiXin.RuleDetail;
+    var ruleReplies = ViewData["ruleReplies"] as List<Yun.WeiXin.ImageTextReplyModel>;
+    var hasReply = ruleReplies != null && ruleReplies.Any();
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">添加图文消息回复</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        添加图文消息回复
+    </h1>
+}
+
+@section headerbeforeace{
+    <link rel="stylesheet" href="@Url.Content("~/areas/admin/Content/css/dropzone.css")"/>
+    <style>
+.j-DropZoneContent{    min-height: 200px; padding: 0; overflow: hidden;}
+.reply .aside .card{position:relative;}
+.reply .aside .panel-body{min-height:50px;}
+.reply .aside .arrow-left,.reply .aside .arrow-left:after{width: 0; height: 0; border-style: solid; border-width: 8px 10px 8px 0; border-color: transparent #d1d1d1 transparent transparent; position: absolute; left: -10px; top: 15px;}
+.reply .aside .arrow-left:after{content: ""; border-right-color: #fff; left: 1px; top: -8px;}
+.reply .aside .img{height:92px; text-align:center; position:relative; overflow:hidden; padding:0;}
+.reply .aside .img img{display:inline-block; max-width:100%; vertical-align:middle; margin:0; border:0;}
+.reply .aside .img h3{position:absolute; bottom:0; left:0; width:100%; text-align:center; z-index:2; color:#fff; background:rgba(51,51,51,0.5); padding:5px 15px; font-size:14px; line-height:1.5em; margin:0; cursor:pointer;}
+.reply .aside .img>span{display:block; border:1px solid #eee; height:100%; text-align:center; line-height:92px; cursor:pointer;}
+.reply .aside .img>span i{color:green;}
+.reply .panel-group .panel:first-child{margin:0; border-bottom-left-radius:0; border-bottom-right-radius:0;}
+.reply .panel-group .panel:first-child .img{overflow:hidden; position:relative; height:160px; background-color:#ececec; color:#c0c0c0; text-align:center; line-height:132px;}
+.reply .panel-group .panel:first-child .img img{max-height:160px; max-width:100%; vertical-align:middle;}
+.reply .panel-group .panel:first-child .img span{display:block; position:absolute; bottom:0; left:0; height:28px; line-height:28px; width:100%; background:rgba(0,0,0,0.7); color:#fff; padding:0 10px;}
+.reply .panel-group .panel+.panel{border-radius:0; margin-top:0; border-top:0;}
+.reply .panel-group .panel+.panel .panel-body{height:104px; padding-right:105px; position:relative; overflow:hidden;}
+.reply .panel-group .panel+.panel .img{float:right; position:absolute; right:15px; top:12px; height:80px; width:80px; background-color:#ececec; color:#c0c0c0; line-height:80px; text-align:center; overflow:hidden;}
+.reply .panel-group .panel+.panel .img img{max-width:80px; max-height:80px; vertical-align:middle; border:0;}
+.reply .panel-group .panel+.panel .text h4{word-break:break-all; font-size:14px; line-height:1.5em; height:54px; overflow:hidden; text-overflow:ellipsis;}
+.reply .panel-group .panel-body .mask{position:absolute; width:100%; height:100%; line-height:104px; left:0; top:0; z-index:999; background-color:rgba(229, 229, 229, 0.85) !important; text-align:center; display:none;}
+.reply .panel-group .panel:first-child .panel-body .mask{line-height:160px;}
+.reply .panel-group .panel-body .mask a{color:#333; display:inline-block; margin:0 3px; cursor:pointer;}
+.reply .panel-group .panel-body:hover .mask{display:block;}
+.reply .panel-group .panel-body .default{ font-style:normal; font-size:16px;}
+.reply .panel-group .panel:last-child{margin-bottom:20px; border-bottom-left-radius:4px; border-bottom-right-radius:4px;}
+.reply .panel-group .panel:last-child .panel-body{padding:15px;}
+.reply .panel-group .panel-body .add{border:3px dotted #b8b8b8; height:72px; line-height:72px; text-align:center; cursor:pointer; border-radius:5px;}
+.reply .panel-group img{position:absolute; left:0; top:0; display:inline-block; width:100%; height:100%;}
+.reply .panel-group{clear: both;margin-bottom: 20px; position: relative;}
+.reply .panel-group .del,.panel-group .no{position: absolute; top:-10px; width:20px; height:20px; color:#fff; background:rgba(0,0,0,0.3); text-align:center; line-height:20px; cursor:pointer; border-radius:100%;}
+.reply .panel-group .del{right:-10px;}
+.reply .panel-group .no{left:-10px;background: #3071a9}
+.reply .panel-group .del:hover{background:rgba(0,0,0,0.7);}
+.reply .panel-group .panel:last-child{margin-bottom: 0;}
+    </style>
+}
+
+@using (Html.BeginForm("AddNewsReply", "WeChat", new { id = ViewContext.RouteData.Values["id"] }, FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", id = "j-submit-form" }))
+{
+    @Html.Partial("_WeChatReplyRule", ruleDetail)
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="panel panel-default clearfix">
+                <div class="panel-heading">
+                    回复内容
+                </div>
+                <div class="panel-body">
+                    <div class="row clearfix reply">
+                        <div class="col-xs-6 col-sm-3 col-md-3">
+                            <div class="panel-group" id="j-left-thumb">
+                                <div class="panel panel-default item">
+                                    <div class="panel-body">
+                                        <div class="img">
+                                            <i class="default">封面图片</i>
+                                            <img src="@(hasReply?ruleReplies[0].Thumb:"")" />
+                                            <span class="text-left j-text">@(hasReply ? ruleReplies[0].Title : "")</span>
+                                            <div class="mask">
+                                                <a href="javascript:;" class="edit"><i class="fa fa-edit"></i>编辑</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (hasReply && ruleReplies.Count>1)
+                                {
+                                    foreach (var r in ruleReplies.Skip(1))
+                                    {
+                                        <div class="panel panel-default item">
+                                            <div class="panel-body">
+                                                <div class="text">
+                                                    <h4 class="j-text">@r.Title</h4>
+                                                </div>
+                                                <div class="img">
+                                                    <img src="@r.Thumb"/>
+                                                    <i class="default">缩略图</i>
+                                                </div>
+                                                <div class="mask">
+                                                    <a href="javascript:;" class="edit"><i class="fa fa-edit"></i> 编辑</a>
+                                                    <a href="javascript:;" class="delete"><i class="fa fa-times"></i> 删除</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="add" id="j-add-item"><span><i class="fa fa-plus"></i> 添加</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-6 col-sm-9 col-md-9 aside" id="edit-container">
+                            <div id="j-space" style="margin-top: 20px;"></div>
+                            <div id="j-card-content">
+                                @Html.Action("NewReplyAside", new { index = 0, model = ruleReplies })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit">
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}
+
+<script type="text/template" id="j-reply-left-content">
+    <div class="panel panel-default item">
+        <div class="panel-body">
+            <div class="text">
+                <h4 class="j-text"></h4>
+            </div>
+            <div class="img">
+                <img src="">
+                <i class="default">缩略图</i>
+            </div>
+            <div class="mask">
+                <a href="javascript:;" class="edit"><i class="fa fa-edit"></i> 编辑</a>
+                <a href="javascript:;" class="delete"><i class="fa fa-times"></i> 删除</a>
+            </div>
+        </div>
+    </div>
+</script>
+
+@section specificscripts
+    {
+        <script src="@Url.Content("~/Areas/admin/Content/js/bootbox.js")"></script>
+        <script src="@Url.Content("~/areas/admin/Content/js/dropzone.js")"></script>
+}
+
+@section inlinescripts{
+    <script>
+        var totalItem = @(hasReply ? ruleReplies.Count : 1);
+        var activeIndex = 0;
+
+        var triggerTitle = function() {
+            $("input[name='title']").off().change(function() {
+                $("#j-left-thumb .item:eq(" + activeIndex + ") .j-text").text($(this).val());
+            });
+        };
+
+        var triggerActiveItem = function() {
+            var top = 0;
+
+            if (activeIndex > 0) {
+                top = top + (activeIndex + 1) * 105;
+            } else {
+                top = 20;
+            }
+
+            $('#j-space').css('marginTop', top);
+            $("html,body").animate({ scrollTop: top + 500 }, (activeIndex > 0 && activeIndex + 1 == totalItem) ? 500 : 0);
+
+            $("#j-card-content .card").addClass("hidden").eq(activeIndex).removeClass("hidden");
+        };
+
+        var editActiveItem = function() {
+            $(".edit").off().click(function() {
+                var item = $(this).closest(".item");
+                var i = item.index();
+
+                if (i == activeIndex) {
+                    return;
+                }
+
+                $("#j-card-content .card").addClass("hidden").eq(i);
+
+                activeIndex = i;
+                triggerActiveItem();
+            });
+        }
+
+        var deleteActiveItem = function() {
+            $(".delete").off().click(function() {
+                var item = $(this).closest(".item");
+                var i = item.index();
+
+                $("#j-card-content .card").eq(i).remove();
+                item.remove();
+
+                totalItem--;
+                activeIndex = 0;
+
+                triggerActiveItem();
+            });
+        }
+
+        editActiveItem();
+        triggerTitle();
+
+        $("#j-submit-form").submit(function() {
+
+            var errorCode = 0;
+
+            //检测是否有缺失条件
+            $("#j-card-content .card").each(function(i) {
+
+                //检测标题
+                var title = $("input[name='title']", this).val();
+                var img = $("input[name='thumbs']", this).val();
+
+                if (title.length <= 0) {
+                    activeIndex = i;
+                    errorCode = 1;
+                    return;
+                }
+
+                if (img.length <= 0) {
+                    activeIndex = i;
+                    errorCode = 2;
+                    return;
+                }
+            });
+
+            if (errorCode > 0) {
+                triggerActiveItem();
+
+                switch (errorCode) {
+                case 1:
+                    bootbox.alert("提交失败，未填写标题");
+                    break;
+                case 2:
+                    bootbox.alert("提交失败，未上传封面图");
+                    break;
+                }
+
+                return false;
+            }
+
+            $.post($(this).attr("action"), $(this).serialize(), function(r) {
+                if (r.error != "") {
+                    bootbox.alert("提交失败，错误代码：" + r.error);
+                } else {
+                    bootbox.alert("提交成功，页面将在1秒后自动跳转");
+                    setTimeout(function() {
+                        window.location.href = "@Url.Action("NewsReply", new {area = "Admin"})";
+                    }, 1000);
+                }
+            });
+
+            return false;
+        });
+
+        $("#j-add-item").off().click(function () {
+            var pg = $(this).closest(".panel-group");
+            if (pg.find(".item").length < 8) {
+
+                pg.find(".item:last").after($("#j-reply-left-content").html());
+
+                totalItem++;
+                activeIndex = totalItem - 1;
+
+                //开始插入右边部分的HTML
+                $.get("@Url.Action("NewReplyAside")", { r: Math.round(), index: activeIndex }, function (html) {
+                    $("#j-card-content").append(html);
+
+                    triggerActiveItem();
+
+                    deleteActiveItem();
+                    editActiveItem();
+                    triggerTitle();
+                });
+            }
+        });
+    </script>
+}

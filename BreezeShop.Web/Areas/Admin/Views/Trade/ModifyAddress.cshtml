@@ -1,0 +1,72 @@
+﻿@{
+    Layout = null;
+    var splitAddress = Model.Address.Split(' ');
+}
+@model Yun.Trade.SnapshotTrade
+
+@using (Html.BeginForm("ModifyAddress", "Trade", FormMethod.Post, new { @class = "form-horizontal", id = "j-modify-address-form" }))
+{
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 区域 </label>
+
+        <div class="col-sm-10">
+            <div class="form-inline">
+                <div class="form-group container-fluid">@Html.DropDownList("province", (IEnumerable<SelectListItem>)ViewData["Provinces"], new { @class = "form-control" })</div>
+                <div class="form-group container-fluid">@Html.DropDownList("city", (IEnumerable<SelectListItem>)ViewData["Cities"], new { @class = "form-control" })</div>
+                <div class="form-group container-fluid">@Html.DropDownList("area", (IEnumerable<SelectListItem>)ViewData["Areas"], new { @class = "form-control" })</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 地址 </label>
+
+        <div class="col-sm-10">
+            <input type="text" name="address" placeholder="地址" class="form-control" id="j-address" value="@(splitAddress.Length > 3 ? splitAddress[3] : "")">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 姓名 </label>
+
+        <div class="col-sm-10">
+            <input type="text" name="realname" placeholder="姓名" class="input-medium" value="@Model.RealName" id="j-realname">
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right"> 电话 </label>
+
+        <div class="col-sm-10">
+            <input type="text" name="mobile" placeholder="电话" class="input-medium" value="@Model.Mobile" id="j-mobile">
+        </div>
+    </div>
+}
+
+<script>
+    $("#province").off().change(function () {
+        $("#city").empty().append("<option value=''>-请选择城市-</option>");
+        $("#area").empty().append("<option value=''>-请选择地区-</option>");
+        if ($("#province").val().length >= 5) {
+            $.get("@Url.Action("CiyiesData", "NotLogin", new { area = "" })", { parentid: $("#province").val().split('-')[1] }, function(html) {
+                for (var c in html.data) {
+                    $("#city").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
+                }
+            });
+        }
+    });
+
+    //城市得变更
+    $("#city").off().change(function () {
+        $("#area").empty().append("<option value=''>-请选择地区-</option>");
+        if ($("#city").val().length >= 5) {
+            $.get("@Url.Action("CiyiesData", "NotLogin", new { area = "" })", { parentid: $("#city").val().split('-')[1] }, function (html) {
+                for (var c in html.data) {
+                    $("#area").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
+                }
+            });
+        }
+    });
+</script>

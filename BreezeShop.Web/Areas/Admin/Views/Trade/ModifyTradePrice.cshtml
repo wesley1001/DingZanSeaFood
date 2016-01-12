@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+
+@using Yun.Trade
+@model Yun.Trade.SnapshotTrade
+
+<table id="tb-modifyprice" class="table table-bordered dataTable bought-table">
+    <thead>
+        <tr class="col-name">
+            <th class="baobei" style="width:44%">商品</th>
+            <th class="price" style="width:12%">单价(元)</th>
+            <th class="quantity" style="width:8%">数量</th>
+            <th class="amount" style="width:12%">原价(元)</th>
+            <th class="amount" style="width:12%">新价格(元)</th>
+            <th class="amount" style="width:12%">邮费(元)</th>
+        </tr>
+    </thead>
+        <tbody class="">
+            @{var counter =0;
+                foreach (var order in Model.Orders)
+                {
+                    counter++;
+            <tr class="order-bd" id="@("item"+order.ItemId)">
+                <td class="baobei">
+                    <a class="pic" style="float: left;" href="@Url.Action("Index", "Item", new { id = order.ItemId })" title="查看宝贝详情" hidefocus="true" target="_blank">
+                        <img class="pic" src="@order.Thumb" alt="查看宝贝详情">
+                    </a>
+                    <div class="desc">
+                        <p class="baobei-name">
+                            <a class="" href="@Url.Action("Index", "Item", new { id = order.ItemId })" target="_blank">
+                                @order.ItemTitle
+                            </a>
+                        </p>
+                        <div title="" class="spec">
+                            @if (order.SkuNames != null)
+                            {
+                                foreach (var s in order.SkuNames)
+                                {
+                                    <span>@s.Value</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </td>
+                <td title="@order.Price" class="price">
+                    <i class="special-num">@order.Price</i>
+                </td>
+                <td title="@order.Quantity" class="quantity special-num">
+                    <i class="special-num">@order.Quantity.ToString("f2")</i>
+                </td>
+                <td title="@order.Money" class="quantity special-num">
+                    <i class="special-num">@order.Money</i>
+                </td>
+                <td class="amount td-last">
+                    <input type="text" value="" class="input-mini J_money" data-orderid="@order.Id" />
+                </td>
+                @if (counter == 1) { 
+                <td rowspan="@Model.Orders.Count" class="">
+                    <input type="text" value="@Model.Fare" class="input-mini" id="postfee" name="postfee" />
+                </td>}
+            </tr>
+        }}
+        </tbody>
+    
+
+</table>

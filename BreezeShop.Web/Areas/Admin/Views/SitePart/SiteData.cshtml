@@ -1,0 +1,118 @@
+﻿@model IList<Yun.Site.Elements>
+
+<div class="table-header">
+    “<b id="J-ModuleNameTable"></b>”功能模块下的数据
+</div>
+
+@helper MenuHelper(long parentId)
+{
+
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+
+    <ol class="dd-list">
+        @foreach (var dr in drs)
+        {
+            <li class="dd-item" data-id="@dr.Id">
+                <div class="dd-handle">
+                    @(dr.Text)
+                    <span class="lighter @(dr.Display ? "orange" : "grey")">
+                        @(dr.Display ? "显示" : "不显示")
+                    </span>
+                    <div class="pull-right action-buttons">
+                        <a class="blue J-AddTextBtn" href="javascript:void(0)" data-nid="@dr.Id">
+                            <i class="ace-icon fa fa-plus bigger-130"></i>
+                        </a>
+
+                        <a class="blue edit" href="@Url.Action("Update" + dr.Type, new { id = dr.Id, moduleId = Request.QueryString["moduleId"], moduleFlag = Request.QueryString["moduleflag"] })">
+                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                        </a>
+
+                        <a class="red delete" href="@Url.Action("Delete", new { id = dr.Id, moduleId = Request.QueryString["moduleId"] })">
+                            <i class="ace-icon fa fa-trash bigger-130"></i>
+                        </a>
+                    </div>
+                </div>
+                @MenuHelper(dr.Id)
+            </li>
+        }
+    </ol>
+}
+
+<div id="nestable">
+    @MenuHelper(0)
+</div>
+@Html.Hidden("NestableOutput")
+
+<script type="text/javascript">
+    $("#J-ModuleNameTable").text($("#ModuleId").find("option:selected").text());
+    addElement();
+
+    $("input[name='switch-field-display']").change(function () {
+        alert("异步保存是否显示数据");
+    });
+    $(".edit").unbind().click(function () {
+        var m = $("#ModuleId").val();
+        if (m.indexOf('|') > 0) {
+            var title = $(this).closest("tr").find(">td.title").text();
+            $.get($(this).attr("href"), { r: Math.round() }, function (html) {
+                bootbox.dialog({
+                    message: html,
+                    title: "修改“" + title + "”的内容",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function () {
+                                var options = {
+                                    iframe: true,
+                                    success: function (r) {
+                                        var result = delHtmlTag(r);
+                                        if (result) {
+                                            $.get("@Url.Action("SiteData", "SitePart")", { moduleId: m.split('|')[0], r: Math.random() }, function (data) {
+                                                $("#J-DataContent").empty().append(data);
+                                                bootbox.hideAll();
+                                                showSuccessMessage();
+                                            });
+                                        } else {
+                                            alert("修改失败，请刷新后重试");
+                                        }
+                                    }
+                                };
+                                if ($("#J-ContentForm").valid()) {
+                                    $('#J-ContentForm').ajaxSubmit(options);
+                                }
+                                    
+                                return false;
+                            }
+                        }
+                    }
+                });
+            });
+        } else {
+            bootbox.alert("请选择功能模块后再点击编辑");
+        }
+
+        return false;
+    });
+
+    $(".delete").unbind().click(function () {
+        var url = $(this).attr("href");
+        var link = this;
+        bootbox.confirm("确定要删除吗?", function (result) {
+            if (result) {
+                $.post(url, function (r) {
+                    if (r) {
+                        $(link).closest("li").remove();
+                    } else {
+                        bootbox.alert("删除失败");
+                    }
+                });
+            }
+        });
+        return false;
+    });
+</script>

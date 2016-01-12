@@ -1,0 +1,370 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.UpdateOrganizationUserModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var roles = ViewData["Roles"] as IList<Yun.User.Roles>;
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        <li>
+            <a href="#">Forms</a>
+        </li>
+        <li class="active">Form Elements</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        Form Elements
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Common form elements and layouts
+        </small>
+    </h1>
+}
+
+@section headerbeforeace{
+    <link rel="stylesheet" href="@Url.Content("~/Areas/Admin/Content/css/bootstrap-datetimepicker.min.css")" />
+    <style type="text/css">
+        .inline-functions-list {height: 400px;overflow-y: auto;overflow-x: hidden;padding-right: 10px;}
+    </style>
+}
+
+<div class="alert alert-block alert-success hide" id="J-SuccessInfo">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="icon-remove"></i>
+    </button>
+    <p>
+        <strong>
+            <i class="icon-ok"></i>
+            成功!
+        </strong>
+        您刚才的操作已成功执行,10秒后该提示将会自动消失！
+    </p>
+</div>
+
+@using (Html.BeginForm("UpdateEmployee", "Permission", FormMethod.Post, new { @class = "form-horizontal", id = "SubmitForm" }))
+{
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="UserName">用户名：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.UserName, new { @class = "input-large", placeholder = "请输入用户名", disabled = true })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.UserName)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Password">密码：</label>
+        <div class="col-xs-12 col-sm-10">
+            <button class="btn btn-sm btn-primary" type="button" id="J-ModifyPassword">修改密码</button>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="UserName">姓名：</label>
+        <div class="col-xs-12 col-sm-10">
+            @Html.TextBoxFor(m => m.DisplayName, new { @class = "input-medium", placeholder = "请输入姓名" })
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="IsFemale">性别</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">
+                @Html.DropDownListFor(m => m.IsFemale, new[]
+                {
+                    new SelectListItem{Text = "男", Value = "0"},
+                    new SelectListItem{Text = "女", Value = "1"}
+                    })
+            </div>
+        </div>
+    </div>
+
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="IdCard">身份证：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.IdCard, new { @class = "col-xs-12 col-sm-3", placeholder = "请输入身份证" })</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    if (roles != null && roles.Any())
+    {
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Role">所属角色：</label>
+            <div class="col-xs-12 col-sm-10">
+                @foreach (var r in roles)
+                {
+                    <div>
+                        <label>
+                            <input name="Role" value="@r.Id" type="checkbox" class="ace" @(Model.Roleids.Contains((int)r.Id) ? "checked" : "") />
+                            <span class="lbl"> @r.Name</span>
+                        </label>
+                    </div>
+                }
+                <div class="space-4"></div>
+                <p>
+                    <button class="btn btn-sm btn-info hide" id="J-ViewRoles" type="button">
+                        <i class="icon-zoom-in align-top bigger-125 icon-on-left"></i>
+                        预览所选角色权限
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="space-12"></div>
+    }
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="EntryTime">入职时间：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="icon-calendar bigger-110"></i>
+                </span>
+                <input class="input-sm date-picker" id="EntryTime" type="text" name="EntryTime" readonly="readonly" data-date-format="yyyy-mm-dd" value="@Model.Entry">
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="JobNum">工号：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.JobNum, new { @class = "input-xlarge", placeholder = "请输入工号" })</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="OtherName">花名：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.OtherName, new { @class = "input-medium", placeholder = "请输入花名" })</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Phone">手机号码：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="icon-phone"></i>
+                </span>
+                @Html.TextBoxFor(m => m.Phone, new { @class = "", placeholder = "请输入手机号码" })
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Email">邮箱：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="icon-envelope-alt"></i>
+                </span>
+                @Html.TextBoxFor(m => m.Email, new { @class = "input-xlarge", placeholder = "请输入邮箱" })
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Plane">座机：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Plane, new { @class = "input-medium", placeholder = "请输入座机" })</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="WorkPlace">办公地点：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.WorkPlace, new { @class = "input-xxlarge", placeholder = "请输入办公地点" })</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Remark">备注：</label>
+        <div class="col-xs-12 col-sm-10">
+            @Html.TextAreaFor(m => m.Remark, new { @class = "input-xlarge", placeholder = "备注" })
+        </div>
+    </div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-2 col-md-10">
+            <button class="btn btn-info" type="submit" id="J-Submit-Btn">
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="reset">
+                <i class="icon-undo bigger-110"></i>重置
+            </button>
+        </div>
+    </div>
+}
+
+
+@section specificscripts{
+    <script src="@Url.Content("~/Areas/Admin/Content/js/bootbox.js")"></script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js")"></script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js")"></script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
+    <script type="text/javascript">
+        jQuery.fn.extend({
+            unobtrusiveValidate: function () {
+                return $.validator.unobtrusive.parse(this);
+            }
+        });
+    </script>
+
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+        function showSuccessMessage() {
+            $("#J-SuccessInfo").removeClass("hide");
+            setTimeout(function () { $("#J-SuccessInfo").addClass("hide"); }, 10000);
+        }
+
+        $('#EntryTime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+
+        $("#J-ViewRoles").toggleClass("hide", $("input[name='Role']:checked").length <= 0);
+
+        $("input[name='Role']").click(function() {
+            $("#J-ViewRoles").toggleClass("hide", $("input[name='Role']:checked").length <= 0);
+        });
+
+        $("#J-ViewRoles").click(function() {
+            if ($("input[name='Role']:checked").length > 0) {
+                var ids = "";
+                $("input[name='Role']:checked").each(function() {
+                    ids += $(this).val() + ",";
+                });
+                ids = ids.substr(0, ids.length - 1);
+
+                $.get("/admin/part/seerolefunctions/" + ids, function(html) {
+                    bootbox.dialog({
+                        message: html,
+                        title: "预览角色功能",
+                        buttons: {
+                            danger:
+                            {
+                                label: "关闭",
+                                className: "btn-danger",
+                                callback: function() {}
+                            }
+                        }
+                    });
+                });
+
+            }
+        });
+
+        $("#J-AddOrganization").click(function() {
+            $.get("/admin/manage/addorganization", function(html) {
+                bootbox.dialog({
+                    message: html,
+                    title: "新增组织机构",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function() {
+                                if ($("#J-Submit-Form").valid()) {
+                                    $.post($("#J-Submit-Form").attr("action"), $("#J-Submit-Form").serialize(), function(r) {
+                                        if (r > 0) {
+                                            var n = $("#Name").val();
+                                            bootbox.hideAll();
+                                            $.get("/admin/part/organizationdropdown", function(fhtml) {
+                                                $("#OrganizationId").remove();
+                                                $("#J-AddOrganization").before(fhtml);
+                                                $("#OrganizationId option").each(function() {
+                                                    if ($(this).text().indexOf(n) > -1) {
+                                                        $("#OrganizationId").val($(this).val());
+                                                        return;
+                                                    }
+                                                });
+                                            });
+                                        } else {
+                                            bootbox.alert("提交失败，请刷新后重新提交");
+                                        }
+                                    });
+                                }
+                                return false;
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        });
+
+        $("#J-ModifyPassword").click(function() {
+            $.get("/admin/part/ModifyPassword/@(ViewContext.RouteData.Values["id"])", function (html) {
+                bootbox.dialog({
+                    message: html,
+                    title: "修改账号密码",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function () {
+                                if ($("#J-ContentForm").valid()) {
+                                    $.post($("#J-ContentForm").attr("action"), $("#J-ContentForm").serialize(), function (r) {
+                                        if (r) {
+                                            showSuccessMessage();
+                                            bootbox.hideAll();
+                                        } else {
+                                            bootbox.alert("提交失败，请刷新后重新提交");
+                                        }
+                                    });
+                                }
+                                return false;
+                            }
+                        },
+                        danger:
+                        {
+                            label: "取消",
+                            className: "btn-danger",
+                            callback: function () { }
+                        }
+                    }
+                });
+            });
+        });
+
+        $(function() {
+            $("#SubmitForm").off().submit(function() {
+                if ($(this).valid()) {
+                    $("#J-Submit-Btn").attr("disabled", true).html("<i class='icon-ok bigger-110'></i>正在提交，请稍后...");
+                    $.post($(this).attr("action"), $(this).serialize(), function(r) {
+                        if (r>0) {
+                            window.location.href = "/admin/manage/employees";
+                        } else {
+                            $("#J-Submit-Btn").removeAttr("disabled");
+                            bootbox.alert("提交失败，错误代码:" + r);
+                        }
+                    });
+                }
+
+                return false;
+            });
+        });
+
+    </script>
+}

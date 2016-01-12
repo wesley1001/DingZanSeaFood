@@ -1,0 +1,42 @@
+﻿@{
+    Layout = null;
+}
+
+
+@using (Html.BeginForm("AddPage", "SitePart", new { moduleFlag = Request.QueryString["moduleflag"] }, FormMethod.Post, new {  @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="PageName">页面名称：</label>
+        <div class="col-xs-12 col-sm-5">
+            <input class="form-control" id="PageNameText" name="PageNameText" placeholder="需要新增的页面名" type="text" value="">
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right">图片上传：</label>
+        <div class="col-sm-5">
+            <input type="file" id="id-input-file-2" name="fileimage" />
+        </div>
+    </div>
+    <div class="space-2"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="ModuleName">备注：</label>
+        <div class="col-xs-12 col-sm-5">
+            <div class="clearfix">
+                <textarea class="input-xxlarge" cols="10" id="remark" name="remark" rows="5" value=""></textarea>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $('#id-input-file-2').ace_file_input({
+        no_file: '还没有上传文件哦...',
+        btn_choose: '选择图片',
+        btn_change: '更换图片',
+        droppable: false,
+        onchange: null,
+        thumbnail: false, //| true | large
+        whitelist: 'gif|png|jpg|jpeg'
+    });
+    $("#J-ContentForm").unobtrusiveValidate();
+</script>

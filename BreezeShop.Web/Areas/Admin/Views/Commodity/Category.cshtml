@@ -1,0 +1,124 @@
+﻿@model IList<Yun.Item.ShopItemCategory>
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; 
+    
+}
+
+@helper MenuHelper(long parentId)
+{
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+    
+    <ol class="dd-list" count="@Model.Count">
+        @foreach (var dr in drs)
+        {
+            
+ 
+            <li class="dd-item" data-id="@dr.Id" par-id="@dr.ParentId">
+                <div class="dd-handle">
+                    @(dr.Title)
+                    <span class="lighter @(dr.Display ? "orange" : "grey")">
+                        @(dr.Display ? "显示" : "不显示")
+                    </span>
+                    <div class="pull-right action-buttons">
+                        <a class="blue" href="@Url.Action("AddCategory",new {id = dr.Id})">
+                            <i class="ace-icon glyphicon glyphicon-plus bigger-130"></i>
+                        </a>
+
+                        <a class="blue" href="@Url.Action("EditCategory",new {id = dr.Id})">
+                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                        </a>
+
+                        <a class="red delete" href="@Url.Action("DeleteCategory",new {id = dr.Id})">
+                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div>
+                </div>
+                @MenuHelper(dr.Id)
+            </li>
+        }
+    </ol>
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">分类管理</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        分类管理
+    </h1>
+}
+
+<div class="alert alert-info">
+    <i class="icon-hand-right"></i>
+    可以进行拖动排序，鼠标左键按住某项目后可进行拖动操作
+    <button class="close" data-dismiss="alert">
+        <i class="icon-remove"></i>
+    </button>
+</div>
+<p>
+    <a class="btn" href="@Url.Action("AddCategory")">
+        <i class="icon-plus bigger-125"></i>
+        新增分类
+    </a>
+    <button class="btn btn-info hide" type="submit" id="J-SaveNestable">
+        <i class="icon-ok bigger-110"></i>保存更改过的排序
+    </button>
+</p>
+<div id="nestable">
+    @MenuHelper(0)
+</div>
+@Html.Hidden("NestableOutput")
+
+@section specificscripts{
+   <script src="@Url.Content("~/Areas/Admin/Content/js/jquery-ui.js")"></script>
+}
+
+
+@section inlinescripts{
+    <script type="text/javascript">
+
+
+        jQuery(function ($) {
+            $(".dd-list").sortable({
+                cursor: "move",
+                items: "li",                        //只是li可以拖动
+                opacity: 0.6,                       //拖动时，透明度为0.6
+                revert: true,                       //释放时，增加动画
+                update: function (event, ui) {       //更新排序之后
+                    $("#J-SaveNestable").removeClass("hide");
+                }
+            });
+
+            $(".delete").click(function () {
+                var link = this;
+                if (confirm("确定要删除吗？")) {
+                    $.post($(this).attr("href"), function (r) {
+                        if (r) {
+                            alert("删除成功");
+                            $(link).closest("li").remove();
+                        }
+                        else {
+                            alert("删除失败");
+                        }
+                    });
+                }
+
+                return false;
+            });
+        });
+    </script>
+}
+
+

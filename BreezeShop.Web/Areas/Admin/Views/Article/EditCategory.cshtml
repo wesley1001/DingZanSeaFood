@@ -1,0 +1,99 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.UpdateArticleCategoryModel
+@{
+    ViewBag.Title = "EditCategory";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+
+        <li>
+            <a href="@Url.Action("Category")">文章分类管理</a>
+        </li>
+        <li class="active">编辑文章分类</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        编辑文章分类
+    </h1>
+}
+
+
+@using (Html.BeginForm("EditCategory", "Article", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.ParentId)
+    @Html.HiddenFor(m=>m.Sort)
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="Title">分类名称：</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Title, new { @class = "col-xs-10 col-sm-5", placeholder = "分类名称，不能重复" })
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="Image">上传：</label>
+        <div class="col-sm-4">
+            <input type="file" id="id-input-file-2" name="imagefile" />
+            @if (!Model.Image.IsEmpty())
+                {
+                <span class="help-block">
+                    <img src="@Model.Image" width="120" />
+                </span>
+                }
+            @Html.HiddenFor(m => m.Image)
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="Description">描述：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">
+                @Html.TextAreaFor(m => m.Description, 5, 10, new { @class = "input-xxlarge" })
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-4 col-sm-offset-3">
+            <label>
+                <input name="IsDisplay" id="IsDisplay" type="checkbox" class="ace" value="1" @(Model.Display ? "checked" : "") />
+                <span class="lbl">是否显示</span>
+            </label>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit">
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}
+
+@section specificscripts{
+<script src="@Url.Content("~/areas/admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
+<script src="@Url.Content("~/areas/admin/Content/js/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+        jQuery(function($) {
+            $('#id-input-file-2').ace_file_input({
+                no_file: '还没有上传文件哦...',
+                btn_choose: '更换图片',
+                btn_change: '更换图片',
+                droppable: false,
+                onchange: null,
+                thumbnail: false
+            });
+        });
+    </script>
+    }

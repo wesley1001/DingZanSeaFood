@@ -1,0 +1,171 @@
+﻿@model List<Yun.Site.CityDomain>
+ 
+    <div id="FreightTables" class="form-horizontal">
+    @foreach (var a in Model.Where(e => e.ParentId == -100))
+    {
+        <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right no-padding-top">
+                <input type="checkbox" class="p-area ace" title="@a.Name" name="city" id="@a.Id" value="@a.ParentId">
+                <span class="lbl @(a.Name.Length==2?"kong":"")">@a.Name</span>
+            </label>
+
+            <div class="col-sm-10">
+                @foreach (var m in Model.Where(e => e.ParentId == a.Id))
+                {
+                <div class="ecity">
+                    <span class="provinces">
+                        <label>
+                            <input type="checkbox" class="p-area ace" title="@m.Name" name="city" id="@m.Id" value="@m.ParentId">
+                            <span class="lbl">@m.Name</span>
+                        </label>
+
+                        <i class="ace-icon glyphicon glyphicon-chevron-down text-muted j-show-other-city" name="centercity" count="" data-id="@m.Id"></i>
+                    </span>
+
+                    <div class="citys hide area" title="@m.Name" id="@m.Id" value="@m.ParentId">
+                        @foreach (var q in Model.Where(e => e.ParentId == m.Id))
+                        {
+                            <span class="areas">
+                                <label>
+                                    <input type="checkbox" class="ace" title="@q.Name" name="city" id="@q.Id" value="@q.ParentId">
+                                    <span class="lbl">@q.Name</span>
+                                </label>
+                            </span>
+                        }
+                    </div>
+
+                </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+
+    var id;
+    var names = "";
+    $(function() {
+        if (name.length > 1) {
+            var nameds = name.split(',');
+            for (var i = 0; i < nameds.length; i++) {
+                if (nameds[i].length < 2) continue;
+                $("input[title=" + nameds[i] + "]").prop({ "disabled": "disabled" });
+            }
+        }
+
+        if (nameids.length > 2) {
+            var nameid = nameids.split(',');
+            for (var i = 0; i < nameid.length; i++) {
+                if (nameid.length < 2) continue;
+                $("input[id=" + nameid[i] + "]").prop({ "checked": true });
+            }
+            $("input[name='city']:checked").each(function() {
+                if (true == $(this).prop("checked")) {
+                    names += $(this).attr('title') + ',';
+                    id += $(this).attr('id') + ',';
+                }
+
+            });
+        }
+        //$(".area").each(function() {
+        //    if ($(this).find("input").length == 1) $(this).width(70);
+        //    if ($(this).find("input").length == 2) $(this).width(140);
+        //});
+
+
+        $(document).bind("click", function (e) {
+            var target = $(e.target);
+            
+            if (target.attr("for") != "IsKuaidi" && !target.hasClass("p-area") && target.attr("name") != "city" && !target.hasClass("lbl")) {
+
+                //重置所有下拉的图标
+                $(".provinces .glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+
+                $(".area").each(function() {
+                    if (!$(this).hasClass("hide")) {
+                        $(this).addClass("hide");
+                        return;
+                    }
+                });
+                $(".p_active").each(function() {
+                    $(this).removeClass("p_active");
+                });
+            }
+        });
+
+        $(".j-show-other-city").on("click", function (e) {
+            if ($(this).hasClass("glyphicon-chevron-up")) {
+                return;
+            }
+
+            //重置所有下拉的图标
+            $(".provinces .glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+
+            //切换上下图标的样式
+            if ($(this).hasClass("glyphicon-chevron-down")) {
+                $(this).removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+            } 
+
+            if ($(this).parent().parent().find(".area").hasClass("hide")) {
+                $(".area").each(function() {
+                    if (!$(this).hasClass("hide")) {
+                        $(this).addClass("hide");
+                        return false;
+                    }
+                });
+
+                $(".p_active").each(function() {
+                    $(this).removeClass("p_active");
+                    return false;
+                });
+
+                $("div[id=" + $(this).data("id") + "]").removeClass("hide");
+                $(this).parent().addClass("p_active");
+            }
+
+            e.stopPropagation();
+        });
+
+        $("input[name='city']").on("click", function() {
+            var checked = false;
+            $("#FreightTables").find("input[value=" + $(this).val() + "]").each(function() {
+                if ($(this).prop("checked")) {
+                    checked = true;
+                }
+            });
+            $("input[id=" + $(this).val() + "]").prop("checked", checked);
+            $("#FreightTables").find("input[value=" + $("input[id=" + $(this).val() + "]").val() + "]").each(function() {
+                if (!$(this).prop("checked")) {
+                    checked = false;
+                }
+            });
+            $("input[id=" + $("input[id=" + $(this).val() + "]").val() + "]").prop("checked", checked);
+            var t = $(this).prop("checked");
+            if ($("input[value=" + $(this).attr("id") + "]").length > 0) {
+                $("input[value=" + $(this).attr("id") + "]").each(function() {
+                    if ($(this).prop("checked") != t && !$(this).prop("disabled")) {
+                        $(this).prop("checked", t);
+
+                    }
+                    var t1 = $(this).prop("checked");
+                    if ($("input[value=" + $(this).attr("id") + "]").length > 0) {
+                        $("input[value=" + $(this).attr("id") + "]").each(function() {
+                            if ($(this).prop("checked") != t1 && !$(this).prop("disabled")) {
+                                $(this).prop("checked", t1);
+                            }
+
+                        });
+                    }
+                });
+            }
+            names = "";
+            id = "";
+            $("input[name='city']:checked").each(function() {
+                if (true == $(this).prop("checked")) {
+                    names += $(this).attr('title') + ',';
+                    id += $(this).attr('id') + ',';
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,118 @@
+﻿@model IList<Yun.User.Function>
+
+@{
+    ViewBag.Title = "后台功能";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@helper MenuHelper(int parentId)
+{
+    if (Model != null)
+    {
+        var drs = Model.Where(e => e.ParentId == parentId).ToList();
+        if (drs.Count <= 0)
+        {
+            return;
+        }
+        <ol class="dd-list">
+            @foreach (var dr in drs)
+            {
+                <li class="dd-item dd2-item @(parentId != 0 ? "item-blue2" : "")" data-id="@dr.Id">
+                    <div class="dd-handle dd2-handle">
+                        <i class="normal-icon @(dr.Description) blue bigger-130"></i>
+                    </div>
+                    <div class="dd-handle dd2-content">
+                        @dr.Name
+                        <div class="pull-right action-buttons">
+                            <a class="blue" href="@Url.Action("AddFunction", new {id = dr.Id, type = dr.Type})">
+                                <i class="ace-icon glyphicon glyphicon-plus bigger-130"></i>
+                            </a>
+                            <a class="blue" href="@Url.Action("EditFunction", new {id = dr.Id})">
+                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                            </a>
+                            <a class="red delete" href="@Url.Action("DeleteFunction", new {id = dr.Id})">
+                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                            </a>
+                        </div>
+                    </div>
+                    @MenuHelper((int)dr.Id)
+                </li>
+            }
+        </ol>
+    }
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">首页</a>
+        </li>
+        <li class="active">后台功能</li>
+    </ul>
+    }
+
+@section pageheader{
+<h1>
+    后台功能
+</h1>
+}
+
+<a class="btn btn-sm" href="@Url.Action("AddFunction")" id="J-AddNewFunction">
+    <i class="icon-plus bigger-125"></i>
+    新增功能
+</a>
+<div class="space-4"></div>
+
+<div id="nestable">
+    @MenuHelper(0)
+</div>
+@Html.Hidden("NestableOutput")
+
+@section specificscripts{
+    <script src="@Url.Content("~/Areas/Admin/Content/js/jquery.nestable.js")"></script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/bootbox.js")"></script>
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+
+        jQuery(function($) {
+            var updateOutput = function(e) {
+                var list = e.length ? e : $(e.target),
+                    output = list.data('output');
+                if (window.JSON) {
+                    output.val(window.JSON.stringify(list.nestable('serialize')));
+                } else {
+                    output.val('JSON browser support required for this demo.');
+                }
+            };
+
+            $('#nestable').nestable({ maxDepth: 4 }).on('change', function() {
+                $("#J-SaveNestable").removeClass("hide");
+                updateOutput($('#nestable').data('output', $('#NestableOutput')));
+            });
+
+            updateOutput($('#nestable').data('output', $('#NestableOutput')));
+
+            $('.dd-handle a').on('mousedown', function(e) {
+                e.stopPropagation();
+            });
+
+            $(".delete").click(function() {
+                if (confirm("确定要删除吗？")) {
+                    $.post($(this).attr("href"), function(r) {
+                        if (r) {
+                            alert("删除成功");
+                            window.location.reload();
+                        } else {
+                            alert("删除失败，该分类下存在数据！");
+                        }
+                    });
+                }
+
+                return false;
+            });
+        });
+    </script>
+}

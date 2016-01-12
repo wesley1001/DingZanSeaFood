@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "添加基本文字回复";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var ruleDetail = ViewData["ruleDetail"] as Yun.WeiXin.RuleDetail;
+    var ruleReplies = ViewData["ruleReplies"] as List<Yun.WeiXin.TextReplyDomain>; 
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">添加基本文字回复</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        添加基本文字回复
+    </h1>
+}
+
+
+
+@using (Html.BeginForm("AddTextReply", "WeChat", new {id=  ViewContext.RouteData.Values["id"]} ,FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", id="j-submit-form" }))
+{
+    @Html.Partial("_WeChatReplyRule", ruleDetail)
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    回复内容
+                </div>
+                <ul class="list-group">
+                    @if (ruleReplies == null)
+                    {
+                        <li class="list-group-item clearfix">
+                            <div class="block">
+                                <div class="col-xs-12 col-sm-12">
+                                    <textarea class="form-control content" placeholder="添加要回复的内容" name="replycontent" rows="4" onkeyup="if (this.value.split('\n').length > 4) this.rows = this.value.split('\n').length;"></textarea>
+                                    <p class="form-control-static"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 text-right">
+                                <div class="btn-group">
+                                    <a href="javascript:;" class="btn btn-danger j-delete-keyword">删除</a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        foreach (var k in ruleReplies)
+                        {
+                            <li class="list-group-item clearfix">
+                                <div class="block">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <textarea class="form-control content" placeholder="添加要回复的内容" name="replycontent" rows="4" onkeyup="if (this.value.split('\n').length > 4) this.rows = this.value.split('\n').length;">@k.Content</textarea>
+                                        <p class="form-control-static"></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 text-right">
+                                    <div class="btn-group">
+                                        <a href="javascript:;" class="btn btn-danger j-delete-keyword">删除</a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+                <div class="panel-footer">
+                    <a href="javascript:;" class="btn btn-default" id="j-add-reply-content">添加回复条目</a>
+                    <span class="help-block">添加多条回复内容时, 随机回复其中一条</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit" >
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}
+
+<script type="text/template" id="j-reply-text-content">
+    <li class="list-group-item clearfix">
+        <div class="block">
+            <div class="col-xs-12 col-sm-12">
+                <textarea class="form-control content" placeholder="添加要回复的内容" name="replycontent" rows="4" onkeyup="if (this.value.split('\n').length>4) this.rows=this.value.split('\n').length;"></textarea>
+                <p class="form-control-static"></p>
+            </div>
+        </div>
+        <div class="col-sm-12 text-right">
+            <div class="btn-group">
+                <a href="javascript:;" class="btn btn-danger j-delete-keyword">删除</a>
+            </div>
+        </div>
+    </li>
+</script>
+
+    @section specificscripts
+    {
+        <script src="@Url.Content("~/Areas/admin/Content/js/bootbox.js")"></script>
+    }
+
+    @section inlinescripts{
+        <script>
+            $("#j-add-reply-content").click(function () {
+                var listGroup = $(this).closest(".panel").find(".list-group");
+                listGroup.append($("#j-reply-text-content").html()).find("li:last textarea").val("");
+
+                $(".j-delete-keyword").off().click(function () {
+                    $(this).closest("li").remove();
+                });
+            });
+
+            $(".j-delete-keyword").off().click(function () {
+                $(this).closest("li").remove();
+            });
+
+            $("#j-submit-form").submit(function() {
+                $.post($(this).attr("action"), $(this).serialize(), function(r) {
+                    if (r.error != "") {
+                        bootbox.alert("提交失败，错误代码：" + r.error);
+                    } else {
+                        bootbox.alert("提交成功，页面将在1秒后自动跳转");
+                        setTimeout(function() {
+                            window.location.href = "@Url.Action("TextReply",new {area="Admin"})";
+                        }, 1000);
+                    }
+                });
+
+                return false;
+            });
+        </script>
+    }

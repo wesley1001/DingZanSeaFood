@@ -1,0 +1,77 @@
+﻿@model IList<Yun.User.Function> 
+
+@helper MenuHelper(long parentId)
+{
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+
+    <ul class="submenu">
+        @foreach (var dr in drs)
+        {
+            <li>
+                @if (Model.Any(e => e.ParentId == dr.Id))
+                {
+                    <a href="javascript:;" class="dropdown-toggle">
+                        @dr.Name
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    @MenuHelper(dr.Id)
+                }
+                else
+                {
+                    <a href="@(dr.Url)">
+                        <i class="menu-icon fa fa-caret-right"></i>
+                        @dr.Name
+                    </a>
+                }
+            </li>
+        }
+    </ul>
+}
+
+
+
+
+        <ul class="nav nav-list">
+            @foreach (var m in Model.Where(e => e.ParentId == 0))
+            {
+                <li>
+                    @if (Model.Any(e => e.ParentId == m.Id))
+                    {
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <i class="menu-icon @m.Description"></i>
+                            <span class="menu-text">@m.Name</span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        @MenuHelper(m.Id)
+                    }
+                    else
+                    {
+                        <a href="@m.Url">
+                            <i class="menu-icon @m.Description"></i>
+                            <span class="menu-text">@m.Name</span>
+                        </a>
+                    }
+                </li>
+            }
+        </ul>
+
+
+
+<script type="text/javascript">
+    function navInit() {
+        var pName = window.location.pathname;
+        $(".nav-list li a").each(function () {
+            if (pName == $(this).attr("href")) {
+                $(this).parent().addClass("active");
+                $(".nav-list .active").parentsUntil(".nav-list", "li").addClass("active");
+                return;
+            }
+        });
+    }
+
+    navInit();
+</script>

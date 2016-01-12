@@ -1,0 +1,251 @@
+﻿@model Yun.WeiXin.RuleDetail
+
+@{
+    //是否是高级设置
+    var isAdvSetting = Model != null && (Model.DisplayOrder > 0 || Model.Status == 0);
+    
+    //是否是高级触发
+    var isAdvTrigger = Model != null && (Model.Keywords != null && Model.Keywords.Any(e => e.Type.ToLower() == "container" || e.Type.ToLower() == "regular" || e.Type.ToLower() == "direct"));
+}
+
+
+
+<div class="form-group">
+    <style>
+        .help-block em { display: inline-block; width: 10em;  font-weight: bold; font-style: normal;}
+        .tab-content{padding:0;}
+        .nav-pills{margin-left: 0;}
+    </style>
+
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">添加回复规则 <span class="text-muted">删除，修改规则、关键字以及回复后，请提交以保存操作。</span></div>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">回复规则名称</label>
+                        <div class="col-sm-6 col-md-8 col-xs-12">
+                            <input type="text" class="form-control" placeholder="请输入回复规则的名称" name="name" value="@(Model!=null?Model.Name:"")">
+                            <span class="help-block">
+                                您可以给这条规则起一个名字, 方便下次修改和查看. <br>
+                                <strong class="text-danger">选择高级设置: 将会提供一系列的高级选项供专业用户使用.</strong>
+                            </span>
+                        </div>
+                        <div class="col-sm-3 col-md-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="ace" data-toggle="collapse" data-target="#j-rule-adv-setting" aria-controls="j-rule-adv-setting" name="adv-setting" value="1" @(isAdvSetting?"checked":"")>
+                                    <span class="lbl"> 高级设置</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse @(isAdvSetting ? "in" : "")" id="j-rule-adv-setting">
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">状态</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline no-padding-left">
+                                    <input type="radio" name="status" value="1" @((Model == null || (Model != null && Model.Status == 1)) ? "checked" : "") class="ace"> <span class="lbl">启用</span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="status" value="0" class="ace" @(Model != null && Model.Status == 0 ? "checked" : "")> <span class="lbl">禁用</span>
+                                </label>
+                                <span class="help-block">您可以临时禁用这条回复.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">置顶回复</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline no-padding-left">
+                                    <input type="radio" name="istop" value="1" class="ace" @(Model != null && Model.DisplayOrder >= 255 ? "checked" : "")> <span class="lbl">置顶</span>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="istop" value="0" class="ace" @((Model == null || (Model != null && Model.DisplayOrder < 255)) ? "checked" : "")> <span class="lbl">普通</span>
+                                </label>
+                                <span class="help-block">“置顶”时无论在什么情况下均能触发且使终保持最优先级</span>
+                            </div>
+                        </div>
+                        <div class="form-group @(Model!=null&&Model.DisplayOrder>=255?"hidden":"")">
+                            <label class="col-xs-12 col-sm-3 col-md-2 control-label">优先级</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="输入这条回复规则优先级" name="displayorder_rule" value="@(Model!=null?Model.DisplayOrder.ToString():"")" max="254" maxlength="3">
+                                <span class="help-block">规则优先级，越大则越靠前，最大不得超过254</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">触发关键字</label>
+                        <div class="col-sm-6 col-md-8 col-xs-12">
+                            <input type="text" class="form-control keyword" placeholder="请输入触发关键字" name="keywordinput" value="@(Model != null && Model.Keywords != null && Model.Keywords.Any(e => e.Type.Equals("Equal", StringComparison.CurrentCultureIgnoreCase)) ? Model.Keywords.Find(e => e.Type == "EQUAL").Content : "")">
+                            <span class="help-block"></span>
+                            <span class="help-block">
+                                当用户的对话内容符合以上的关键字定义时，会触发这个回复定义。多个关键字请使用逗号隔开。 <br>
+                                <strong class="text-danger">选择高级触发: 将会提供一系列的高级触发方式供专业用户使用(注意: 如果你不了解, 请不要使用). </strong>
+                            </span>
+                        </div>
+                        <div class="col-sm-3 col-md-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="ace" data-toggle="collapse" data-target="#j-adv-trigger" aria-expanded="false" aria-controls="j-adv-trigger" name="adv-trigger" value="1" @(isAdvTrigger ? "checked" : "")>
+                                    <span class="lbl"> 高级触发</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group collapse @(isAdvTrigger ? "in" : "")" id="j-adv-trigger">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">高级触发列表</label>
+                        <div class="col-sm-9">
+                            <div class="panel panel-default tab-content" id="j-keywords-pans">
+                                <div class="panel-heading">
+                                    <ul class="nav nav-pills">
+                                        <li class="active" data-value="container"><a href="#container" data-toggle="tab">包含关键字</a></li>
+                                        <li data-value="regular"><a href="#regular" data-toggle="tab">正则表达式模式匹配</a></li>
+                                        <li data-value="direct"><a href="#direct" data-toggle="tab">直接接管</a></li>
+                                    </ul>
+                                </div>
+                                <ul class="tab-pane list-group active" id="container">
+                                    @if (Model != null && Model.Keywords != null && Model.Keywords.Any(e => e.Type.ToLower() == "container"))
+                                    {
+                                        foreach (var m in Model.Keywords.Where(e => e.Type.ToLower() == "container"))
+                                        {
+                                            <li class="list-group-item clearfix">
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input type="text" class="form-control keyword" name="container-keywords" placeholder="请输入关键字" value="@m.Content">
+                                                    <span class="help-block"></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a href="javascript:;" class="btn btn-danger btn-sm j-delete-keyword">删除</a>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                                <ul class="tab-pane list-group" id="regular">
+                                    @if (Model != null && Model.Keywords != null && Model.Keywords.Any(e => e.Type.ToLower() == "regular"))
+                                    {
+                                        foreach (var m in Model.Keywords.Where(e => e.Type.ToLower() == "regular"))
+                                        {
+                                            <li class="list-group-item clearfix">
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input type="text" class="form-control keyword" name="regular-keywords" placeholder="请输入关键字" value="@m.Content">
+                                                    <span class="help-block"></span>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a href="javascript:;" class="btn btn-danger btn-sm j-delete-keyword">删除</a>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                                <ul class="tab-pane list-group" id="direct">
+                                    @if (Model != null && Model.Keywords != null && Model.Keywords.Any(e => e.Type.ToLower() == "direct"))
+                                    {
+                                        foreach (var m in Model.Keywords.Where(e => e.Type.ToLower() == "direct"))
+                                        {
+                                            <li class="list-group-item clearfix">
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <input type="hidden" name="direct-keywords" value="直接接管" />
+                                                    <p class="form-control-static">符合优先级条件时, 这条回复将直接生效</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a href="javascript:;" class="btn btn-danger btn-sm j-delete-keyword">取消接管</a>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+
+                                </ul>
+                                <div class="panel-footer">
+                                    <div id="j-panel-footer-container">
+                                        <a href="#container" class="btn btn-default">添加包含关键字</a>
+                                        <span class="help-block">用户进行交谈时，对话中包含上述关键字就执行这条规则。</span>
+                                    </div>
+                                    <div class="hidden" id="j-panel-footer-regular">
+                                        <a href="#regular" class="btn btn-default">添加正则表达式模式</a>
+                                        <span class="help-block">用户进行交谈时，对话内容符合述关键字中定义的模式才会执行这条规则。<br><strong>注意：如果你不明白正则表达式的工作方式，请不要使用正则匹配</strong> <br><strong>注意：正则匹配使用MySQL的匹配引擎，请使用MySQL的正则语法</strong> <br><strong>示例: </strong><br><em>^微信</em>匹配以“微信”开头的语句<br><em>微信$</em>匹配以“微信”结尾的语句<br><em>^微信$</em>匹配等同“微信”的语句<br><em>微信</em>匹配包含“微信”的语句<br><em>[0-9.-]</em>匹配所有的数字，句号和减号<br><em>^[a-zA-Z_]$</em>所有的字母和下划线<br><em>^[[:alpha:]]{3}$</em>所有的3个字母的单词<br><em>^a{4}$</em>aaaa<br><em>^a{2,4}$</em>aa，aaa或aaaa<br><em>^a{2,}$</em>匹配多于两个a的字符串</span>
+                                    </div>
+                                    <div class="hidden" id="j-panel-footer-direct">
+                                        <a href="#direct" class="btn btn-default">添加直接接管操作</a>
+                                        <span class="help-block">如果没有比这条回复优先级更高的回复被触发，那么直接使用这条回复。<br><strong>注意：如果你不明白这个机制的工作方式，请不要使用直接接管</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/template" id="j-keywords-text-content">
+    <li class="list-group-item clearfix">
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" class="form-control keyword" name="keywords" placeholder="请输入关键字">
+            <span class="help-block"></span>
+        </div>
+        <div class="col-sm-4">
+            <a href="javascript:;" class="btn btn-danger btn-sm j-delete-keyword">删除</a>
+        </div>
+    </li>
+</script>
+
+<script type="text/template" id="j-keywords-direct-content">
+    <li class="list-group-item clearfix">
+        <div class="col-xs-12 col-sm-8">
+            <input type="hidden" name="direct-keywords" value="直接接管" />
+            <p class="form-control-static">符合优先级条件时, 这条回复将直接生效</p>
+        </div>
+        <div class="col-sm-4">
+            <a href="javascript:;" class="btn btn-danger btn-sm j-delete-keyword">取消接管</a>
+        </div>
+    </li>
+</script>
+
+
+<script type="text/javascript">
+        $("#j-keywords-pans .nav-pills>li").click(function() {
+            $("#j-keywords-pans .panel-footer>div").addClass("hidden");
+            $("#j-panel-footer-" + $(">a", this).attr("href").replace("#", "")).removeClass("hidden");
+            $("#TriggerType").val($(this).data("value"));
+        });
+
+        $("#j-keywords-pans .panel-footer .btn").click(function() {
+            var id = $(this).attr("href").replace("#", "");
+            if (id != "direct") {
+                $("#" + id).append($("#j-keywords-text-content").html());
+                $("#" + id).find("input[name='keywords']").attr("name", id + "-keywords");
+            } else {
+                if ($("#direct>li").length <= 0) {
+                    $("#" + id).append($("#j-keywords-direct-content").html());
+                } else {
+                    return false;
+                }
+            }
+
+            $(".j-delete-keyword").off().click(function () {
+                $(this).closest("li").remove();
+            });
+
+            return false;
+        });
+
+        $("input[name='istop']").click(function() {
+            $("input[name='displayorder_rule']").closest(".form-group").toggleClass("hidden", parseInt($(this).val()) == 1);
+        });
+        
+    @if (Model != null)
+    {
+        <text>
+            if ($("#j-keywords-pans .nav-pills>li.active").length > 0) {
+                $("#TriggerType").val($("#j-keywords-pans .nav-pills>li.active").data("value"));
+            } else {
+                $("#j-keywords-pans .nav-pills>li:first").addClass("active");
+                $("#j-keywords-pans>.tab-pane:first").addClass("active");
+            }
+     </text>
+    }
+        
+        
+</script>

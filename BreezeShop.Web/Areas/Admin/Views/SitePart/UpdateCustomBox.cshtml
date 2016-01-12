@@ -1,0 +1,73 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.UpdateCustomBoxModel
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="icon-remove"></i>
+        </button>
+        <strong>
+            <i class="icon-remove"></i>
+            错误！
+        </strong>
+        当前模块数据不存在，请关闭并刷新当前页后重新尝试.
+        <br>
+    </div>
+    return;
+}
+
+@using (Html.BeginForm("UpdateCustomBox", "SitePart", new {id = ViewContext.RouteData.Values["id"],moduleFlag = Request.QueryString["moduleflag"], moduleId = Request.QueryString["moduleId"]}, FormMethod.Post, new {@class = "form-horizontal", enctype = "multipart/form-data", Id = "J-ContentForm"}))
+{
+    @Html.HiddenFor(m => m.IsDisplay)
+    @Html.HiddenFor(m => m.ParentId)
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Title">标题：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Title, new { @class = "input-xlarge", placeholder = "请输入标题" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Title)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="SortOrder">排序：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                @Html.TextBoxFor(m => m.SortOrder, new { @class = "input-mini", placeholder = "排序" })
+            </div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.SortOrder)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="CustomText">文本：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                @Html.TextAreaFor(m => m.CustomText, new { placeholder = "自定义文本", rows = "3" })
+            </div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.CustomText)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-3 col-sm-offset-2">
+            <label>
+                <input name="Display" id="Display" type="checkbox" class="ace" value="1" checked="" />
+                <span class="lbl">是否显示</span>
+            </label>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $.getScript("@Url.Content("~/areas/admin/Content/js/kindeditor/kindeditor-min.js")", function () {
+        KindEditor.basePath = '../../content/assets/js/kindeditor/';
+        KindEditor.create('#CustomText', {
+            width: '100%',
+            uploadJson: '@Url.Action("Upload", "NotLogin",new {area=""})',
+            resizeType: 1,
+            allowPreviewEmoticons: false,
+            items: [
+                'source', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
+            afterBlur: function () { this.sync(); }
+        });
+    });
+    $("#J-ContentForm").unobtrusiveValidate();
+</script>

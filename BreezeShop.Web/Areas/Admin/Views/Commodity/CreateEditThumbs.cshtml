@@ -1,0 +1,18 @@
+﻿@using BreezeShop.Core.FileFactory
+@model Dictionary<string, string>
+
+@foreach (var m in Model)
+{
+    <div class="dz-preview dz-processing dz-image-preview dz-success">
+        <div class="dz-details">
+            <div class="dz-filename"><span data-dz-name="">@m.Key</span></div>
+            <img data-dz-thumbnail="" alt="@m.Key" src="@ImageExtension.GetUrl(ImageSize._120x120, m.Value.ToString())">
+        </div>
+        <div class="progress progress-small progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress="" style="width: 100%;"></div></div>
+        <div class="dz-success-mark"><span></span></div>
+        <div class="dz-error-mark"><span></span></div>
+        <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
+        <div class="dz-position-message clearfix"><button class="btn btn-minier pull-left" type="button"><i class="bigger-110 fa fa-arrow-left"></i>左移</button> <button class="btn btn-minier  pull-right" type="button">右移<i class="bigger-110 fa fa-arrow-right"></i></button></div>
+        <a class="dz-remove" href="javascript:void(0);" data-dz-remove="">删除文件</a>
+    </div>
+}

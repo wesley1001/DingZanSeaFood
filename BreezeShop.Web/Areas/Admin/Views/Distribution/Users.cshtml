@@ -1,0 +1,60 @@
+﻿@model BreezeShop.Core.PageModel<Yun.Distribution.DistributionUser>
+@using BreezeShop.Web.Helper
+
+@{
+    ViewBag.Title = "分销商列表";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var parentUsers = ViewData["ParentUserList"] as List<Yun.User.UserDetail>;
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">分销商列表</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        分销商列表
+    </h1>
+}
+
+<div id="mytestcheckbox" class="table-header">
+    分销商列表
+</div>
+
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <table class="table table-bordered table-hover dataTable" id="sample-table-2">
+            <thead>
+                <tr>
+                    <th>用户名</th>
+                    <th>昵称</th>
+                    <th>佣金总额</th>
+                    <th>上级分销商</th>
+                    <th>下级分销商数</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model.Items)
+                {
+                    <tr>
+                        <td>@u.UserName</td>
+                        <td>@u.RealName</td>
+                        <td>@u.Turnover</td>
+                        <td>@(parentUsers!=null?parentUsers.Single(e=>e.UserId==u.UserId).RealName:"")</td>
+                        <td>@u.DistributorQuantity</td>
+                        <td>@u.CreateTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 20)
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CCD61732-DBCF-4A3A-A452-BA4F4ED7E604}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BreezeShop.Core</RootNamespace>
+    <AssemblyName>BreezeShop.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NPOI, Version=2.1.3.1, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.1.3.1\lib\net40\NPOI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Utilities">
+      <HintPath>..\libs\Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Yun">
+      <HintPath>..\libs\Yun.dll</HintPath>
+    </Reference>
+    <Reference Include="Yun.Logistics">
+      <HintPath>..\libs\Yun.Logistics.dll</HintPath>
+    </Reference>
+    <Reference Include="Yun.Shop">
+      <HintPath>..\libs\Yun.Shop.dll</HintPath>
+    </Reference>
+    <Reference Include="Yun.Site">
+      <HintPath>..\libs\Yun.Site.dll</HintPath>
+    </Reference>
+    <Reference Include="Yun.User">
+      <HintPath>..\libs\Yun.User.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\FileCache.cs" />
+    <Compile Include="Cache\MultiFolderFileCache.cs" />
+    <Compile Include="Cache\NumericalFileCache.cs" />
+    <Compile Include="DataProvider\GlobeInfo.cs" />
+    <Compile Include="DataProvider\Manage.cs" />
+    <Compile Include="DataProvider\Member.cs" />
+    <Compile Include="DataProvider\PageElementExtension.cs" />
+    <Compile Include="DataProvider\SystemCity.cs" />
+    <Compile Include="ExceptionLog.cs" />
+    <Compile Include="FileFactory\ExcelTool.cs" />
+    <Compile Include="FileFactory\FileManage.cs" />
+    <Compile Include="FileFactory\ImageExtension.cs" />
+    <Compile Include="FileFactory\UploadMethod\FilesUpload.cs" />
+    <Compile Include="FileFactory\UploadMethod\ImageHandler.cs" />
+    <Compile Include="FileFactory\KindeditorMode.cs" />
+    <Compile Include="FileFactory\UploadMethod\PictureCore.cs" />
+    <Compile Include="Model\Enums\ExistUserEnum.cs" />
+    <Compile Include="Model\Enums\SystemRunStatus.cs" />
+    <Compile Include="Model\Enums\VerificationAction.cs" />
+    <Compile Include="Model\Enums\VerificationSendEnum.cs" />
+    <Compile Include="Model\WebSetting.cs" />
+    <Compile Include="PageModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserTrace\BaseBrowseTrace.cs" />
+    <Compile Include="UserTrace\MallBrowseTrace.cs" />
+    <Compile Include="YunClient.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

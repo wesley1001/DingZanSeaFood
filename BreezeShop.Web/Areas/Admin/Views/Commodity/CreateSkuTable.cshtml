@@ -1,0 +1,80 @@
+﻿@using Utilities.DataTypes.ExtensionMethods
+@using Yun.Item
+@model List<BreezeShop.Web.Areas.Admin.Models.CustomSkuModel>
+@{
+    var rows = (int)ViewData["Rows"];
+    var col = Model.Count;
+    var counter = new int[col];
+    var isfenxiao = Request.QueryString["IsFenxiao"].TryTo(0);
+
+    var skuData = ViewData["SkuData"] as IList<ItemSkuInDetail>;
+}
+
+@helper CreateTd(int currentCol, int currentRow, int[] counter)
+{
+    var rows = (int)ViewData["Rows"];
+    var rowsspan = 1;
+    for (var i = 0; i <= currentCol; i++)
+    {
+        rowsspan = rowsspan * Model[i].Values.Count;
+    }
+    rowsspan = rows / rowsspan;
+    if ((currentRow + rowsspan) % rowsspan == 0)
+    {
+        <td rowspan="@rowsspan" class="sku-map-@Model[currentCol].KeyIds[counter[currentCol]]">@Model[currentCol].Values[counter[currentCol]]</td>
+        counter[currentCol]++;
+        if (counter[currentCol] == Model[currentCol].Values.Count)
+        {
+            counter[currentCol] = 0;
+        }
+    }
+}
+
+<div class="space-8"></div>
+<div class="table-responsive">
+    <table class="table table-bordered dataTable">
+        <thead>
+            <tr>
+                @foreach (var th in Model)
+                {
+                    <th class="sku-th-@th.Id">@th.Name</th>
+                }
+                <th>价格</th>
+                <th>原价</th>
+                <th class="fenxiao-opt-hidden">分销价范围</th>
+                <th>数量</th>
+                <th>商品编码</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < rows; i++)
+            {
+                <tr>
+                    @for (var c = 0; c < col; c++)
+                    {
+                        @CreateTd(c, i, counter)
+                    }
+                    <td class="form-group">
+                        <div class="form-inline"><input type="text" class="input-small sku-price required" name="SkuPrice-@(i)" value="@(skuData!=null?skuData[i].Price: Request.Form["SkuPrice-"+i])" /></div>
+                    </td>
+                    <td><input type="text" class="input-small" name="SkuMarketPrice-@(i)" value="@(skuData != null ? skuData[i].MarketPrice : Request.Form["SkuMarketPrice-" + i])" /></td>
+                    <td class="fenxiao-opt-hidden">
+                        <div class="form-inline">
+                            <input type="text" class="input-mini" name="SkuFxMin-@(i)" value="@(skuData != null && !skuData[i].AdditionalInfo.IsEmpty() ? skuData[i].AdditionalInfo.Split('-')[0]: Request.Form["SkuFxMin-" + i])" placeholder="最低价" />-<input type="text" class="input-mini" name="SkuFxMax-@(i)" value="@(skuData != null && !skuData[i].AdditionalInfo.IsEmpty() ? skuData[i].AdditionalInfo.Split('-')[1] : Request.Form["SkuFxMax-" + i])" placeholder="最高价" />
+                        </div>
+                    </td>
+                    <td class="form-group">
+                        <div class="form-inline">
+                            <input type="text" class="input-mini required" name="SkuMaxStore-@(i)" maxlength="9" value="@(skuData != null ? skuData[i].Stock.ToString() : Request.Form["SkuMaxStore-" + i])" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-inline">
+                            <input type="text" class="input-small" name="SkuItemCode-@(i)" value="@(skuData != null ? skuData[i].SkuCode : Request.Form["SkuItemCode-" + i])" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

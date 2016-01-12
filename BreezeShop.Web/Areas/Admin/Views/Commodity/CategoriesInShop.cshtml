@@ -1,0 +1,33 @@
+﻿
+@model IList<Yun.Item.ShopItemCategory>
+@{
+    var ids = (Request.QueryString["ids"] ?? "").Split(',');
+}
+
+@helper CategoryHelper(long parentId, string[] ids, int level)
+{
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+    level++;
+
+    <ul class="list-unstyled level-@(level)">
+        @foreach (var dr in drs)
+        {
+            <li>
+                <label>
+                    @if (Model.Count(e => e.ParentId == dr.Id) <= 0)
+                    {
+                        <input name="ShopCategorys" value="@dr.Id" type="checkbox" class="checkbox-inline" @(ids.Contains(dr.Id.ToString())?"checked":"") />
+                    }
+                    <span class="lbl"> @dr.Title</span>
+                </label>
+                @CategoryHelper(dr.Id, ids,level)
+            </li>
+        }
+    </ul>
+}
+
+@CategoryHelper(0, ids,0)

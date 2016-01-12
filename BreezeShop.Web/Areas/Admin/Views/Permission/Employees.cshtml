@@ -1,0 +1,112 @@
+﻿@using BreezeShop.Web.Helper
+@model IList<Yun.User.PermissionUser>
+
+@{
+    ViewBag.Title = "Employees";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+
+        <li>
+            <a href="#">Forms</a>
+        </li>
+        <li class="active">Form Elements</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        Form Elements
+        <small>
+            <i class="icon-double-angle-right"></i>
+            Common form elements and layouts
+        </small>
+    </h1>
+}
+
+<p>
+    <a class="btn" href="@Url.Action("AddEmployee")">
+        <i class="icon-plus bigger-125"></i>
+        新增员工
+    </a>
+</p>
+<div class="table-header">
+    员工列表
+</div>
+
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名/姓名</th>
+                    <th>最后登录时间</th>
+                    <th>手机/座机</th>
+                    <th>状态</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                    <tr>
+                        <td>@m.UserId</td>
+                        <td>@m.UserName
+                            <br/>
+                            @m.DisplayName
+                        </td>
+                        <td>@(!m.LastLoginTime.IsEmpty()?m.LastLoginTime:"未曾登录")</td>
+                        <td>@m.Phone<br />@m.Plane</td>
+                        <td>@(m.IsDisabled ? "禁用" : "正常")</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-xs btn-info" href="@Url.Action("UpdateEmployee", new { id = m.UserId })">
+                                    <i class="icon-edit bigger-120">编辑</i>
+                                </a>
+                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteEmployee", new { id = m.UserId })">
+                                    <i class="icon-trash bigger-120">删除</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Pager("PagerBottom", (int)ViewBag.CurrentPage, (int)ViewBag.TotalItems, "_PagerTemplate", 10)
+    </div>
+</div>
+
+@section specificscripts{
+    <script src="@Url.Content("~/Areas/Admin/Content/js/bootbox.js")"></script>
+}
+
+
+@section inlinescripts{
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $(".delete").click(function () {
+                var url = $(this).attr("href");
+                var link = this;
+                bootbox.confirm("确定要删除该职员吗?删除后无法还原，请注意操作", function (result) {
+                    if (result) {
+                        $.post(url, function (r) {
+                            if (r) {
+                                $(link).closest("tr").remove();
+                            } else {
+                                bootbox.alert("删除失败");
+                            }
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

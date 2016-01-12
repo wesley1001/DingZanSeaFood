@@ -1,0 +1,82 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.WxPaySettingModel
+@{
+    ViewBag.Title = "WxPay";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">微信支付设置</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        微信支付设置
+    </h1>
+}
+
+@using (Html.BeginForm("WxPay", "Setting", FormMethod.Post, new { @class = "form-horizontal",  enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="AppId">APPID：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.AppId, new { @class = "input-large", placeholder = "请输入APPID" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.AppId)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MchId">商户ID：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.MchId, new { @class = "input-large", placeholder = "请输入商户ID" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.MchId)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Key">公众号KEY：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Key, new {@class = "input-xxlarge", placeholder = "请输入公众号KEY"})</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Key)</div>
+        </div>
+    </div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="ClientNotifyUrl">客户端通知地址：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.ClientNotifyUrl, new { @class = "input-xxlarge", placeholder = "请输入客户端通知地址" })</div>
+        </div>
+    </div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-2 col-md-10">
+            <button class="btn btn-info" type="submit" id="J-Submit-Btn">
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="reset">
+                <i class="icon-undo bigger-110"></i>重置
+            </button>
+        </div>
+    </div>
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+        $('#id-input-file-2').ace_file_input({
+            no_file: '还没有上传文件哦...',
+            btn_choose: '选择图片',
+            btn_change: '更换图片',
+            droppable: false,
+            onchange: null,
+            thumbnail: false, //| true | large
+            whitelist: 'gif|png|jpg|jpeg'
+        });
+    </script>
+}
