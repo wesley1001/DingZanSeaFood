@@ -1063,9 +1063,7 @@
     <Content Include="Areas\Admin\Views\Report\SalesStatistics.cshtml" />
     <Content Include="Areas\Admin\Views\Report\ItemSalesReport.cshtml" />
     <Content Include="Areas\Admin\Views\Report\MonthSalesStatistics.cshtml" />
-    <None Include="Properties\PublishProfiles\heyiftp.pubxml" />
-    <None Include="Properties\PublishProfiles\shenchengjie.pubxml" />
-    <None Include="Properties\PublishProfiles\测试站点.pubxml" />
+    <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
