@@ -1,0 +1,12 @@
+﻿@model Yun.Archive.ArticleDetail
+@{
+    ViewBag.Title = "文章详情";
+}
+
+<article class="article">
+    <h1>@Model.Title</h1>
+    <p class="time">@(Convert.ToDateTime(Model.CreateTime).ToShortDateString())</p>
+    <section class="detail">
+        @Html.Raw(Model.Detail)
+    </section>
+</article>

@@ -225,6 +225,11 @@
     <Compile Include="CommonService\CustomMessageHandler.cs" />
     <Compile Include="CommonService\CustomMessageHandler_Events.cs" />
     <Compile Include="CommonService\LocationService.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MemberAuthController.cs" />
+    <Compile Include="Controllers\NotLoginController.cs" />
+    <Compile Include="Controllers\Oauth2Controller.cs" />
+    <Compile Include="Controllers\WxAuthController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1064,6 +1069,11 @@
     <Content Include="Areas\Admin\Views\Report\ItemSalesReport.cshtml" />
     <Content Include="Areas\Admin\Views\Report\MonthSalesStatistics.cshtml" />
     <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
+    <Content Include="Views\NotLogin\Article.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
