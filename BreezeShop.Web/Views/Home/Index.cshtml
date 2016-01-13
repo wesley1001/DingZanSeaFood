@@ -1,5 +1,42 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@model List<Yun.Item.GoodsDetail>
+@{
+    
 }
 
-<h2>Index</h2>
+<div class="header">
+    <div class="bg-img">
+        <img src="@Url.Content("~/Content/images/header-img.jpg")"/>
+    </div>
+    <ul class="other clearfix">
+        <li class="logo">
+            <img src="@Url.Content("~/Content/images/logo.png")"/>
+        </li>
+        <li>
+            <div class="text">@BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name</div>
+            <ul class="info">
+                <li><a href="javascript:;"><strong>@ViewData["itemTotal"]</strong><br/>全部商品</a></li>
+                <li class="trade-icon"><a href="javascript:;"><i></i><br/>我的订单</a></li>
+                <li class="category-icon"><a href="@Url.Action("List")"><i></i><br/>分类</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div class="search">
+    <form method="GET" action="@Url.Action("List")">
+        <input type="text" placeholder="商品搜索：请输入关键子" name="q"/>
+        <button type="submit" class="icon">提交</button>
+    </form>
+</div>
+<div class="item">
+    @if (Model != null)
+    {
+        foreach (var m in Model)
+        {
+            <a href="@Url.Action("GoodsDetail", new {id = m.Id})"><img src="@(BreezeShop.Core.FileFactory.ImageExtension.GetUrl("800", m.Picture))"/></a>
+        }
+    }
+</div>
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}

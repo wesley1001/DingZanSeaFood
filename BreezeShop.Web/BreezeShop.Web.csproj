@@ -741,18 +741,15 @@
     <Content Include="Areas\Admin\Views\WeChat\AddTextReply.cshtml" />
     <Content Include="Content\css\base.css" />
     <Content Include="Content\css\main.css" />
-    <Content Include="Content\images\bg_fmenu.png" />
-    <Content Include="Content\images\cut\1.png" />
-    <Content Include="Content\images\cut\2.png" />
-    <Content Include="Content\images\cut\3.png" />
-    <Content Include="Content\images\cut\4.png" />
-    <Content Include="Content\images\edit.jpg" />
-    <Content Include="Content\images\icon\ico_fback.png" />
-    <Content Include="Content\images\icon\ico_fmenu.png" />
+    <Content Include="Content\images\header-img.jpg" />
+    <Content Include="Content\images\icon\1.png" />
+    <Content Include="Content\images\icon\2.png" />
+    <Content Include="Content\images\icon\3.png" />
+    <Content Include="Content\images\icon\4.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\me.png" />
     <Content Include="Content\images\none-image.png" />
-    <Content Include="Content\images\shishangqixing.jpg" />
-    <Content Include="Content\images\user.png" />
+    <Content Include="Content\images\search_icon.png" />
     <Content Include="Content\js\design.js" />
     <Content Include="Content\js\form_ajax.js" />
     <Content Include="Content\js\ga.js" />
@@ -1068,12 +1065,17 @@
     <Content Include="Areas\Admin\Views\Report\SalesStatistics.cshtml" />
     <Content Include="Areas\Admin\Views\Report\ItemSalesReport.cshtml" />
     <Content Include="Areas\Admin\Views\Report\MonthSalesStatistics.cshtml" />
+    <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
     <Content Include="Views\NotLogin\Article.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\List.cshtml" />
+    <Content Include="Views\Home\ItemData.cshtml" />
+    <Content Include="Views\Home\GoodsDetail.cshtml" />
+    <Content Include="Views\Shared\_FooterNav.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

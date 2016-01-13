@@ -1,0 +1,30 @@
+﻿@using BreezeShop.Core.FileFactory
+@model List<Yun.Item.GoodsDetail>
+
+<ul class="list-view">
+    @if (Model != null)
+    {
+        foreach (var m in Model)
+        {
+            <li class="list-item">
+                <div class="p">
+                    <a href="@Url.Action("GoodsDetail", new {id = m.Id})">
+                        <img class="p-pic" src="@ImageExtension.GetUrl("120", m.Picture)">
+                    </a>
+                </div>
+                <div class="d">
+                    <a href="@Url.Action("GoodsDetail", new {id = m.Id})">
+                        <h3 class="d-title">@m.ItemTitle</h3>
+                    </a>
+                    <p class="d-price">
+                        <em class="h"><span class="price-icon">¥</span><span class="font-num">@m.Price</span></em>
+                        @if (m.MarketPrice > 0)
+                        {
+                            <del><span class="price-icon">¥</span><span class="font-num">@m.MarketPrice</span></del>
+                        }
+                    </p>
+                </div>
+            </li>
+        }
+    }
+</ul>

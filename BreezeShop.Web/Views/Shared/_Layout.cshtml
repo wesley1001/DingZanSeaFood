@@ -11,31 +11,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title>@(ViewBag.Title ?? BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)</title>
     <link type="text/css" rel="stylesheet" href="@Url.Content("~/content/css/base.css")" />
-    <link href="~/Content/css/main.css?v=0.0.3" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/css/main.css")" />
     @RenderSection("head",false)
 </head>
 <body>
-<article id="wrap" class="sc">
+<div id="page" class="@ViewContext.RouteData.Values["controller"].ToString().ToLower() @ViewContext.RouteData.Values["action"].ToString().ToLower()">
     @RenderBody()
-    <footer id="foot">
-        <!--util-->
-        <div class="util">
-            <!--登录前-->
-            <span><a href="#wrap">TOP 返回顶部</a></span>
-        </div>
+    <footer>
         <!--联系我们-->
         <div class="contact-us">
             <p class="info">
-                <span>客服微信：21669832</span><br />
-                <span>欢迎来电询问 : 18868963721</span><br/>
+                <span>欢迎来电询问 : 13967877766</span><br />
                 <span>服务时间：工作日9:00am-8:30pm</span>
             </p>
-            <p class="copyright">© www.nbheyi.com.cn 浙ICP备15038560号-1 </p>
+            <p class="copyright">© www.nbdzhx.com 浙ICP备15046425号</p>
         </div>
     </footer>
     @RenderSection("warplast", false)
-</article>
+</div>
 <script src="@Url.Content("~/Content/js/jquery.js")"></script>
-    @RenderSection("bodybottom", false)
+@RenderSection("bodybottom", false)
 </body>
 </html>
