@@ -1,5 +1,218 @@
-﻿@{
-    ViewBag.Title = "GoodsDetail";
+﻿@model Yun.Item.GoodsDetail
+@{
+    ViewBag.Title = Model.ItemTitle;
+    var expressTemplate = (Yun.Logistics.DeliveryTemplate)ViewData["ExpressTemplate"];
 }
 
-<h2>GoodsDetail</h2>
+@section head{
+    <link href="~/Content/js/swiper/css/swiper.min.css" rel="stylesheet" />
+}
+
+<section>
+    <div class="content goods">
+        <div class="warrper">
+            <div class="banner">
+                <div class="swiper-container swiper-goods-banner">
+                    <div class="swiper-wrapper">
+                        @foreach (var m in (Model.Pictures ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <div class="swiper-slide">
+                                <img src="@m" />
+                            </div>
+                        }
+                    </div>
+                    <div class="pagination"></div>
+                    <a class="inner-back" href="javascript:;">
+                        <div id="inner-back">
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="goods-info">
+                <h2 class="title">@Model.ItemTitle</h2>
+                <div class="price-num">
+                    <h3 class="price">
+                        ￥
+                        <span id="J-Price">
+                            @if (Model.ItemSkus != null && Model.ItemSkus.Any())
+                            {
+                                @(Model.ItemSkus.Min(e => e.Price))@:-@(Model.ItemSkus.Max(e => e.Price))
+                            }
+                            else
+                            {
+                                @Model.Price
+                            }
+                        </span>
+                    </h3>
+                </div>
+                <div class="sub-title">@Model.SubTitle</div>
+                <hr />
+                <dl class="goods-plans">
+                    <dt>剩余：@Model.Stock</dt>
+                    @if (expressTemplate != null)
+                    {
+                        <dt>运费：@(expressTemplate.Name)</dt>
+                    }
+                </dl>
+            </div>
+
+            <div class="goods-catagete-change">
+                @using (Html.BeginForm("Buy", "Home", FormMethod.Get, new { id = "J-Buy-Form" }))
+                {
+                    @Html.Hidden("itemid", ViewContext.RouteData.Values["id"])
+                    @Html.Hidden("skuid", 0)
+                    @Html.Hidden("delivery", (Model.CouponTemplateId > 0 && Model.FreightTemplateId > 0) ? "" : (Model.CouponTemplateId > 0 ? "coupon" : "express"))
+                    <dl class="goods-plans">
+                        @foreach (var m in Model.ItemSpecs)
+                        {
+                            <dt>@m.Name</dt>
+                            <dd class="sku-choose">
+                                @foreach (var v in m.Values)
+                                {
+                                    <span data-specid="@v.Id" class="sku">@v.Value</span>
+                                }
+                            </dd>
+                        }
+
+                        <dd class="buy-act ">
+                            <label class="left-label">购买数量：</label>
+                            <span class="spinner clearfix">
+                                <button class="decrease" disabled="disabled" type="button">-</button>
+                                <input type="number" name="quantity" class="value" id="num-a" value="1" maxlength="5" buylimit="@Model.BuyLimit" max="@((Model.Stock > 0 && Model.BuyLimit > 0) ? Model.BuyLimit : Model.Stock)" min="1" />
+                                <button class="increase" type="button">+</button>
+                            </span>
+                        </dd>
+
+                        @if (Model.Stock <= 0)
+                        {
+                            <dd class="stock-empty">库存不足！</dd>
+                        }
+                    </dl>
+                    <dl class="goods-detail">
+                        <dt><span class="active">商品详情</span></dt>
+                        <dd class="content">@Html.Raw(Model.ItemDetail)</dd>
+                    </dl>
+                    <div class="buy-changes">
+                        @if (Model.Stock > 0)
+                        {
+                            <a class="buy-now J-c-buy" href="javascript:;">立即购买</a>
+                            <a class="add-cart J-c-buy" href="javascript:;">加入购物车</a>
+                        }
+                        else
+                        {
+                            <a class="j-not-buy" href="javascript:;">库存不足，无法购买</a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section bodybottom{
+    <script src="~/Content/js/skuMap.js"></script>
+    <script src="~/Content/js/swiper/js/swiper.jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+        var mySwiper = new Swiper('.swiper-container', {
+            pagination: '.pagination',
+            paginationClickable: true
+        });
+
+        function doBuyAction(btn) {
+            var currentClass = $(btn).attr("class");
+
+            $.post("@Url.Action("AddCart", "Ajax", new {area = ""})", $("#J-Buy-Form").serialize(), function(result) {
+                if (result.error != null) {
+                    alert("失败:" + result.error);
+                } else {
+                    if (currentClass.indexOf("buy-now") >= 0) {
+                        window.location.href = "@Url.Action("Buy")";
+                    } else {
+                        alert("恭喜，已成功添加到购物车！");
+                    }
+                }
+            });
+        }
+
+        function initCurrentSku() {
+            if ($(".sku-choose .bh-sku-selected").length > 0) {
+                var selValue = new Array();
+                $(".sku-choose .bh-sku-selected").each(function() {
+                    selValue.push($(this).attr("data-specid"));
+                });
+                $("#skuid").val(skuMapData[selValue.join(';')].skuid);
+            }
+        }
+
+
+        var skuMapData = @(Html.Raw(ViewData["SkuData"] ?? "null"));
+
+        $(function() {
+
+            //进行SKU的库存运算和部分设置，望大牛能优化和提取出一个函数
+            skuExecute(skuMapData, ".sku-choose .sku", "disabled", "bh-sku-selected", "data-specid", "#J-Price", ".J-stock", @Model.Stock, "#num-a", function(e) {
+                if ($("input[name='quantity']").attr("buylimit") > 0) $("input[name='quantity']").attr("max", $("input[name='quantity']").attr("buylimit"));
+            });
+
+            $(".spinner .decrease").click(function() {
+                var num = parseInt($("#num-a").val());
+                if (num > 1) {
+                    $("#num-a").val(num - 1);
+                    $(".spinner .increase").removeAttr("disabled");
+                    if (num - 1 <= 1) {
+                        $(this).attr("disabled", "disabled");
+                    }
+                } else {
+                    $(this).attr("disabled", "disabled");
+                }
+            });
+
+            $(".spinner .increase").click(function() {
+                var num = parseInt($("#num-a").val());
+                var max = parseInt($("#num-a").attr("max"));
+                if (num < max) {
+                    $("#num-a").val(num + 1);
+                    $(".spinner .decrease").removeAttr("disabled");
+                    if (num + 1 >= max) {
+                        $(this).attr("disabled", "disabled");
+                    }
+                } else {
+                    $(this).attr("disabled", "disabled");
+                }
+            });
+
+            $(".J-c-buy").click(function() {
+                if ($(".sku-choose").length != $(".sku-choose .bh-sku-selected").length) {
+
+                    alert("请选择商品属性后再点提交");
+                    return;
+                }
+
+                initCurrentSku();
+
+                doBuyAction(this);
+            });
+
+            $(".J-buy").click(function() {
+                if ($(".sku-choose").length <= 0 && $("#delivery").val().length > 0) {
+                    doBuyAction(this);
+                    return;
+                }
+
+                if ($(".sku-choose").length == $(".sku-choose .bh-sku-selected").length) {
+                    initCurrentSku();
+
+                    doBuyAction(this);
+                } else {
+                    $(".buy-confirm").attr("class", $(this).attr("class").replace("J-buy", "") + " buy-confirm J-c-buy");
+
+                    alert("请选择商品属性后再点提交");
+                }
+            });
+        });
+    </script>
+}

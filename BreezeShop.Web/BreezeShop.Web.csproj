@@ -225,6 +225,7 @@
     <Compile Include="CommonService\CustomMessageHandler.cs" />
     <Compile Include="CommonService\CustomMessageHandler_Events.cs" />
     <Compile Include="CommonService\LocationService.cs" />
+    <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberAuthController.cs" />
     <Compile Include="Controllers\NotLoginController.cs" />
@@ -750,14 +751,9 @@
     <Content Include="Content\images\me.png" />
     <Content Include="Content\images\none-image.png" />
     <Content Include="Content\images\search_icon.png" />
-    <Content Include="Content\js\design.js" />
-    <Content Include="Content\js\form_ajax.js" />
-    <Content Include="Content\js\ga.js" />
-    <Content Include="Content\js\jquery-1.4.2.min.js" />
     <Content Include="Content\js\jquery.cookie.js" />
     <Content Include="Content\js\jquery.js" />
     <Content Include="Content\js\skuMap.js" />
-    <Content Include="Content\js\swipe.js" />
     <Content Include="Content\js\swiper\css\swiper.css" />
     <Content Include="Content\js\swiper\css\swiper.min.css" />
     <Content Include="Content\js\swiper\js\swiper.jquery.js" />
