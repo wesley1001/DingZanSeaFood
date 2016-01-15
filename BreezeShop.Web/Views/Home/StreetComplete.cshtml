@@ -1,0 +1,24 @@
+﻿@model List<Yun.Site.CityDomain>
+
+<div class="pop-address">
+    @if (Model != null && Model.Any())
+    {
+        <ul class="list">
+            @foreach (var m in Model)
+            {
+                <li data-id="@m.Id">
+                    <h6>@m.Name</h6>
+                    <p>@m.Ext</p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="no-address">
+            <p><strong>您的地址暂时无法配送哦~</strong>
+            </p>
+            <p>亲换一个地址试试吧~</p>
+        </div>
+    }
+</div>

@@ -1,0 +1,245 @@
+﻿@using Utilities.DataTypes.ExtensionMethods
+@using Yun.Logistics
+@model List<Yun.Trade.CartDetail>
+@{
+    ViewBag.Title = "购物车";
+    var cashCoupons = ViewData["cashCoupons"] as List<Yun.Marketing.CashCouponDomain>;
+    var defaultAddress = ViewData["defaultAddress"] as UserAddress;
+}
+
+<div id="shop-car">
+    <p>收货地址</p>
+@using (Html.BeginForm("Buy", "Home", FormMethod.Post, new { id = "j-payform" }))
+{
+    <a href="@Url.Action("TradeAddress")">
+        @if (defaultAddress == null)
+        {
+        <!--无收货地址的时候-->
+            <div class="info-box focus">请选择收货地址</div>
+        }
+        else
+        {
+        <!--有收货地址的时候-->
+            <div class="info-box focus">
+                <p><label>姓名：</label><span id="j-realname">@defaultAddress.Name</span></p>
+                <p><label>电话：</label><span id="j-mobile">@defaultAddress.Mobile</span></p>
+                <p><label>地址：</label><span id="j-street">@defaultAddress.Province @defaultAddress.City @defaultAddress.Area @defaultAddress.Street</span></p>
+            </div>
+    <input type="hidden" name="addressid" value="@defaultAddress.Id" id="j-addressid" />
+        }
+    </a>
+    <p>订单信息</p>
+        <div class="info-box focus ">
+            @foreach (var item in Model)
+            {
+                <div class="cart-item-list">
+                    <div class="clearfix mb10">
+                        <span class="left">@item.ItemInfo.Product</span>
+                        <span class="right green">¥<em>@item.ItemInfo.Price</em>/份</span>
+                    </div>
+                    <div class="clearfix order-info">
+                        <span class="left lightgrey f10">
+                            @if (item.ItemInfo.SkuInfo != null)
+                            {
+                                foreach (var pair in item.ItemInfo.SkuInfo)
+                                {
+                                    @(pair.Key)@:：@(pair.Value)&nbsp;
+                        }
+                            }
+                        </span>
+                        <span class="right" data-cartid="@item.CardId">
+                            <em class="j-decrease">-</em><i class="green" max="@item.ItemInfo.MaxStore">@(item.Quantity)</i><em class="nomr j-increase">+</em>
+                        </span>
+                    </div>
+                </div>
+            }
+            <div class="clearfix">
+                <span class="left green">共计<em class="j-total-quantity">@(Model.Sum(e => e.Quantity))</em>件</span>
+                <span class="right green">小计：¥<em class="j-item-total-price">@(Model.Sum(e => e.Quantity * e.ItemInfo.Price.TryTo(0.0)).ToString("f2"))</em></span>
+            </div>
+        </div>
+
+        if (cashCoupons != null && cashCoupons.Any())
+        {
+            <div class="discount">
+                <select name="use-cashcoupon" id="j-cashcoupon">
+                    @foreach (var c in cashCoupons)
+                    {
+                        <option value="@c.Id" data-price="@c.Credit">@c.Name</option>
+                    }
+                </select>
+            </div>
+        }
+        <div class="info-box no-border price-statistics">
+            <div class="clearfix">
+                <span class="left">运费</span>
+                <span class="right">￥<em id="j-express-price">@ViewData["ExpressPrice"]</em></span>
+            </div>
+            <div class="clearfix">
+                <span class="left">优惠</span>
+                <span class="right">
+                    ￥<em id="j-cheap">0.00</em>
+                </span>
+            </div>
+            <div class="clearfix">
+                <span class="left">共计<em class="green j-total-quantity">0</em>件</span>
+                <span class="right">商品总价<em class="green">¥</em><em id="j-total-price">0.00</em></span>
+            </div>
+
+        </div>
+        <p>备注</p>
+        <div class="info-box">
+            <textarea name="note" type="text" placeholder="还有什么要求写这里哦~"></textarea>
+        </div>
+        <div class="button-box">
+            <a class="shop-btn greenBg" href="@Url.Action("Index")">继续购买</a>
+            <button class="shop-btn redBg" href="javascript:;" id="j-pay" type="button">立即去支付</button>
+        </div>
+    }
+
+</div>
+
+@section bodybottom
+{
+    <script type="text/javascript">
+        var quantityTimer;
+
+        function setTotalPrice() {
+            var totalQuantity = 0;
+
+            //优惠价格
+            var cheapPrice = 0;
+            if ($("#j-cashcoupon").length > 0) {
+                cheapPrice = parseFloat($("#j-cashcoupon option:selected").data("price"));
+                $("#j-cheap").text(cheapPrice.toFixed(2));
+            }
+
+            var totalPrice = 0;
+            var expressPrice = parseFloat($("#j-express-price").text());
+            $(".cart-item-list").each(function() {
+                var price = parseFloat($(".right.green em", this).text());
+                var quantity = parseInt($(".order-info i.green", this).text());
+
+                totalPrice += price * quantity;
+
+                totalQuantity += quantity;
+            });
+
+            //总数量的显示
+            $(".j-total-quantity").text(totalQuantity);
+
+            //计算快递价格
+            $.get("@Url.Action("GetExpressPrice", "Home")", { addressId: $("#j-addressid").val() == undefined ? 0 : $("#j-addressid").val() }, function(html) {
+                expressPrice = parseFloat(html);
+                $("#j-express-price").text(expressPrice.toFixed(2));
+                $(".j-item-total-price").text((totalPrice + parseFloat(expressPrice)).toFixed(2));
+                $("#j-total-price").text((totalPrice + parseFloat(expressPrice) - cheapPrice).toFixed(2));
+            });
+        }
+
+        $("#j-pay").click(function() {
+            if ($(".cart-item-list").length <= 0) {
+                alert("您的购物车空空如也，赶紧去选购吧！");
+                return;
+            }
+
+            if ($("#j-addressid").val() == undefined) {
+                alert("请选择收货地址");
+                return;
+            }
+
+            $(this).text("支付中...").attr("disabled", "disabled");
+
+            clearTimeout(quantityTimer);
+            quantityTimer = setTimeout(function() {
+                $.post($("#j-payform").attr("action"), $("#j-payform").serialize(), function(data) {
+                    if (data.error == undefined || data.error == null || data.error === "") {
+                        if (data.flowid == 1) {
+                            window.location.replace("@Url.Action("Trades", "Center")");
+                        } else {
+                            window.location.replace("@Url.Action("ToPay")/" + data.tradeid + "?flowid=" + data.flowid);
+                        }
+                    } else {
+                        $(this).text("立即去支付").removeAttr("disabled");
+                        alert(data.error);
+                    }
+                });
+            }, 100);
+        });
+
+        $(".j-decrease").each(function() {
+            $(this).click(function() {
+                var thisBtn = this;
+                var numText = $(this).next();
+                var num = parseInt(numText.text());
+                if (num > 0) {
+                    clearTimeout(quantityTimer);
+
+                    if (num - 1 <= 0 && !confirm("您真的确定要删除该商品吗？")) {
+                        return;
+                    }
+
+                    quantityTimer = setTimeout(function() {
+                        //异步提交
+                        $.post("@Url.Action("UpdateCard", "Ajax")", { cartid: $(thisBtn).parent().attr("data-cartid"), quantity: num - 1 }, function(r) {
+                            if (!r.result) {
+                                numText.text(num);
+                                return;
+                            }
+
+                            if ((num - 1) <= 0) {
+                                $(thisBtn).closest(".cart-item-list").remove();
+                            }
+
+                            setTotalPrice();
+                        });
+                    }, 100);
+
+                    if (num - 1 >= 1) {
+                        numText.text(num - 1);
+                    }
+
+                    $(this).parent().find(".j-increase").removeAttr("disabled");
+                } else {
+                    $(this).attr("disabled", "disabled");
+                }
+            });
+        });
+
+        $(".j-increase").each(function() {
+            $(this).click(function() {
+                var thisBtn = this;
+                var numText = $(this).prev();
+                var num = parseInt(numText.text());
+                var max = parseInt(numText.attr("max"));
+
+                if (num < max) {
+                    clearTimeout(quantityTimer);
+
+                    quantityTimer = setTimeout(function() {
+                        $.post("@Url.Action("UpdateCard", "Ajax")", { cartid: $(thisBtn).parent().attr("data-cartid"), quantity: num + 1 }, function(r) {
+                            if (!r.result) {
+                                numText.text(num);
+                                return;
+                            }
+
+                            setTotalPrice();
+                        });
+                    }, 100);
+
+                    numText.text(num + 1);
+                    $(this).parent().find(".j-decrease").removeAttr("disabled");
+                    if (num + 1 >= max) {
+                        $(this).attr("disabled", "disabled");
+                    }
+                } else {
+                    $(this).attr("disabled", "disabled");
+                }
+            });
+        });
+
+        setTotalPrice();
+
+        $("#j-cashcoupon").change(setTotalPrice);
+    </script>
+}

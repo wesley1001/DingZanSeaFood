@@ -1,0 +1,153 @@
+﻿@model Yun.Logistics.UserAddress
+
+@{
+    ViewBag.Title = "编辑地址";
+    var provinces = (List<SelectListItem>) ViewData["ProvincesList"];
+    var cities = (List<SelectListItem>) ViewData["CitiesList"];
+    var areas = (List<SelectListItem>) ViewData["AreasList"];
+}
+
+<header class="header">
+    <div class="left">&nbsp;</div>
+    <div class="center">编辑地址</div>
+    <div class="right">&nbsp;</div>
+</header>
+
+
+@using (Html.BeginForm("AdderssEdit","Home", FormMethod.Post, new {id = "j-form"}))
+{
+    <div class="select-address">
+        <ul class="new-address">
+            <li>
+                <label>城市</label>
+                <div class="city">
+                    <select name="province" id="province">
+                        @foreach (var m in provinces)
+                        {
+                            <option @(m.Selected ? "selected" : "") value="@m.Value">@m.Text</option>
+                        }
+                    </select>
+                    <select name="city" id="city">
+                        @foreach (var m in cities)
+                        {
+                            <option @(m.Selected ? "selected" : "") value="@m.Value">@m.Text</option>
+                        }
+                    </select>
+                    <select name="area" id="area">
+                        @foreach (var m in areas)
+                        {
+                            <option @(m.Selected ? "selected" : "") value="@m.Value">@m.Text</option>
+                        }
+                    </select>
+                </div>
+            </li>
+            <li>
+                <label>地址</label>
+                <div><input type="text" value="@(Model != null ? Model.Street : "")" name="street" id="j-street"/>
+                </div>
+            </li>
+            <li><label>姓名</label>
+                <div><input type="text" value="@(Model != null ? Model.Name : "")" name="realname" id="j-realname"/>
+                </div></li>
+            <li><label>电话</label>
+                <div><input type="tel" value="@(Model != null ? Model.Mobile : "")" name="tel" id="j-tel" maxlength="11"/>
+                </div></li>
+        </ul>
+
+    </div>
+
+    <div class="isdefault">
+        <span class="left">是否设为默认地址<input type="checkbox" name="isdefault" value="1" @(Model != null ? (Model.IsDefault ? "checked" : "") : "") /> </span>
+    </div>
+    @Html.Hidden("redirectUrl", Request.QueryString["redirect"]??"")
+}
+<div class="button-box">
+    <input type="button" class="addr-btn delete" value="删除"/>
+    <input type="button" class="addr-btn save" value="保存"/>
+</div>
+
+@section bodybottom{
+    <script>
+        $(".save").click(function() {
+            if ($("#area").val().length <= 0 || $("#city").val().length <= 0) {
+                alert("请选择区域");
+                return;
+            }
+
+            if ($("#j-street").val().length <= 0) {
+                alert("请输入配送地址");
+                return;
+            }
+
+            if ($("#j-realname").val().length <= 0) {
+                alert("请输入收货人姓名");
+                return;
+            }
+
+            if ($("#j-tel").val().length <= 0) {
+                alert("请输入收货人电话");
+                return;
+            }
+
+            if ($("#j-tel").val().length < 11) {
+                alert("请输入正确的收货人电话");
+                return;
+            }
+
+            $(this).attr("disabled", "disabled").val("正在保存");
+            $.post("@Url.Action("AdderssEdit", "Home", new {id = ViewContext.RouteData.Values["id"] ?? "0"})", $("#j-form").serialize(), function(r) {
+                if (r) {
+                    if ($("#redirectUrl").val().length <= 5) {
+                        window.location.replace("@Url.Action("ManageAddress")");
+                        return;
+                    }
+
+                    window.location.replace($("#redirectUrl").val());
+                } else {
+                    $(".save").removeAttr("disabled").val("保存");
+                    alert("保存失败，请输入完整的收货地址后再点提交");
+                }
+            });
+        });
+
+        $(".delete").click(function() {
+            if (confirm("真的要删除该地址吗？")) {
+                $(this).attr("disabled", "disabled").val("正在删除");
+                $.post("@Url.Action("DeleteAddress", "Home", new {id = ViewContext.RouteData.Values["id"] ?? "0"})", function(r) {
+                    if (r) {
+                        window.location.replace("@Url.Action("AdderssEdit")");
+                    } else {
+                        $(".delete").removeAttr("disabled").val("删除");
+                        alert("删除失败");
+                    }
+                });
+            }
+        });
+
+        //省得变更
+        $("#province").change(function() {
+            $("#city").empty().append("<option value=''>-请选择城市-</option>");
+            $("#area").empty().append("<option value=''>-请选择地区-</option>");
+            if ($("#province").val().length >= 5) {
+                $.get("@Url.Action("CiyiesData", "NotLogin")", { parentid: $("#province").val().split('-')[1] }, function(html) {
+                    for (var c in html.data) {
+                        $("#city").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
+                    }
+                });
+            }
+        });
+
+        //城市得变更
+        $("#city").change(function () {
+            $("#area").empty().append("<option value=''>-请选择地区-</option>");
+            if ($("#city").val().length >= 5) {
+                $.get("@Url.Action("CiyiesData", "NotLogin")", { parentid: $("#city").val().split('-')[1] }, function (html) {
+                    for (var c in html.data) {
+                        $("#area").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
+                    }
+                });
+            }
+        });
+
+    </script>
+}

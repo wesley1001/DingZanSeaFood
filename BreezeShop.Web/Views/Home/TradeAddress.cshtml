@@ -1,0 +1,32 @@
+﻿@model List<Yun.Logistics.UserAddress>
+@{
+    ViewBag.Title = "我得地址列表";
+}
+
+
+<header class="header">
+    <div class="left"></div>
+    <div class="center"></div>
+    <div class="right">@Html.ActionLink("新地址", "AdderssEdit",new {redirect = Request.Url})</div>
+</header>
+
+@foreach (var m in Model)
+{
+    <a href="@Url.Action("Buy", new { addressId = m.Id })">
+        <div class="edit-address">
+            <p>
+                @m.Name
+                @if (m.IsDefault)
+                {
+                    <em class="red">(默认地址)</em>
+                }
+            </p>
+            <p>@m.Mobile</p>
+            <p>@m.Province @m.City @m.Area @m.Street</p>
+        </div>
+    </a>
+}
+
+    <a class="edit-addr-button" href="@Url.Action("ManageAddress")">
+        管理地址
+    </a>

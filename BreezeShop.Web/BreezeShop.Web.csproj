@@ -1072,6 +1072,12 @@
     <Content Include="Views\Home\ItemData.cshtml" />
     <Content Include="Views\Home\GoodsDetail.cshtml" />
     <Content Include="Views\Shared\_FooterNav.cshtml" />
+    <Content Include="Views\Home\AdderssEdit.cshtml" />
+    <Content Include="Views\Home\Buy.cshtml" />
+    <Content Include="Views\Home\ManageAddress.cshtml" />
+    <Content Include="Views\Home\StreetComplete.cshtml" />
+    <Content Include="Views\Home\ToPay.cshtml" />
+    <Content Include="Views\Home\TradeAddress.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

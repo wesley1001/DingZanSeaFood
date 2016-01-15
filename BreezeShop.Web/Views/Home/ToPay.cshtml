@@ -1,0 +1,96 @@
+﻿@using Yun.Trade
+@model Yun.Pay.JsApiPayResult
+@{
+    ViewBag.Title = "去支付";
+    var trade = (SnapshotTrade)ViewData["Trade"];
+}
+
+@section head{
+    <script type="text/javascript">
+    function onBridgeReady() {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+                "appId": "@Model.AppId", //公众号名称，由商户传入
+                "timeStamp": "@Model.TimeStamp", //时间戳，自1970年以来的秒数
+                "nonceStr": "@Model.NonceStr", //随机串
+                "package": "@Model.Package",
+                "signType": "@Model.SignType", //微信签名方式：
+                "paySign": "@Model.PaySign" //微信签名
+            },
+            function(res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    window.location.replace("@Url.Action("Trades", "Center")");
+                    } else {
+                        //alert(res.err_code + res.err_desc + res.err_msg);
+                    }
+                    //if(res.err_msg == "get_brand_wcpay_request：ok" ) {}     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+                }
+            );
+        }
+
+        function callpay() {
+            if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                    document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                }
+            } else {
+                onBridgeReady();
+            }
+        }
+    </script>
+}
+
+<header class="header">
+    <div class="left back">
+        <a href="javascript:;">&lt;</a>
+    </div>
+    <div class="center">支付中心</div>
+    <div class="right">&nbsp;</div>
+</header>
+
+<div id="shop-car">
+    <p>配送信息</p>
+    <div class="info-box focus">
+        <p><label>姓名：</label><span id="j-realname">@trade.RealName</span></p>
+        <p><label>电话：</label><span id="j-mobile">@trade.Mobile</span></p>
+        <p><label>地址：</label><span id="j-street">@trade.Address</span></p>
+    </div>
+    <p>订单信息</p>
+    <div class="info-box focus ">
+        @foreach (var item in trade.Orders)
+        {
+            <div class="clearfix mb10">
+                <span class="left">@item.ItemTitle</span>
+                <span class="right green">¥<em>@item.Price</em>/份</span>
+            </div>
+            <div class="clearfix order-info">
+                <span class="left lightgrey f10">
+                    @if (item.SkuNames != null && item.SkuNames.Any())
+                    {
+                        foreach (var pair in item.SkuNames)
+                        {
+                            @(pair.Key)@:：@(pair.Value)&nbsp;
+                        }
+                    }
+                </span>
+            </div>
+        }
+        <div class="clearfix">
+            <span class="left green">共计<em class="j-total-quantity">@(trade.Quantity)</em>件</span>
+            <span class="right green">应付金额：¥<em class="j-item-total-price">@(trade.Money)</em></span>
+        </div>
+    </div>
+    <div class="button-box">
+        <button class="shop-btn redBg" href="javascript:;" id="j-topay" type="button">微信支付</button>
+    </div>
+    </div>
+
+@section bodybottom
+{
+    <script>
+        $("#j-topay").click(onBridgeReady);
+    </script>
+}
