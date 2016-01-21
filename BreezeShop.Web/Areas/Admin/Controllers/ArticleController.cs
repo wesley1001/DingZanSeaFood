@@ -88,7 +88,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Add(AddArticleModel model, string status, int categoryId)
+        public ActionResult Add(AddArticleModel model, string status, int categoryId = 0)
         {
             if (ModelState.IsValid)
             {

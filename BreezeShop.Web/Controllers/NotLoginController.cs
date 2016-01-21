@@ -82,5 +82,28 @@ namespace BreezeShop.Web.Controllers
         {
             return View(YunClient.Instance.Execute(new GetArchiveRequest { Id = id }).Article);
         }
+
+        public ActionResult ArticleList()
+        {
+            return View(YunClient.Instance.Execute(new GetArchivesRequest
+            {
+                PageNum = 1,
+                PageSize = 20,
+                Fields = "id,title,createtime,thumb"
+            }).Articles);
+        }
+
+        public ActionResult ArticleData(int p = 1)
+        {
+            return
+                PartialView(
+                    YunClient.Instance.Execute(new GetArchivesRequest
+                    {
+                        PageNum = p,
+                        PageSize = 20,
+                        Fields = "id,title,createtime,thumb"
+                    }).Articles);
+        }
+
     }
 }

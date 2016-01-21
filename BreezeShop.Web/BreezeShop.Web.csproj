@@ -1078,6 +1078,8 @@
     <Content Include="Views\Home\StreetComplete.cshtml" />
     <Content Include="Views\Home\ToPay.cshtml" />
     <Content Include="Views\Home\TradeAddress.cshtml" />
+    <Content Include="Views\NotLogin\ArticleList.cshtml" />
+    <Content Include="Views\NotLogin\ArticleData.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

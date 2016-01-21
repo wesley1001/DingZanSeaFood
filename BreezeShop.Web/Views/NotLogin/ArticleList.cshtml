@@ -1,0 +1,56 @@
+﻿@model IList<Yun.Archive.ArticleDetail>
+
+@{
+    ViewBag.Title = "文章列表";
+}
+
+<div id="J-List-Content" class="new-list">
+    <ul>
+        @foreach (var m in Model)
+        {
+            <li>
+                <a href="@Url.Action("Article", new { id = m.Id })">
+                    <div class="new-pic">
+                        <img src="@BreezeShop.Core.FileFactory.ImageExtension.GetUrl("310", m.Thumb)" class="img-responsive" />
+                    </div>
+                    <div class="new-info">
+                        <h2 class="new-title">@m.Title</h2>
+                        <p class="new-time">@m.CreateTime</p>
+                    </div>
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}
+
+@section bodybottom{
+    <script type="text/javascript">
+
+        var page = 1;
+        var loading = false;
+
+        function loadItem() {
+            //$("#J-Loading").removeClass("hide");
+            $.get("@Url.Action("ArticleData", "NotLogin")", { p: page }, function(html) {
+                if (html.length > 20) {
+                    $("#J-List-Content").append(html);
+                    loading = false;
+                }
+                //$("#J-Loading").addClass("hide");
+            });
+        }
+
+        $(window).scroll(function() {
+            if ($(document).scrollTop() + 60 >= $(document).height() - $(window).height() && !loading) {
+                loading = true;
+                page++;
+                loadItem();
+            }
+        });
+
+</script>
+}

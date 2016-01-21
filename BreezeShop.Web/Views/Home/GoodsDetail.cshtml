@@ -93,9 +93,13 @@
                         <dd class="content">@Html.Raw(Model.ItemDetail)</dd>
                     </dl>
                     <div class="buy-changes">
+                        <a href="@Url.Action("Index")" class="cart">
+                            <img src="@Url.Content("~/content/images/icon/1.png")">
+                            店铺主页
+                        </a>
                         <a href="@Url.Action("Buy")" class="cart">
                             <img src="@Url.Content("~/content/images/icon/2.png")">
-                             购物车
+                            购物车
                         </a>
                         @if (Model.Stock > 0)
                         {
