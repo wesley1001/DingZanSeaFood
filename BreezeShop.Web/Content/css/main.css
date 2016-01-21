@@ -92,100 +92,95 @@ body{background-color:#f8f8f8;font-family:tahoma,arial,\5FAE\8F6F\96C5\9ED1,sans
 .buy-changes .add-cart,.buy-changes .buy-now{line-height:3.5}
 .buy-changes .buy-now{color:#FFF;background:#f60;border:1px solid #f60}
 .buy-changes .add-cart{color:#333;background:#FFF;border:1px solid #e5e5e5}
-
-#shop-car{ padding: 10px;}
+#shop-car{padding:10px}
 #shop-car em,#shop-car i{font-style:normal}
-.info-box{border:1px solid #ccc;border-radius:.5em;padding:1em;margin-bottom: 1em;background: #FFF;color: #000;font-size: 1.4em;}
-.info-box.focus{border-color:#cccccc}
+.info-box{border:1px solid #ccc;border-radius:.5em;padding:1em;margin-bottom:1em;background:#FFF;color:#000;font-size:1.4em}
+.info-box.focus{border-color:#ccc}
 .info-box.no-border{border:none}
 .info-box.no-border span{display:inline-block}
 .info-box textarea{width:100%;background-color:transparent;border:0}
 .button-box{text-align:center}
-.shop-btn{border-radius:.4em;border:none;padding:1em 1.7em;margin:0 1em;color:#fff;font-size:1.2em;display: inline-block;font-size: 1.4em;}
+.shop-btn{border-radius:.4em;border:none;padding:1em 1.7em;margin:0 1em;color:#fff;font-size:1.2em;display:inline-block;font-size:1.4em}
 .shop-btn a{color:#FFF}
-.shop-btn.redBg{ background: #dd5116;color: #FFF;border: 1px solid #dd5116;}
-.shop-btn.greenBg{ background: #FFF;color: #000;border: 1px solid #cccccc;}
+.shop-btn.redBg{background:#dd5116;color:#FFF;border:1px solid #dd5116}
+.shop-btn.greenBg{background:#FFF;color:#000;border:1px solid #ccc}
 .order-info{color:#ccc;font-size:1em;margin-bottom:2em}
-.order-info span em{border:1px solid #ccc;border-radius:1em;display:inline-block;padding:.2em .8em;margin: 0 .5em;}
+.order-info span em{border:1px solid #ccc;border-radius:1em;display:inline-block;padding:.2em .8em;margin:0 .5em}
 .info-box .right{float:right}
-.info-box .mb10{ margin-bottom: 10px;}
-.info-box.price-statistics>div{ margin-bottom: .6em;}
+.info-box .mb10{margin-bottom:10px}
+.info-box.price-statistics>div{margin-bottom:.6em}
 .send-time{height:3em;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin-top:3em;margin-bottom:1em}
 .discount select{width:100%;border-radius:.5em;padding:.5em;border-color:#ccc;color:#575757}
-.new-address{ margin-top: 1em;padding: 0 1em;font-size: 1.2rem;}
+.new-address{margin-top:1em;padding:0 1em;font-size:1.2rem}
 .new-address>li{margin-bottom:1em;text-align:justify;display:-webkit-box}
 .new-address>li label{line-height:3em;margin-right:1em;text-align:center;display:block;color:#000}
-.new-address>li>div{display:block;-webkit-box-flex:1;border:1px solid #cccccc;color:#d5c3b9;position:relative}
+.new-address>li>div{display:block;-webkit-box-flex:1;border:1px solid #ccc;color:#d5c3b9;position:relative}
 .new-address>li>div.city{border:0;line-height:3}
-.new-address>li>div.city select{ width: 100%;}
+.new-address>li>div.city select{width:100%}
 .new-address>li>div input{display:block;width:98%;height:3em;border:0;text-indent:10px}
-.new-address select{ font-size: 1.3rem;}
-.isdefault{height:2em;padding:1em;margin:0 1em 1em;border: 1px solid #cccccc;}
-.isdefault span{font-size: 1.3rem;}
+.new-address select{font-size:1.3rem}
+.isdefault{height:2em;padding:1em;margin:0 1em 1em;border:1px solid #ccc}
+.isdefault span{font-size:1.3rem}
 .isdefault input[type=checkbox]{vertical-align:middle;margin-left:3px}
-.addr-btn{background-color:#cccccc;color:#fff;padding:1em 2em;margin:0 1em 1em;border:none}
-
-.edit-address{border-bottom:1px solid #eee;padding: 1em 3em;color: #000;font-size: 1.4rem;}
-.edit-addr-button{display:block;background-color:#cccccc;color:#fff;padding:1em 0;text-align:center;width:90%;margin:1em auto}
-
-/*资讯列表*/
-.bottom-border {
-  border-bottom: 1px solid #b5b5b5;
-}
-.header-title {
-    font-size: 1.6rem;
-  color: #000;
-}
-.back {
-  width: 10px;
-  height: 22px;
-  background: url("../images/back-pic.png") center no-repeat;
-  float: left;
-  position:relative;
-}
-.search-link {
-  width: 20px;
-height: 28px;
-  background: url("../images/search-pic.png") center no-repeat;
-  background-size:20px;
-  float: right;
-  margin-right: 50px;
-}
-.new-list {
-  padding: 0px 11px;
-  margin: 11px auto;
-  border-top: 1px solid #d2d2d2;
-  background-color: #fff;
-}
-.new-list li {
-  padding: 14px 0;
-  border-bottom: 1px solid #d2d2d2;
-}
-.new-list li:last-child {
-  border-bottom: 0;
-}
-.new-list li .new-pic {
-  width: 60px;
-  height: 60px;
-  display: table-cell;
-  overflow: hidden;
-  text-align: center;
-  vertical-align: middle;
-  float: left;
-  margin-right: 14px;
-}
-.new-list li .new-title {
-  color: #333;
-  line-height: 18px;
-  font-size: 1.4rem;
-  padding: 5px 0px;
-}
-.new-list li .new-time {
-  color: #999;
-}
-/*资讯详情*/
+.addr-btn{background-color:#ccc;color:#fff;padding:1em 2em;margin:0 1em 1em;border:none}
+.edit-address{border-bottom:1px solid #eee;padding:1em 3em;color:#000;font-size:1.4rem}
+.edit-addr-button{display:block;background-color:#ccc;color:#fff;padding:1em 0;text-align:center;width:90%;margin:1em auto}
+.bottom-border{border-bottom:1px solid #b5b5b5}
+.header-title{font-size:1.6rem;color:#000}
+.new-list{padding:0 11px;margin:11px auto;border-top:1px solid #d2d2d2;background-color:#fff}
+.new-list li{padding:14px 0;border-bottom:1px solid #d2d2d2}
+.new-list li:last-child{border-bottom:0}
+.new-list li .new-pic{width:60px;height:60px;display:table-cell;overflow:hidden;text-align:center;vertical-align:middle;float:left;margin-right:14px}
+.new-list li .new-title{color:#333;line-height:18px;font-size:1.4rem;padding:5px 0}
+.new-list li .new-time{color:#999}
 .article{padding:1em}
 .article h1{font-size:1.6em;margin-bottom:.5em}
 .article .time{margin-bottom:.7em}
-.article .detail,.article .detail p{font-size: 1.2em;}
-.article .detail p{ line-height: 1.8;}
+.article .detail,.article .detail p{font-size:1.2em}
+.article .detail p{line-height:1.8}
+
+.achievement,.index .user-info{background: #dd5116;color: #FFF;font-size: 1.4em;}
+.index .user-info{ padding: 10px;}
+.index .user-info a{color: #FFF;}
+.index .user-info .avatar{ float: left;width: 80px;height: 80px;}
+.index .user-info .other{ line-height: 1.8;border-bottom: 1px dashed #FFF;padding-bottom: 7px;}
+
+.achievement{ display: flex;    padding-bottom: 8px;margin-bottom: 15px;}
+.achievement li{ flex: 1;text-align: center;line-height: 1.7;}
+
+.list-box{ margin: 0 10px;font-size: 1.4em;border: 1px solid #e8e8e8;margin-bottom: 15px;background: #FFF;    border-radius: 6px;}
+.list-box a{ color: #000;display: block;}
+.list-box dt{ background: #f3f3f3;font-weight: bold;}
+.list-box dt,.list-box dd{ height: 38px;line-height: 38px;border-bottom: 1px solid #e8e8e8;margin: 0;padding-left: 20px;}
+.list-box dd:last-of-type{ border-bottom: 0;}
+.list-box dd>span{ float: right;
+    margin-right: 10px;
+    background: #dd5116;
+    border-radius: 6px;
+    height: 25px;
+    line-height: 25px;
+    margin-top: 7px;
+    color: #FFF;
+    padding: 0 7px;}
+
+.my-cashcoupon .coupons{border:1px solid #eee;border-radius:6px;padding: .6em;margin: .5em 0;}
+.my-cashcoupon .coupons ul{display:-webkit-box;list-style: none;  font-size: 1.4rem;}
+.my-cashcoupon .coupons ul .left{text-align:center}
+.my-cashcoupon .coupons ul .middle{text-align:left}
+.my-cashcoupon .coupons ul li{-webkit-box-flex:1;padding:15px 0}
+.my-cashcoupon .coupons .info{background:#acd13a;color:#fff;font-size:16px}
+.my-cashcoupon .coupons .info .middle{font-size:30px}
+.my-cashcoupon .coupons .status .left{font-weight:700}
+
+.qrcode .content{ background: #FFF;}
+.qrcode .user-info{display: flex;font-size: 1.4em;padding-top: 30px;    margin-bottom: 30px;position: relative;}
+.qrcode .user-info p{ margin: 0;line-height: 1.7;}
+.qrcode .user-info img{ width: 60px;height: 60px;margin-top: 5px;border-right: 1px solid #333;padding-right: 10px;}
+.qrcode .user-info>li:first-of-type{ flex: 4;    text-align: right;}
+.qrcode .user-info>li:last-of-type{ flex: 8;padding-left: 10px;padding-top: 20px;}
+.qrcode .logo{ text-align: center;margin-bottom: 30px;}
+.qrcode-content{ background: #dd5116;text-align: center;padding: 30px 0 10px 0;color: #ffffff;font-size: 1.4em;}
+.qrcode-content .img{ margin: 0 55px;
+    background: #FFF;
+    padding: 20px;}
+.qrcode-content .img img{    max-width: 100%;}

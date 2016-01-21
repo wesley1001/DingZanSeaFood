@@ -1,0 +1,32 @@
+﻿@model Yun.User.UserDetail
+@{
+    ViewBag.Title = "我的幸运二维码";
+}
+
+<div class="content">
+    <ul class="user-info">
+        <li>
+            <img src="@Model.Avatar"/>
+        </li>
+        <li>
+            <p><strong>我是</strong>@(Model.RealName)</p>
+            <p><strong>我在用</strong>@(BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)</p>
+        </li>
+    </ul>
+
+    <div class="logo">
+        <img src="@Url.Content("~/Content/images/logo.png")"/>
+    </div>
+
+    <div class="qrcode-content">
+        <div class="img">
+            <img src="http://a.summerbreeze.cn/QrCodeHandler.ashx?t=@Model.UserId" />
+        </div>
+        <p>长按此图/识别图中二维码/搞定！<br />邀请口令：@Model.UserId</p>
+    </div>
+</div>
+
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}

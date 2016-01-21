@@ -226,6 +226,7 @@
     <Compile Include="CommonService\CustomMessageHandler_Events.cs" />
     <Compile Include="CommonService\LocationService.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
+    <Compile Include="Controllers\CenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberAuthController.cs" />
     <Compile Include="Controllers\NotLoginController.cs" />
@@ -1080,6 +1081,9 @@
     <Content Include="Views\Home\TradeAddress.cshtml" />
     <Content Include="Views\NotLogin\ArticleList.cshtml" />
     <Content Include="Views\NotLogin\ArticleData.cshtml" />
+    <Content Include="Views\Center\Index.cshtml" />
+    <Content Include="Views\Center\QrCode.cshtml" />
+    <Content Include="Views\Center\MyCashCoupons.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

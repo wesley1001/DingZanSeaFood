@@ -1,0 +1,49 @@
+﻿@using Utilities.DataTypes.ExtensionMethods
+@using Yun.Distribution
+@model Yun.User.UserDetail
+@{
+    ViewBag.Title = "个人中心";
+    var distributorPerformance = (ViewData["DistributorPerformance"] as DistributorPerformance) ?? new DistributorPerformance();
+    var lowerDistributors = (ViewData["LowerDistributors"] as List<DistributionUser>) ?? new List<DistributionUser>();
+    var superiorDistributor = (ViewData["SuperiorDistributor"] as DistributionUser) ?? new DistributionUser();
+}
+
+<div class="user-info clearfix">
+    <div class="avatar">
+        <img src="@Model.Avatar"/>
+    </div>
+    <ul class="other">
+        <li>昵称：@Model.RealName</li>
+        <li>关注时间：@Model.CreateTime.Substring(0, Model.CreateTime.IndexOf(' '))</li>
+        <li>二维码：@Html.ActionLink("查看二维码", "QrCode")</li>
+    </ul>
+</div>
+
+<ul class="achievement">
+    <li>营业额<br/>@distributorPerformance.TotalTradeMoney.ToString("f2")</li>
+    <li>累计利润<br/>@distributorPerformance.TotalProfit.ToString("f2")</li>
+    <li>可领利润<br />@Model.Money.TryTo(0.0).ToString("f2")</li>
+</ul>
+
+    <dl class="list-box blue">
+        <dt>个人信息</dt>
+        <dd>我的分销<span>@(distributorPerformance.PaidTotalBuyer)人；@(distributorPerformance.PaidTradeNum)单</span></dd>
+        <dd>我的粉丝<span>@(lowerDistributors.Count)人</span></dd>
+        <dd>缘起<span>@superiorDistributor.RealName</span></dd>
+        <dd>累计利润明细<i></i></dd>
+    </dl>
+
+    <dl class="list-box">
+        <dt>用户管理</dt>
+        <dd><a href="javascript:;">提现<i></i></a></dd>
+        <dd><a href="javascript:;">账户管理<i></i></a></dd>
+        <dd><a href="@Url.Action("ManageAddress","Home")">收货地址<i></i></a></dd>
+        <dd><a href="@Url.Action("QrCode")">查看幸运二维码<i></i></a></dd>
+        <dd><a href="javascript:;">我的订单<i></i></a></dd>
+        <dd><a href="@Url.Action("MyCashCoupons")">我的优惠券<i></i></a></dd>
+    </dl>
+
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}

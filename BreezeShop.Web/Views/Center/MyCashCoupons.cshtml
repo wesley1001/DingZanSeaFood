@@ -1,0 +1,26 @@
+﻿@model List<Yun.Marketing.CashCouponDomain>
+@{
+    ViewBag.Title = "我的优惠券";
+}
+
+<section class="my-cashcoupon">
+    @foreach (var m in Model)
+    {
+        <div class="coupons">
+            <ul class="info">
+                <li class="left">@m.Name</li>
+                <li class="middle">￥@m.Credit</li>
+                <li class="right">元代金券</li>
+            </ul>
+            <ul class="status">
+                <li class="left">有效期：</li>
+                <li class="middle">@(Convert.ToDateTime(m.EndTime).ToShortDateString())</li>
+                <li class="right green">@(m.OrderId>0?"已使用":"未使用")</li>
+            </ul>
+        </div>
+    }
+</section>
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}

@@ -21,11 +21,9 @@ namespace BreezeShop.Core.DataProvider
         /// <returns></returns>
         public static UserDetail GetLoginMember(string token = null)
         {
-            var t = string.IsNullOrEmpty(token)?Token: token;
-            if (t.IsNullOrEmpty()) return null;
+            var t = string.IsNullOrEmpty(token) ? Token : token;
 
-            return _userCache.Get(t.Hash(),
-                () => YunClient.Instance.Execute(new GetUserRequest(), t).User);
+            return YunClient.Instance.Execute(new GetUserRequest(), t).User;
         }
 
         /// <summary>

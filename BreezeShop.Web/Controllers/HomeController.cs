@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using BreezeShop.Core;
 using BreezeShop.Core.DataProvider;
-using Senparc.Weixin;
 using Utilities.DataTypes.ExtensionMethods;
 using Yun.Item.Request;
 using Yun.Logistics;
