@@ -100,7 +100,7 @@ body{background-color:#f8f8f8;font-family:tahoma,arial,\5FAE\8F6F\96C5\9ED1,sans
 .info-box.no-border span{display:inline-block}
 .info-box textarea{width:100%;background-color:transparent;border:0}
 .button-box{text-align:center}
-.shop-btn{border-radius:.4em;border:none;padding:1em 1.7em;margin:0 1em;color:#fff;font-size:1.2em;display:inline-block;font-size:1.4em}
+.shop-btn{border-radius:.4em;border:none;padding:1em 1.7em;margin:0 .8em;color:#fff;font-size:1.2em;display:inline-block;font-size:1.4em}
 .shop-btn a{color:#FFF}
 .shop-btn.redBg{background:#dd5116;color:#FFF;border:1px solid #dd5116}
 .shop-btn.greenBg{background:#FFF;color:#000;border:1px solid #ccc}
