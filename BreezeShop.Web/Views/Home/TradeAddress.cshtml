@@ -4,10 +4,10 @@
 }
 
 
-<header class="header">
+<header>
     <div class="left"></div>
     <div class="center"></div>
-    <div class="right">@Html.ActionLink("新地址", "AdderssEdit",new {redirect = Request.Url})</div>
+    <div class="right">@Html.ActionLink("新地址", "AdderssEdit", new { redirect = Request.Url })</div>
 </header>
 
 @foreach (var m in Model)

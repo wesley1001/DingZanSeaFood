@@ -7,7 +7,7 @@
     var areas = (List<SelectListItem>)ViewData["AreasList"];
 }
 
-<header class="header">
+<header>
     <div class="left">&nbsp;</div>
     <div class="center">账户管理</div>
     <div class="right">&nbsp;</div>
@@ -25,7 +25,7 @@
             </li>
             <li>
                 <label>开户行</label>
-                <div>
+                <div class="city">
                     <select name="bank">
                         <option value="招商银行" @(Model!=null?(Model.BankName == "招商银行" ? "selected" : ""):"")>招商银行</option>
                         <option value="中国工商银行" @(Model != null ? (Model.BankName == "中国工商银行" ? "selected" : "") : "")>中国工商银行</option>
@@ -60,15 +60,18 @@
             </li>
             <li>
                 <label>支行</label>
-                <input type="text" name="SubBranch" value="@(Model != null ? Model.SubBranch : "")"/>
+                <div><input type="text" name="SubBranch" value="@(Model != null ? Model.SubBranch : "")" /></div>
+                
             </li>
             <li>
                 <label>开户名</label>
-                <input type="text" name="AccountName" value="@(Model != null ? Model.AccountName : "")"/>
+                <div><input type="text" name="AccountName" value="@(Model != null ? Model.AccountName : "")" /></div>
+                
             </li>
             <li>
                 <label>账号</label>
-                <input type="text" name="BankAccount" value="@(Model != null ? Model.BankAccount : "")"/>
+                <div><input type="text" name="BankAccount" value="@(Model != null ? Model.BankAccount : "")" /></div>
+                
             </li>
             <li>
                 <label>城市</label>
@@ -103,4 +106,33 @@
 
 @section warplast{
     @Html.Partial("_FooterNav")
+}
+
+@section bodybottom{
+    <script>
+        //省得变更
+        $("#province").change(function() {
+            $("#city").empty().append("<option value=''>-请选择城市-</option>");
+            $("#area").empty().append("<option value=''>-请选择地区-</option>");
+            if ($("#province").val().length >= 5) {
+                $.get("@Url.Action("CiyiesData", "NotLogin")", { parentid: $("#province").val().split('-')[1] }, function(html) {
+                    for (var c in html.data) {
+                        $("#city").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
+                    }
+                });
+            }
+        });
+
+        //城市得变更
+        $("#city").change(function () {
+            $("#area").empty().append("<option value=''>-请选择地区-</option>");
+            if ($("#city").val().length >= 5) {
+                $.get("@Url.Action("CiyiesData", "NotLogin")", { parentid: $("#city").val().split('-')[1] }, function (html) {
+                    for (var c in html.data) {
+                        $("#area").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
+                    }
+                });
+            }
+        });
+    </script>
 }

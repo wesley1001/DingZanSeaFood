@@ -8,7 +8,7 @@
 }
 
 <div id="shop-car">
-    <p>收货地址</p>
+    <h5>收货地址</h5>
 @using (Html.BeginForm("Buy", "Home", FormMethod.Post, new { id = "j-payform" }))
 {
     <a href="@Url.Action("TradeAddress")">
@@ -28,7 +28,7 @@
     <input type="hidden" name="addressid" value="@defaultAddress.Id" id="j-addressid" />
         }
     </a>
-    <p>订单信息</p>
+    <h5>订单信息</h5>
         <div class="info-box focus ">
             @foreach (var item in Model)
             {
@@ -87,7 +87,7 @@
             </div>
 
         </div>
-        <p>备注</p>
+    <h5>备注</h5>
         <div class="info-box">
             <textarea name="note" type="text" placeholder="还有什么要求写这里哦~"></textarea>
         </div>
