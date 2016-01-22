@@ -216,8 +216,7 @@ namespace BreezeShop.Web.Controllers
 
         public ActionResult AdderssEdit(int id = 0)
         {
-            var provinces =
-                SystemCity.GetCities(0).Where(e => new[] { "江苏省", "浙江省", "上海" }.Contains(e.Name)).ToList();
+            var provinces = SystemCity.GetCities(0);
 
             var dataProvinces = new List<SelectListItem>();
             var dataCities = new List<SelectListItem>();

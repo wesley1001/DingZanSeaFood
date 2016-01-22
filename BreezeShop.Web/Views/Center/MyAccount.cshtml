@@ -1,0 +1,106 @@
+﻿@model Yun.Pay.Bank
+
+@{
+    ViewBag.Title = "我的账户";
+    var provinces = (List<SelectListItem>)ViewData["ProvincesList"];
+    var cities = (List<SelectListItem>)ViewData["CitiesList"];
+    var areas = (List<SelectListItem>)ViewData["AreasList"];
+}
+
+<header class="header">
+    <div class="left">&nbsp;</div>
+    <div class="center">账户管理</div>
+    <div class="right">&nbsp;</div>
+</header>
+
+@using (Html.BeginForm("MyAccount", "Center", FormMethod.Post, new { id = "j-form" }))
+{
+    <div class="select-address">
+        <ul class="new-address">
+            <li>
+                <label>真实姓名</label>
+                <div>
+                    <input type="text" name="realname" value="@(Model != null ? Model.RealName : "")"/>
+                </div>
+            </li>
+            <li>
+                <label>开户行</label>
+                <div>
+                    <select name="bank">
+                        <option value="招商银行" @(Model!=null?(Model.BankName == "招商银行" ? "selected" : ""):"")>招商银行</option>
+                        <option value="中国工商银行" @(Model != null ? (Model.BankName == "中国工商银行" ? "selected" : "") : "")>中国工商银行</option>
+                        <option value="中国农业银行" @(Model != null ? (Model.BankName == "中国农业银行" ? "selected" : "") : "")>中国农业银行</option>
+                        <option value="中国银行" @(Model != null ? (Model.BankName == "中国银行" ? "selected" : "") : "")>中国银行</option>
+                        <option value="中国建设银行" @(Model != null ? (Model.BankName == "中国建设银行" ? "selected" : "") : "")>中国建设银行</option>
+                        <option value="交通银行" @(Model != null ? (Model.BankName == "交通银行" ? "selected" : "") : "")>交通银行</option>
+                        <option value="宁波银行" @(Model != null ? (Model.BankName == "宁波银行" ? "selected" : "") : "")>宁波银行</option>
+                        <option value="恒丰银行" @(Model != null ? (Model.BankName == "恒丰银行" ? "selected" : "") : "")>恒丰银行</option>
+                        <option value="上海浦东发展银行" @(Model != null ? (Model.BankName == "上海浦东发展银行" ? "selected" : "") : "")>上海浦东发展银行</option>
+                        <option value="中信银行" @(Model != null ? (Model.BankName == "中信银行" ? "selected" : "") : "")>中信银行</option>
+                        <option value="华夏银行" @(Model != null ? (Model.BankName == "华夏银行" ? "selected" : "") : "")>华夏银行</option>
+                        <option value="中国光大银行" @(Model != null ? (Model.BankName == "中国光大银行" ? "selected" : "") : "")>中国光大银行</option>
+                        <option value="兴业银行" @(Model != null ? (Model.BankName == "兴业银行" ? "selected" : "") : "")>兴业银行</option>
+                        <option value="广发银行" @(Model != null ? (Model.BankName == "广发银行" ? "selected" : "") : "")>广发银行</option>
+                        <option value="中国民生银行" @(Model != null ? (Model.BankName == "中国民生银行" ? "selected" : "") : "")>中国民生银行</option>
+                        <option value="平安银行" @(Model != null ? (Model.BankName == "平安银行" ? "selected" : "") : "")>平安银行</option>
+                        <option value="浙商银行" @(Model != null ? (Model.BankName == "浙商银行" ? "selected" : "") : "")>浙商银行</option>
+                        <option value="渤海银行" @(Model != null ? (Model.BankName == "渤海银行" ? "selected" : "") : "")>渤海银行</option>
+                        <option value="上海银行" @(Model != null ? (Model.BankName == "上海银行" ? "selected" : "") : "")>上海银行</option>
+                        <option value="北京银行" @(Model != null ? (Model.BankName == "北京银行" ? "selected" : "") : "")>北京银行</option>
+                        <option value="江苏银行" @(Model != null ? (Model.BankName == "江苏银行" ? "selected" : "") : "")>江苏银行</option>
+                        <option value="南京银行" @(Model != null ? (Model.BankName == "南京银行" ? "selected" : "") : "")>南京银行</option>
+                        <option value="杭州银行" @(Model != null ? (Model.BankName == "杭州银行" ? "selected" : "") : "")>杭州银行</option>
+                        <option value="花旗银行" @(Model != null ? (Model.BankName == "花旗银行" ? "selected" : "") : "")>花旗银行</option>
+                        <option value="恒丰银行" @(Model != null ? (Model.BankName == "恒丰银行" ? "selected" : "") : "")>恒丰银行</option>
+                        <option value="渣打银行" @(Model != null ? (Model.BankName == "渣打银行" ? "selected" : "") : "")>渣打银行</option>
+                        <option value="东亚银行" @(Model != null ? (Model.BankName == "东亚银行" ? "selected" : "") : "")>东亚银行</option>
+                        <option value="恒生银行" @(Model != null ? (Model.BankName == "恒生银行" ? "selected" : "") : "")>恒生银行</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <label>支行</label>
+                <input type="text" name="SubBranch" value="@(Model != null ? Model.SubBranch : "")"/>
+            </li>
+            <li>
+                <label>开户名</label>
+                <input type="text" name="AccountName" value="@(Model != null ? Model.AccountName : "")"/>
+            </li>
+            <li>
+                <label>账号</label>
+                <input type="text" name="BankAccount" value="@(Model != null ? Model.BankAccount : "")"/>
+            </li>
+            <li>
+                <label>城市</label>
+                <div class="city">
+                    <select name="province" id="province">
+                        @foreach (var m in provinces)
+                        {
+                            <option @(m.Selected ? "selected" : "") value="@m.Value">@m.Text</option>
+                        }
+                    </select>
+                    <select name="city" id="city">
+                        @foreach (var m in cities)
+                        {
+                            <option @(m.Selected ? "selected" : "") value="@m.Value">@m.Text</option>
+                        }
+                    </select>
+                    <select name="area" id="area">
+                        @foreach (var m in areas)
+                        {
+                            <option @(m.Selected ? "selected" : "") value="@m.Value">@m.Text</option>
+                        }
+                    </select>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="button-box">
+        <input type="button" class="addr-btn save" value="保存" />
+    </div>
+}
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}

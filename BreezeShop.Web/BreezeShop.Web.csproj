@@ -1084,6 +1084,8 @@
     <Content Include="Views\Center\Index.cshtml" />
     <Content Include="Views\Center\QrCode.cshtml" />
     <Content Include="Views\Center\MyCashCoupons.cshtml" />
+    <Content Include="Views\Center\MyAccount.cshtml" />
+    <Content Include="Views\Center\Withdrawals.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

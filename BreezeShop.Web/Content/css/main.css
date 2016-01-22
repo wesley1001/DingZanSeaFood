@@ -1,5 +1,12 @@
 a{text-decoration:none}
 body{background-color:#f8f8f8;font-family:tahoma,arial,\5FAE\8F6F\96C5\9ED1,sans-serif}
+.header{display:-webkit-box;border-bottom:.2em solid #eee;height:3em;line-height: 3em;font-size: 1.2rem;}
+.header>div{-webkit-box-flex:1}
+.header .left{padding-left:1em}
+.header .left.back a{color:#000;font-size:2em}
+.header .center{font-size:1.4em;color:#1f1f1f;text-align:center}
+.header .right{text-align:right;padding-right:1em}
+.header .right a{ color: #000;}
 #page{max-width:640px;margin:0 auto;overflow:hidden}
 .contact-us{padding:13px 0 60px}
 .contact-us .info{color:#dfdfdf;text-align:center}

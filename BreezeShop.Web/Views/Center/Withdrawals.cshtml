@@ -1,0 +1,36 @@
+﻿@model Yun.Pay.Bank
+
+@{
+    ViewBag.Title = "提现";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("BankId", Model.Id)
+    <dl class="list-box">
+        <dt>银行信息</dt>
+        <dd>户名：@Model.RealName</dd>
+        <dd>开户行：@Model.BankName</dd>
+        <dd>支行：@Model.SubBranch</dd>
+        <dd>账号：@Model.BankAccount</dd>
+    </dl>
+
+    <dl class="list-box">
+        <dt>余额</dt>
+        <dd>可领取余额：@ViewData["Money"]</dd>
+    </dl>
+
+    <div class="money">
+        <input type="number" name="money" max="@ViewData["Money"]" min="0.01" id="j-money" />
+    </div>
+
+    <div class="button-box">
+        <input type="button" class="addr-btn save" value="转账到银行卡" />
+    </div>
+}
+
+
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}
