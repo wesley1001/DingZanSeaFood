@@ -10,7 +10,7 @@
 
 <div class="user-info clearfix">
     <div class="avatar">
-        <img src="@Model.Avatar"/>
+        <img src="@Model.Avatar" width="70"/>
     </div>
     <ul class="other">
         <li>昵称：@Model.RealName</li>
@@ -39,7 +39,7 @@
         <dd><a href="@Url.Action("MyAccount")">账户管理<i></i></a></dd>
         <dd><a href="@Url.Action("ManageAddress","Home")">收货地址<i></i></a></dd>
         <dd><a href="@Url.Action("QrCode")">查看幸运二维码<i></i></a></dd>
-        <dd><a href="javascript:;">我的订单<i></i></a></dd>
+        <dd><a href="@Url.Action("Trades","Center")">我的订单<i></i></a></dd>
         <dd><a href="@Url.Action("MyCashCoupons")">我的优惠券<i></i></a></dd>
     </dl>
 

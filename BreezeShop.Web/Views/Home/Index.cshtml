@@ -15,7 +15,7 @@
             <div class="text">@BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name</div>
             <ul class="info">
                 <li><a href="@Url.Action("List")"><strong>@ViewData["itemTotal"]</strong><br/>全部商品</a></li>
-                <li class="trade-icon"><a href="javascript:;"><i></i><br/>我的订单</a></li>
+                <li class="trade-icon"><a href="@Url.Action("Trades","Center")"><i></i><br/>我的订单</a></li>
                 <li class="category-icon"><a href="@Url.Action("List")"><i></i><br/>分类</a></li>
             </ul>
         </li>

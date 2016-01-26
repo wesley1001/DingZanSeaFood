@@ -8,6 +8,7 @@ using Utilities.DataTypes.ExtensionMethods;
 using Yun.Distribution.Request;
 using Yun.Marketing.Request;
 using Yun.Pay.Request;
+using Yun.Trade.Request;
 
 namespace BreezeShop.Web.Controllers
 {
@@ -182,6 +183,23 @@ namespace BreezeShop.Web.Controllers
                 Member.Token);
 
             return Json(req.Result > 0 ? 1 : 0);
+        }
+
+
+        public ActionResult Trades()
+        {
+            return View();
+        }
+
+        public ActionResult TradeList(string tradestatus, int p = 1)
+        {
+            return PartialView(YunClient.Instance.Execute(new GetMyTradesRequest
+            {
+                PageNum = p,
+                PageSize = 10,
+                TradeStatus = tradestatus,
+                CommentStatus = tradestatus == "SUCCESS" ? "I_HAS_NOT_COMMENT" : string.Empty
+            }, Member.Token).Trades);
         }
     }
 }

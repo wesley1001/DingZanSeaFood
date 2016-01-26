@@ -203,3 +203,105 @@ header .right a{ color: #000;}
     font-size: 16px;
     text-indent: 15px;
     line-height: 30px;}
+
+
+/*È«²¿¶©µ¥*/
+.order-list {
+  padding: 0px;
+  margin: 15px auto;
+}
+.order-list .order-title {
+  height: 35px;
+  line-height: 35px;
+  border-bottom: 1px solid #d2d2d2;
+  margin-bottom: 0px;
+  font-size: 14px;
+  color: #333333;
+}
+.order-list li {
+  background-color: #fff;
+  border-bottom: 1px solid #d2d2d2;
+  border-top: 1px solid #d2d2d2;
+  padding: 0 11px;
+  margin-bottom: 15px;
+}
+.top-order-info {
+  height: 35px;
+  line-height: 35px;
+  border-bottom: 1px solid #d2d2d2;
+}
+.middle-goods-info {
+  clear: both;
+  padding: 15px 0px;
+  border-bottom: 1px solid #d2d2d2;
+  overflow: hidden;
+  line-height: 18px;
+}
+.middle-goods-info .goods-pic {
+  width: 60px;
+  float: left;
+}
+.middle-goods-info .goods-text {
+  width: 100%;
+  padding-left: 70px;
+}
+.middle-goods-info .goods-text h2 {
+  max-height: 36px;
+  overflow: hidden;
+  font-size: 1.4rem;
+}
+.middle-goods-info .goods-text p {
+  font-size: 1.2rem;
+}
+.middle-goods-info .goods-pic img{
+    width: 60px;
+}
+.wb70 {
+  width: 70%;
+}
+.wb25 {
+  width: 25%;
+}
+.bottom-goods-buy-info {
+  clear: both;
+  overflow: hidden;
+  padding: 15px 0;
+  text-align: right;
+  color: #000;
+  line-height: 20px;
+}
+.padding-sm-5 {
+  padding: 5px;
+}
+.color-price {
+  color: #ff6000;
+}
+.last-goods-operate {
+  border-top: 1px solid #d2d2d2;
+  padding: 12px 0;
+}
+.default-order-btn {
+  border: 1px solid #5f646e;
+  color: #5f646e;
+  height: 28px;
+  line-height: 26px;
+  padding: 0 10px;
+  display: inline-block;
+  background-color: #fff;
+}
+.pay-order-btn {
+  border: 1px solid #cd1612;
+  color: #cd1612;
+  height: 28px;
+  line-height: 26px;
+  padding: 0 10px;
+  display: inline-block;
+  background-color: #fff;
+}
+.item-left{ float: left;}
+.item-right {
+  float: right;
+}
+.color-blue {
+  color: #0f85e8;
+}

@@ -1086,6 +1086,8 @@
     <Content Include="Views\Center\MyCashCoupons.cshtml" />
     <Content Include="Views\Center\MyAccount.cshtml" />
     <Content Include="Views\Center\Withdrawals.cshtml" />
+    <Content Include="Views\Center\Trades.cshtml" />
+    <Content Include="Views\Center\TradeList.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

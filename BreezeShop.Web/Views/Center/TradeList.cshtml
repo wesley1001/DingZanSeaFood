@@ -1,0 +1,88 @@
+﻿@model IList<Yun.Trade.SnapshotTrade>
+
+@foreach (var m in Model)
+{
+    <li>
+        <div class="top-order-info">
+            <div class="item-left">
+                订单编号：@m.Id
+            </div>
+            <div class="item-right color-blue">
+                @switch (m.TradeStatus)
+                {
+                    case "TRADE_CLOSED":
+                    case "TRADE_CLOSED_BY_SELF":
+                        @:已关闭
+                                break;
+                    case "TRADE_NO_CREATE_PAY":
+                    case "WAIT_BUYER_PAY":
+                    @:<a href="@Url.Action("ToPay", "Home", new {id = m.Id, flowid = 0, payId = m.PayId})" class="big">未付款</a>
+                                break;
+                    case "WAIT_SELLER_SEND_GOODS":
+                    @:已付款
+                                break;
+                    case "WAIT_BUYER_CONFIRM_GOODS":
+                    @:已配送
+                                break;
+                    case "TRADE_FINISHED":
+                    case "TRADE_BUYER_SIGNED":
+                    @:已成功
+                                break;
+                }
+            </div>
+        </div>
+        @foreach (var o in m.Orders)
+        {
+            <div class="middle-goods-info" data-id="@m.Id">
+                <div class="goods-pic">
+                    <div class="w60-h60">
+                        <img src="@(BreezeShop.Core.FileFactory.ImageExtension.GetUrl("60", o.Thumb))"/>
+                    </div>
+                </div>
+                <div class="goods-text">
+                    <div class="item-left wb70">
+                        <h2 class="f12">@o.ItemTitle</h2>
+                        <p class="color-9">
+                            @if (o.SkuNames != null)
+                            {
+                                foreach (var s in o.SkuNames)
+                                {
+                                    <span>@s.Value</span>
+                                }
+                            }
+                        </p>
+                    </div>
+
+                    <div class="item-right wb25 text-right">
+                        ￥@(o.Price.ToString("f2"))<br />x @o.Quantity
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="bottom-goods-buy-info">
+            <span class="color-9">(配送方式: </span>
+            @switch (m.ShippingType)
+            {
+                case "SELF":
+                    @:自提
+                    break;
+                case "BUSINESS":
+                @:商家配送
+                    break;
+                case "EXPRESS":
+                @:快递
+                    break;
+            }
+            <span class="color-9">运费: </span>￥@m.Fare.ToString("f2"))
+            <br />
+            共 @m.Quantity 件商品 <span class="color-9">实付(含运费):</span>
+            <span class="f15 color-price">@m.Money.ToString("f2")</span>
+        </div>
+        @if (m.TradeStatus == "WAIT_BUYER_PAY")
+        {
+            <div class="last-goods-operate text-right">
+                <a class="pay-order-btn ml10" href="@Url.Action("ToPay", "Home", new { id = m.Id, flowid = 0, payId = m.PayId })">付款</a>
+            </div>
+        }
+    </li>
+}

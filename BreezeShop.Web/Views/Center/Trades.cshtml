@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "我的订单";
+}
+
+<ul class="order-list" id="J-List-Content">
+    @Html.Action("TradeList")
+</ul>
+
+@section bodybottom
+{
+    <script type="text/javascript">
+        var page = 1;
+        var loading = false;
+        function loadItem() {
+            //$("#J-Loading").removeClass("hide");
+            $.get("@Url.Action("TradeList", "Center")", { p: page }, function (html) {
+                if (html.length > 20) {
+                    $("#J-List-Content").append(html);
+                    loading = false;
+                }
+                //$("#J-Loading").addClass("hide");
+            });
+        }
+        $(window).scroll(function () {
+            if ($(document).scrollTop() + 60 >= $(document).height() - $(window).height() && !loading) {
+                loading = true;
+                page++;
+                loadItem();
+            }
+        });
+</script>
+}
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}
