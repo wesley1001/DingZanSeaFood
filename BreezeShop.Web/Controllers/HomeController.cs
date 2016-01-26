@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using BreezeShop.Core;
 using BreezeShop.Core.DataProvider;
 using Utilities.DataTypes.ExtensionMethods;
+using Yun.Distribution.Request;
 using Yun.Item.Request;
 using Yun.Logistics;
 using Yun.Logistics.Request;
@@ -481,6 +482,27 @@ namespace BreezeShop.Web.Controllers
             return PartialView(req);
         }
 
+        public ActionResult DistributionRegister(int id = 0)
+        {
+            var loginedUser = Member.GetLoginMember();
+            if (id <= 0 || loginedUser == null)
+            {
+                return Content("用户不存在");
+            }
 
+            //注册成为分销用户
+            var req = YunClient.Instance.Execute(new AuditCooperationRequest
+            {
+                Ip = Request.UserHostAddress,
+                SuperiorDistributorId = id
+            }, Member.Token);
+
+            if (req.Result <= 0)
+            {
+                return Content("失败，错误代码：" + req.Result);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

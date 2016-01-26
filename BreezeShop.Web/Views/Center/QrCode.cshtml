@@ -20,7 +20,7 @@
 
     <div class="qrcode-content">
         <div class="img">
-            <img src="http://a.summerbreeze.cn/QrCodeHandler.ashx?t=@Model.UserId" />
+            <img src="http://a.summerbreeze.cn/QrCodeHandler.ashx?t=@(BreezeShop.Core.YunClient.WebUrl + "home/distributionregister/" + Model.UserId)" />
         </div>
         <p>长按此图/识别图中二维码/搞定！<br />邀请口令：@Model.UserId</p>
     </div>
