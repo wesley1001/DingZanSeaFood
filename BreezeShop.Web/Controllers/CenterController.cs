@@ -59,9 +59,9 @@ namespace BreezeShop.Web.Controllers
             var subBranch = collection["SubBranch"];
             var accountName = collection["AccountName"];
             var bankAccount = collection["BankAccount"];
-            var province = collection["province"];
-            var city = collection["city"];
-            var area = collection["area"];
+            var province = collection["province"].Substring(0, collection["province"].IndexOf('-'));
+            var city = collection["city"].Substring(0, collection["city"].IndexOf('-'));
+            var area = collection["area"].Substring(0, collection["area"].IndexOf('-'));
 
             var banks = YunClient.Instance.Execute(new GetBandBanksRequest(), Member.Token).Banks;
             if (banks != null && banks.Any())

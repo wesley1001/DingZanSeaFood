@@ -20,7 +20,7 @@
             <li>
                 <label>真实姓名</label>
                 <div>
-                    <input type="text" name="realname" value="@(Model != null ? Model.RealName : "")"/>
+                    <input type="text" name="realname" id="j-realname" value="@(Model != null ? Model.RealName : "")" />
                 </div>
             </li>
             <li>
@@ -60,17 +60,17 @@
             </li>
             <li>
                 <label>支行</label>
-                <div><input type="text" name="SubBranch" value="@(Model != null ? Model.SubBranch : "")" /></div>
+                <div><input type="text" name="SubBranch" value="@(Model != null ? Model.SubBranch : "")" id="j-SubBranch" /></div>
                 
             </li>
             <li>
                 <label>开户名</label>
-                <div><input type="text" name="AccountName" value="@(Model != null ? Model.AccountName : "")" /></div>
+                <div><input type="text" name="AccountName" value="@(Model != null ? Model.AccountName : "")" id="j-AccountName" /></div>
                 
             </li>
             <li>
                 <label>账号</label>
-                <div><input type="text" name="BankAccount" value="@(Model != null ? Model.BankAccount : "")" /></div>
+                <div><input type="text" name="BankAccount" value="@(Model != null ? Model.BankAccount : "")" id="j-BankAccount" /></div>
                 
             </li>
             <li>
@@ -100,7 +100,7 @@
     </div>
 
     <div class="button-box">
-        <input type="button" class="addr-btn save" value="保存" />
+        <input type="button" class="addr-btn save" value="保存" id="j-save-btn" />
     </div>
 }
 
@@ -110,6 +110,46 @@
 
 @section bodybottom{
     <script>
+        $("#j-save-btn").click(function () {
+
+            if ($("#j-realname").val().length <= 0) {
+                alert("请输入收货人姓名");
+                return;
+            }
+
+            if ($("#j-SubBranch").val().length <= 0) {
+                alert("请输入支行");
+                return;
+            }
+
+            if ($("#j-AccountName").val().length <= 0) {
+                alert("请输入开户名");
+                return;
+            }
+
+            if ($("#j-BankAccount").val().length <= 0) {
+                alert("请输入银行账号");
+                return;
+            }
+
+            if ($("#area").val().length <= 0 || $("#city").val().length <= 0) {
+                alert("请选择区域");
+                return;
+            }
+
+            var btn = $(this);
+            btn.attr("disabled", true);
+            $.post($("#j-form").attr("action"), $("#j-form").serialize(), function(r) {
+                if (r) {
+                    alert("数据保存成功");
+                    window.location.reload();
+                } else {
+                    alert("数据保存失败");
+                    btn.removeAttr("disabled");
+                }
+            });
+        });
+
         //省得变更
         $("#province").change(function() {
             $("#city").empty().append("<option value=''>-请选择城市-</option>");
@@ -124,10 +164,10 @@
         });
 
         //城市得变更
-        $("#city").change(function () {
+        $("#city").change(function() {
             $("#area").empty().append("<option value=''>-请选择地区-</option>");
             if ($("#city").val().length >= 5) {
-                $.get("@Url.Action("CiyiesData", "NotLogin")", { parentid: $("#city").val().split('-')[1] }, function (html) {
+                $.get("@Url.Action("CiyiesData", "NotLogin")", { parentid: $("#city").val().split('-')[1] }, function(html) {
                     for (var c in html.data) {
                         $("#area").append("<option value='" + html.data[c].Name + "-" + html.data[c].Id + "'>" + html.data[c].Name + "</option>");
                     }

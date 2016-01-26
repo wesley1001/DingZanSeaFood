@@ -1,15 +1,10 @@
 ﻿using BreezeShop.Core;
 using BreezeShop.Core.FileFactory;
-using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 using System.Linq;
 using System.Web.Mvc;
 using BreezeShop.Core.DataProvider;
-using Utilities.DataTypes.ExtensionMethods;
 using Yun.Archive.Request;
-using Yun.Marketing.Request;
-using Yun.Trade;
 using Yun.Trade.Request;
-using Yun.User.Request;
 
 namespace BreezeShop.Web.Controllers
 {
@@ -24,7 +19,7 @@ namespace BreezeShop.Web.Controllers
 
         public ActionResult SimulationLogin()
         {
-            Member.Token = "NX0iIzRGc1k2dzdGUFIrRmFTbXhqZzVUUCtvbnJXc0hoWkV2V0w5R3VZZHBJT3NrNUU9";
+            Member.Token = "cX1efmVSVVlzMHZyczNrK2dNM0UzRU8zbVE2N0UxVnVGbjFxNElNaGV4UUVzRDU1SkU9";
             Member.OpenId = "onUkywrE3glAbBpzA2SekpX-b4cc";
 
             return Content("写入成功");

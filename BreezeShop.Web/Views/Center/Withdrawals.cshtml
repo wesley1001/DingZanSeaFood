@@ -4,7 +4,7 @@
     ViewBag.Title = "提现";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Withdrawals", "Center", FormMethod.Post, new { id = "j-form" }))
 {
     @Html.Hidden("BankId", Model.Id)
     <dl class="list-box">
@@ -20,17 +20,40 @@
         <dd>可领取余额：@ViewData["Money"]</dd>
     </dl>
 
-    <div class="money">
-        <input type="number" name="money" max="@ViewData["Money"]" min="0.01" id="j-money" />
-    </div>
+    <dd class="money">
+        <input type="number" name="money" max="@ViewData["Money"]" min="0.01" id="j-money" tabindex="0" placeholder="请输入提现金额" />
+    </dd>
 
     <div class="button-box">
-        <input type="button" class="addr-btn save" value="转账到银行卡" />
+        <input type="button" class="addr-btn save" value="转账到银行卡" id="j-save-btn"/>
     </div>
 }
 
-
-
 @section warplast{
     @Html.Partial("_FooterNav")
+}
+
+@section bodybottom{
+    <script language="javascript">
+        document.getElementById("j-money").focus();
+
+        $("#j-save-btn").click(function() {
+            var btn = $(this);
+            if (parseFloat(btn.val()) <= 0) {
+                alert("请输入正确提现金额");
+                return;
+            }
+
+            btn.attr("disabled", true);
+            $.post($("#j-form").attr("action"), $("#j-form").serialize(), function (r) {
+                if (r) {
+                    alert("已成功进行提现申请，请等待管理员审核");
+                    window.location.reload();
+                } else {
+                    alert("提现申请失败，请稍后再试");
+                    btn.removeAttr("disabled");
+                }
+            });
+        });
+</script>
 }
