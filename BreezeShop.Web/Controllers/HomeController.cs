@@ -491,7 +491,7 @@ namespace BreezeShop.Web.Controllers
             }
             
             //自己用户不需要绑定
-            if (id != loginedUser.UserId)
+            if (id != loginedUser.UserId && (loginedUser.OwnedSupplier == null || !loginedUser.OwnedSupplier.Any()))
             {
                 //注册成为分销用户
                 var req = YunClient.Instance.Execute(new AuditCooperationRequest
