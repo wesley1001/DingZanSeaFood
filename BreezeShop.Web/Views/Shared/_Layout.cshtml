@@ -1,5 +1,7 @@
-﻿@{
+﻿@using System.Collections
+@{
     Layout = null;
+    var jsSdk = TempData["JsSdkData"] as Hashtable;
 }
 
 <!DOCTYPE html>
@@ -11,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title>@(ViewBag.Title ?? BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)</title>
     <link type="text/css" rel="stylesheet" href="@Url.Content("~/content/css/base.css")" />
-    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/css/main.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/css/main.css?v=.0.0.1")" />
     @RenderSection("head",false)
 </head>
 <body>
@@ -30,6 +32,47 @@
     @RenderSection("warplast", false)
 </div>
 <script src="@Url.Content("~/Content/js/jquery.js")"></script>
+
+@if (jsSdk != null)
+{
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript">
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: '@(jsSdk["appId"])',
+        timestamp: '@(jsSdk["timestamp"])',
+        nonceStr: '@(jsSdk["nonceStr"])',
+        signature: '@(jsSdk["signature"])',
+        jsApiList: ['checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    });
+
+    wx.ready(function () {
+        wx.onMenuShareTimeline({
+            title: '@(ViewBag.ShareTitle ?? ViewBag.Title)', // 分享标题
+            link: '@(ViewBag.ShareUrl??Request.Url.ToString())', // 分享链接
+            imgUrl: '@(ViewBag.ShareImage ?? "")', // 分享图标
+            success: function () {
+            },
+            cancel: function () {
+            }
+        });
+
+        wx.onMenuShareAppMessage({
+            title: '@(ViewBag.ShareTitle ?? ViewBag.Title)', // 分享标题
+            desc: '@(ViewBag.ShareDescription ?? ViewBag.Title)', // 分享描述
+            link: '@(ViewBag.ShareUrl ?? Request.Url.ToString())', // 分享链接
+            imgUrl: '@(ViewBag.ShareImage ?? "")', // 分享图标
+            success: function () {
+            },
+            cancel: function () {
+            }
+        });
+    });
+    </script>
+}
+
 @RenderSection("bodybottom", false)
 </body>
 </html>

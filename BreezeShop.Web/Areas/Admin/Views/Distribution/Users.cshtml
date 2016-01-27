@@ -45,6 +45,7 @@
                     <th>上级分销商</th>
                     <th>下级分销商数</th>
                     <th>创建时间</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -54,9 +55,21 @@
                         <td>@u.UserName</td>
                         <td>@u.RealName</td>
                         <td>@u.Turnover</td>
-                        <td>@(parentUsers!=null?parentUsers.Single(e=>e.UserId==u.UserId).RealName:"")</td>
+                        <td>
+                            @if (u.ParentId > 0)
+                            {
+                                @(parentUsers != null ? parentUsers.Single(e => e.UserId == u.ParentId).RealName : "")
+                            }
+                            else
+                            {
+                                @:不存在
+                            }
+                        </td>
                         <td>@u.DistributorQuantity</td>
                         <td>@u.CreateTime</td>
+                        <td>
+                            <a href="@Url.Action("UserSearch", new { parentId = u.Id })" class="btn btn-xs btn-info j-add">添加下级分销商</a>
+                        </td>
                     </tr>
                 }
             </tbody>

@@ -257,7 +257,8 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                 YunClient.Instance.Execute(new AuditCooperationRequest
                 {
                     SuperiorDistributorId = parentId,
-                    UserName = nick
+                    UserName = nick,
+                    Ip = Request.UserHostAddress
                 });
 
             return Json(req.Result);

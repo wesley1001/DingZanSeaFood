@@ -20,16 +20,16 @@ header .right a{ color: #000;}
 
 .header{border:1px solid #CCC;border-top:0;padding-bottom:10px;background:#FFF;margin-bottom:10px}
 .header img{width:100%}
-.header .other{margin-top:-40px;display:flex}
+.header .other{margin-top:-40px;position: relative;}
 .header .logo{float:left;width:80px;margin-left:10px;background:#FFF;border:1px solid #CCC;border-radius:3px}
 .header .other>li:last-of-type{margin-left:10px;width:100%}
-.header .info{display:flex;margin-top:23px}
-.header .info li:first-of-type strong{font-size:18px}
-.header .info li{flex:1;text-align:center;position:relative}
-.header .info li a{display:block;color:#999}
+.header .info{display:-webkit-box;margin-top:23px}
+.header .info li:first-of-type strong{font-size:20px}
+.header .info li{-webkit-box-flex: 1;text-align:center;position:relative}
+.header .info li a{display:block;color: #999;    font-size: 1.4em;}
 .header .info li:first-of-type:after,.header .info li:nth-of-type(even):after{content:'';height:20px;width:1px;background:#CCC;display:inline-block;position:absolute;right:0;top:12px}
-.header .text{font-size:16px;color:#FFF}
-.header .info li i{display:inline-block;height:18px;width:18px}
+.header .text{font-size:16px;color: #FFF;margin-left: 100px;}
+.header .info li i{display:inline-block;height:20px;width:20px}
 
 .trade-icon i{background:url(../images/me.png) no-repeat 0 0}
 .category-icon i{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExODA4M0EzMTZCRDQ1OTM1RCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2QjMyMDdGNDAyNUExMUUzQUM5NUQwQzZFMDZERkU2RiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2QjMyMDdGMzAyNUExMUUzQUM5NUQwQzZFMDZERkU2RiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjk2REUwODlGQTgwOEUzMTFCNDI1RkI4MTJENzg2RjZBIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0MDcyMDY4MTE4MDgzQTMxNkJENDU5MzVEIi8+IDwvcmRmOkRlc2NyaXB0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) no-repeat 0 0;background-size:20px}
@@ -38,9 +38,9 @@ header .right a{ color: #000;}
 .search .icon{position:absolute;top:1px;left:18px;border:0;height:32px;width:37px;padding:0;color:#fff;font-size:14px;text-indent:-9999px;background:url(../images/search_icon.png) center center no-repeat #fff;background-size:16px 16px;border-radius:5px 0 0 5px}
 .home.index .item img{max-width:100%}
 .menu-nav{position:fixed;bottom:0;left:0;width:100%;border-top:1px solid #ccc;box-shadow:0 -2px 5px #ccc;cursor:pointer;background-color:#f8f8f8;font-size:12px;background-color:#f8f8f8;z-index:6}
-.menu-nav ul{display:flex}
-.menu-nav ul li{height:50px;text-align:center;position:relative;flex:1}
-.navcontent{margin-top:5px}
+.menu-nav ul{display:-webkit-box;}
+.menu-nav ul li{height:50px;text-align:center;position:relative;-webkit-box-flex:1;}
+.navcontent{    padding-top: 5px;}
 .navcontent img{display:block;margin:0 auto 2px}
 .menu-nav a{color:#000}
 .menu-nav img{width:22px}
@@ -87,7 +87,7 @@ header .right a{ color: #000;}
 .buy-act .decrease,.buy-act .increase{background:#FFF;border:1px solid #c5c8cf;text-align:center;height:30px;line-height:26px;float:left;width:30px}
 .buy-act .decrease{border-right:0}
 .buy-act .increase{border-left:0}
-.buy-act .value{height:24px;line-height:24px;text-align:center;float:left;width:100px}
+.buy-act .value{height:26px;line-height:26px;text-align:center;float:left;width: 100px; border: 1px solid #c5c8cf;}
 .stock-empty{text-align:center;color:red}
 .goods-detail>dt{background:#FFF;height:35px;line-height:35px}
 .goods-detail>dd{margin:0}
@@ -96,10 +96,10 @@ header .right a{ color: #000;}
 .goods-detail img{max-width:100%!important}
 .goods-detail>.content{margin-bottom:1.5em;padding:1em}
 .goods-detail p,.goods-detail>.content{font-size:1.4em;margin-bottom:1em}
-.buy-changes{position:fixed;bottom:0;width:100%;display:flex;left:0}
-.buy-changes>a{display:block;height:100%;flex:1;height:100%;text-align:center}
+.buy-changes{position:fixed;bottom:0;width:100%;display:-webkit-box;left: 0;background:#FFF;}
+.buy-changes>a{display:block;-webkit-box-flex:1;text-align:center}
 .buy-changes .cart{background:#FFF;color:#000}
-.buy-changes .cart img{width:28px;display:block;margin:auto;margin-top:4px}
+.buy-changes .cart img{width:28px;display:block;margin:auto;padding-top:4px}
 .buy-changes .add-cart,.buy-changes .buy-now{line-height:3.5}
 .buy-changes .buy-now{color:#FFF;background:#f60;border:1px solid #f60}
 .buy-changes .add-cart{color:#333;background:#FFF;border:1px solid #e5e5e5}
@@ -157,8 +157,8 @@ header .right a{ color: #000;}
 .index .user-info .avatar{ float: left;width: 80px;height: 80px;}
 .index .user-info .other{ line-height: 1.8;border-bottom: 1px dashed #FFF;padding-bottom: 7px;}
 
-.achievement{ display: flex;    padding-bottom: 8px;margin-bottom: 15px;}
-.achievement li{ flex: 1;text-align: center;line-height: 1.7;}
+.achievement{ display:-webkit-box;  padding-bottom: 8px;margin-bottom: 15px;}
+.achievement li{ -webkit-box-flex:1;text-align: center;line-height: 1.7;}
 
 .list-box{ margin: 0 10px;font-size: 1.4em;border: 1px solid #e8e8e8;margin-bottom: 15px;background: #FFF;    border-radius: 6px;}
 .list-box a{ color: #000;display: block;}
@@ -185,17 +185,20 @@ header .right a{ color: #000;}
 .my-cashcoupon .coupons .status .left{font-weight:700}
 
 .qrcode .content{ background: #FFF;}
-.qrcode .user-info{display: flex;font-size: 1.4em;padding-top: 30px;    margin-bottom: 30px;position: relative;}
+.qrcode .user-info{display:-webkit-box;font-size: 1.4em; margin-bottom: 10px;position: relative;}
 .qrcode .user-info p{ margin: 0;line-height: 1.7;}
 .qrcode .user-info img{ width: 60px;height: 60px;margin-top: 5px;border-right: 1px solid #333;padding-right: 10px;}
-.qrcode .user-info>li:first-of-type{ flex: 4;    text-align: right;}
-.qrcode .user-info>li:last-of-type{ flex: 8;padding-left: 10px;padding-top: 20px;}
-.qrcode .logo{ text-align: center;margin-bottom: 30px;}
+.qrcode .user-info>li:first-of-type{ -webkit-box-flex: 4;    text-align: right;}
+.qrcode .user-info>li:last-of-type{ -webkit-box-flex: 8;padding-left: 10px;padding-top: 20px;}
+.qrcode .logo{ text-align: center;margin-bottom: 10px;}
 .qrcode-content{ background: #dd5116;text-align: center;padding: 30px 0 10px 0;color: #ffffff;font-size: 1.4em;}
 .qrcode-content .img{ margin: 0 55px;
     background: #FFF;
     padding: 20px;}
 .qrcode-content .img img{    max-width: 100%; }
+.qrcode .tip {
+    padding: 10px; font-size: 1.4em;
+}
 
 .withdrawals .money{margin: 0 10px;margin-bottom: 15px;margin-top: -7px;}
 .money input{     width: 100%;

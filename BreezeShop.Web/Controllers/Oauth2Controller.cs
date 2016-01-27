@@ -63,7 +63,8 @@ namespace BreezeShop.Web.Controllers
                     Avatar = userInfo.headimgurl,
                     OAuth2Type = "weixin",
                     OAuthId = userInfo.openid,
-                    RealName = userInfo.nickname
+                    RealName = userInfo.nickname,
+                    ShopId = GlobeInfo.InitiatedShopId
                 });
 
                 if (r.UserId > 0)

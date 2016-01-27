@@ -4,13 +4,16 @@
 }
 
 <div class="content">
+    <p class="tip">您可将二维码发送给朋友，或者分享该页面，从此开启您的@(BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)...</p>
     <ul class="user-info">
         <li>
             <img src="@Model.Avatar"/>
         </li>
         <li>
-            <p><strong>我是</strong>@(Model.RealName)</p>
-            <p><strong>我在用</strong>@(BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)</p>
+            <p><strong>我是</strong>@(Model.RealName)
+            </p>
+            <p><strong>我在用</strong>@(BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)
+            </p>
         </li>
     </ul>
 
@@ -20,13 +23,8 @@
 
     <div class="qrcode-content">
         <div class="img">
-            <img src="http://a.summerbreeze.cn/QrCodeHandler.ashx?t=@(BreezeShop.Core.YunClient.WebUrl + "home/distributionregister/" + Model.UserId)" />
+            <img src="http://a.summerbreeze.cn/QrCodeHandler.ashx?t=@(BreezeShop.Core.YunClient.WebUrl + "home/distributionregister/" + Model.UserId)"/>
         </div>
-        <p>长按此图/识别图中二维码/搞定！<br />邀请口令：@Model.UserId</p>
+        <p>长按此图/识别图中二维码/搞定！<br/>邀请口令：@Model.UserId</p>
     </div>
 </div>
-
-
-@section warplast{
-    @Html.Partial("_FooterNav")
-}

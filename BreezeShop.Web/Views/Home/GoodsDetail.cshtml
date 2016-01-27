@@ -78,7 +78,7 @@
                             <label class="left-label">购买数量：</label>
                             <span class="spinner clearfix">
                                 <button class="decrease" disabled="disabled" type="button">-</button>
-                                <input type="number" name="quantity" class="value" id="num-a" value="1" maxlength="5" buylimit="@Model.BuyLimit" max="@((Model.Stock > 0 && Model.BuyLimit > 0) ? Model.BuyLimit : Model.Stock)" min="1" />
+                                <input type="tel" name="quantity" class="value" id="num-a" value="1" maxlength="5" buylimit="@Model.BuyLimit" max="@((Model.Stock > 0 && Model.BuyLimit > 0) ? Model.BuyLimit : Model.Stock)" min="1" />
                                 <button class="increase" type="button">+</button>
                             </span>
                         </dd>
@@ -158,6 +158,10 @@
 
 
         var skuMapData = @(Html.Raw(ViewData["SkuData"] ?? "null"));
+
+        $("#J-Buy-Form").submit(function() {
+            return false;
+        });
 
         $(function() {
 

@@ -489,17 +489,21 @@ namespace BreezeShop.Web.Controllers
             {
                 return Content("用户不存在");
             }
-
-            //注册成为分销用户
-            var req = YunClient.Instance.Execute(new AuditCooperationRequest
+            
+            //自己用户不需要绑定
+            if (id != loginedUser.UserId)
             {
-                Ip = Request.UserHostAddress,
-                SuperiorDistributorId = id
-            }, Member.Token);
+                //注册成为分销用户
+                var req = YunClient.Instance.Execute(new AuditCooperationRequest
+                {
+                    Ip = Request.UserHostAddress,
+                    SuperiorDistributorId = id
+                }, Member.Token);
 
-            if (req.Result <= 0)
-            {
-                return Content("失败，错误代码：" + req.Result);
+                if (req.Result <= 0)
+                {
+                    return Content("失败，错误代码：" + req.Result);
+                }
             }
 
             return RedirectToAction("Index", "Home");

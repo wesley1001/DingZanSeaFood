@@ -95,16 +95,33 @@
                     <tr>
                         <td>@u.UserId</td>
                         <td>
-                            @u.Nick<br>
-                            @u.Email<br>
-                            @u.Mobile<br>
-                            @u.RealName
+                            @if (!string.IsNullOrEmpty(u.Nick))
+                            {
+                                @u.Nick<br>
+                            }
+                            @if (!string.IsNullOrEmpty(u.Email))
+                            {
+                                @u.Email<br>
+                            }
+                            @if (!string.IsNullOrEmpty(u.Mobile))
+                            {
+                                @u.Mobile<br>
+                            }
+                            @if (!string.IsNullOrEmpty(u.RealName))
+                            {
+                                @u.RealName
+                            }
                         </td>
                         <td>@u.CreateTime</td>
                         <td>@u.Money</td>
                         <td>@u.PrepaidCard</td>
                         <td>@u.TradingVolume</td>
-                        <td><a href="@Url.Action("BecomeDistributor", new { nick = u.Nick})" class="btn btn-xs btn-info j-add">确认添加</a></td>
+                        <td>
+                            @if (u.OwnedSupplier == null || !u.OwnedSupplier.Any())
+                            {
+                                <a href="@Url.Action("BecomeDistributor", new {nick = u.Nick, parentId = Request.QueryString["parentId"].IsEmpty() ? "0" : Request.QueryString["parentId"]})" class="btn btn-xs btn-info j-add">确认添加</a>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

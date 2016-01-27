@@ -40,7 +40,12 @@ namespace BreezeShop.Web.Controllers
 
         public ActionResult QrCode()
         {
-            return View(Member.GetLoginMember());
+            var user = Member.GetLoginMember();
+            ViewBag.ShareUrl = BreezeShop.Core.YunClient.WebUrl + "home/distributionregister/" + user.UserId;
+            ViewBag.ShareImage = user.Avatar;
+            ViewBag.ShareTitle = "我是" + user.RealName + "，我在用" + GlobeInfo.WebSetting.Name;
+
+            return View(user);
         }
 
         public ActionResult MyCashCoupons()

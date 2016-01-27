@@ -2,6 +2,7 @@
 using System.Net.NetworkInformation;
 using System.Web.Mvc;
 using BreezeShop.Core;
+using BreezeShop.Web.Helper;
 using Senparc.Weixin.MP.CommonAPIs;
 using Yun.WeiXin.Request;
 
@@ -42,6 +43,13 @@ namespace BreezeShop.Web.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             InitAppKey();
+
+            if (!string.IsNullOrEmpty(appId) && !string.IsNullOrEmpty(secret))
+            {
+                var wx = new WxJsSdk(appId, secret);
+                TempData["JsSdkData"] = wx.getSignPackage();
+            }
+
             base.OnActionExecuting(filterContext);
         }
 
