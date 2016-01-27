@@ -60,10 +60,6 @@
                             {
                                 @(parentUsers != null ? parentUsers.Single(e => e.UserId == u.ParentId).RealName : "")
                             }
-                            else
-                            {
-                                @:不存在
-                            }
                         </td>
                         <td>@u.DistributorQuantity</td>
                         <td>@u.CreateTime</td>
