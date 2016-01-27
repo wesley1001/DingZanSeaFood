@@ -1062,6 +1062,7 @@
     <Content Include="Areas\Admin\Views\Report\SalesStatistics.cshtml" />
     <Content Include="Areas\Admin\Views\Report\ItemSalesReport.cshtml" />
     <Content Include="Areas\Admin\Views\Report\MonthSalesStatistics.cshtml" />
+    <Content Include="Areas\Admin\Views\Distribution\UserSearch.cshtml" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
     <Content Include="Views\NotLogin\Article.cshtml" />

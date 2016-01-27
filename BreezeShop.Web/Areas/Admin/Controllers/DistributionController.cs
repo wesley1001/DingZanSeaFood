@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using Utilities.DataTypes.ExtensionMethods;
 using Yun.Distribution.Request;
+using Yun.User;
 using Yun.User.Request;
 
 namespace BreezeShop.Web.Areas.Admin.Controllers
@@ -171,6 +172,53 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             return View(page);
         }
 
+        /// <summary>
+        /// 可以成为分销商的用户搜索
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="mobile"></param>
+        /// <param name="nick"></param>
+        /// <param name="minregtime"></param>
+        /// <param name="maxregtime"></param>
+        /// <param name="minmoney"></param>
+        /// <param name="maxmoney"></param>
+        /// <param name="minscore"></param>
+        /// <param name="maxscore"></param>
+        /// <param name="minprepaid"></param>
+        /// <param name="maxprepaid"></param>
+        /// <param name="realname"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public ActionResult UserSearch(string email, string mobile, string nick, DateTime? minregtime, DateTime? maxregtime,
+            double? minmoney,
+            double? maxmoney, long? minscore, long? maxscore, double minprepaid = 0, double maxprepaid = 0, string realname = "" ,int p = 1)
+        {
+            var page = new PageModel<UserDetail>();
+            var req = YunClient.Instance.Execute(new FindUsersRequest
+            {
+                Email = email,
+                Mobile = mobile,
+                Nick = nick,
+                MinMoney = minmoney,
+                MaxMoney = maxmoney,
+                MinScore = minscore,
+                MaxScore = maxscore,
+                MinRegTime = minregtime,
+                MaxRegTime = maxregtime,
+                PageNum = p,
+                PageSize = 20,
+                MinPrepaidCard = minprepaid,
+                MaxPrepaidCard = maxprepaid,
+                RealName = realname
+            });
+
+            page.Items = req.Users;
+            page.CurrentPage = p;
+            page.TotalItems = req.TotalItem;
+
+            return View(page);
+        }
+
 
         public ActionResult CommissionDetails(int p = 1, int tradeId = 0, DateTime? minDateTime = null, DateTime? maxDateTime = null)
         {
@@ -194,6 +242,25 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             };
 
             return View(page);
+        }
+
+        /// <summary>
+        /// 成为分销商
+        /// </summary>
+        /// <param name="nick"></param>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult BecomeDistributor(string nick ,int parentId = 0)
+        {
+            var req =
+                YunClient.Instance.Execute(new AuditCooperationRequest
+                {
+                    SuperiorDistributorId = parentId,
+                    UserName = nick
+                });
+
+            return Json(req.Result);
         }
     }
 }

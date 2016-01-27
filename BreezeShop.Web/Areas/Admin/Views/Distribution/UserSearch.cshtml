@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "添加分销商";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@using BreezeShop.Web.Helper
+@model BreezeShop.Core.PageModel<Yun.User.UserDetail>
+
+@section headerbeforeace{
+    <link href="~/Areas/Admin/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">添加分销商</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        选择需要成为分销商的用户
+    </h1>
+}
+<div id="mytestcheckbox" class="table-header">
+    待添加用户列表
+</div>
+<div class="table-responsive">
+    <div class="dataTables_wrapper">
+        <div class="row">
+            <form method="GET" action="@Url.Action("UserSearch", "Distribution", new { area = "Admin" })" class="col-sm-12">
+                <div class="form-inline">
+                    <div class="form-group">昵称：</div>
+                    <div class="form-group"><input type="text" name="nick" class="input-small" value="@Request.QueryString["nick"]"></div>
+                    <div class="form-group">邮箱：</div>
+                    <div class="form-group"><input type="text" name="email" class="input-large" value="@Request.QueryString["email"]"></div>
+                    <div class="form-group">手机号：</div>
+                    <div class="form-group"><input type="text" name="mobile" class="input-large" value="@Request.QueryString["mobile"]"></div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-inline">
+                    <div class="form-group">余额查询:</div>
+                    <div class="form-group">
+                        <input type="text" name="minmoney" class="input-small" value="@Request.QueryString["minmoney"]"> &mdash;
+                        <input type="text" name="maxmoney" class="input-small" value="@Request.QueryString["maxmoney"]">
+                    </div>
+                    <div class="form-group">充值卡余额:</div>
+                    <div class="form-group">
+                        <input type="text" name="minprepaid" class="input-small" value="@Request.QueryString["minprepaid"]"> &mdash;
+                        <input type="text" name="maxprepaid" class="input-small" value="@Request.QueryString["maxprepaid"]">
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-inline">
+                    <div class="form-group">注册时间：</div>
+                    <div class="form-group">
+                        从<input type="text" data-date-format="yyyy-mm-dd hh:ii" value="@Request.QueryString["minregtime"]" readonly="readonly" class="date-picker" name="minregtime">
+                    </div>
+                    <div class="form-group">
+                        到<input type="text" data-date-format="yyyy-mm-dd hh:ii" value="@Request.QueryString["maxregtime"]" readonly="readonly" class="date-picker" name="maxregtime">
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-inline">
+                    <div class="form-group">姓名：</div>
+                    <div class="form-group"><input type="text" name="realname" class="input-small" value="@Request.QueryString["realname"]"></div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-inline">
+                    <button type="submit" class="btn btn-purple btn-sm">
+                        <i class="icon-search icon-on-right bigger-110"></i>
+                        搜索
+                    </button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-bordered table-hover dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户信息</th>
+                    <th>注册时间</th>
+                    <th>余额</th>
+                    <th>充值卡余额</th>
+                    <th>交易次数</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model.Items)
+                {
+                    <tr>
+                        <td>@u.UserId</td>
+                        <td>
+                            @u.Nick<br>
+                            @u.Email<br>
+                            @u.Mobile<br>
+                            @u.RealName
+                        </td>
+                        <td>@u.CreateTime</td>
+                        <td>@u.Money</td>
+                        <td>@u.PrepaidCard</td>
+                        <td>@u.TradingVolume</td>
+                        <td><a href="@Url.Action("BecomeDistributor", new { nick = u.Nick})" class="btn btn-xs btn-info j-add">确认添加</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 10)
+
+    </div>
+</div>
+@section specificscripts{
+    <script src="@Url.Content("~/areas/admin/content/js/bootbox.js")"></script>
+    <script src="~/areas/admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/areas/admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+}
+
+
+@section inlinescripts{
+
+    <script type="text/javascript">
+        $(".date-picker").datetimepicker({ format: 'yyyy-mm-dd hh:ii', language: 'zh-CN', autoclose: true, bootcssVer: 3 });
+
+        $(".j-add").click(function() {
+            var url = $(this).attr("href");
+            var link = this;
+            bootbox.confirm("确定真的要添加吗?", function (result) {
+                if (result) {
+                    $.post(url, function (r) {
+                        if (r>0) {
+                            bootbox.alert("提交成功，页面将会在1秒后自动跳转");
+                            setTimeout(function() {
+                                window.location.href = "@Url.Action("Users")";
+                            }, 1000);
+                        } else {
+                            bootbox.alert("删除失败");
+                        }
+                    });
+                }
+            });
+            return false;
+        });
+    </script>
+}
