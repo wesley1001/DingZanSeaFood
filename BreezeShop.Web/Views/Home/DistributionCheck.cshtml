@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "申请成为分销商";
+}
+
+<div class="container">
+    <div class="premise">
+        <h2>申请成为分销商的前提</h2>
+        <div class="premiseInfo">
+            <ul>
+                <li id="first">
+                    <p>成为商城会员</p>
+                </li>
+                <li id="second">
+                    <p class="seth">
+                        联系@(BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name)，申请成为分销商
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <div class="progress">
+            <div class="radius success show">
+                <div class="bgradius">√</div>
+            </div>
+            <div class="line" id="lineOne"></div>
+            <div class="radius" id="radiusOne">
+                <div class="bgradius">√</div>
+            </div>
+            <div class="line two" id="lineTwo"></div>
+            <div class="radius" id="radiusTwo">
+                <div class="bgradius">√</div>
+            </div>
+            <div class="line"></div>
+        </div>
+    </div>
+    <div class="btnList">
+        <a type="button" id="ReadBack" class="btn btn-danger" href="@Url.Action("Index")">继续逛逛</a>
+        <div style="padding: 5px; text-align: center; font-size: 16px; line-height: 20px; background: #fff; display: block; border-radius: 4px;">分销商特权</div>
+    </div>
+    <div class="privilegeList">
+        <ul>
+            <li>
+                <i></i>
+                <p>无需备货，零库存销售产品，平台统一发货</p>
+            </li>
+            <li>
+                <i></i>
+                <p>拥有专属推广链接，快速发展下级分销商和会员</p>
+            </li>
+            <li>
+                <i></i>
+                <p>通过下级会员消费获得佣金收益，佣金可以提现</p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@section warplast{
+    @Html.Partial("_FooterNav")
+}

@@ -16,6 +16,7 @@ using Yun.Pay.Request;
 using Yun.Site.Request;
 using Yun.Trade;
 using Yun.Trade.Request;
+using Yun.User.Request;
 
 namespace BreezeShop.Web.Controllers
 {
@@ -489,9 +490,12 @@ namespace BreezeShop.Web.Controllers
             {
                 return Content("用户不存在");
             }
-            
+
+            var superior = YunClient.Instance.Execute(new GetUserRequest {UserId = id}).User;
+
             //自己用户不需要绑定
-            if (id != loginedUser.UserId && (loginedUser.OwnedSupplier == null || !loginedUser.OwnedSupplier.Any()))
+            if (id != loginedUser.UserId && (loginedUser.OwnedSupplier == null || !loginedUser.OwnedSupplier.Any()) &&
+                superior != null && superior.OwnedSupplier != null && superior.OwnedSupplier.Any())
             {
                 //注册成为分销用户
                 var req = YunClient.Instance.Execute(new AuditCooperationRequest
@@ -507,6 +511,23 @@ namespace BreezeShop.Web.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        
+        /// <summary>
+        /// 申请成为分销商
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DistributionCheck()
+        {
+            var user = Member.GetLoginMember();
+
+            if (user.OwnedSupplier != null && user.OwnedSupplier.Any())
+            {
+                return RedirectToAction("QrCode", "Center");
+            }
+
+            return View();
         }
     }
 }

@@ -745,6 +745,7 @@
     <Content Include="Areas\Admin\Views\WeChat\AddTextReply.cshtml" />
     <Content Include="Content\css\base.css" />
     <Content Include="Content\css\main.css" />
+    <Content Include="Content\images\fxicon.png" />
     <Content Include="Content\images\header-img.jpg" />
     <Content Include="Content\images\icon\1.png" />
     <Content Include="Content\images\icon\2.png" />
@@ -1091,6 +1092,7 @@
     <Content Include="Views\Center\Withdrawals.cshtml" />
     <Content Include="Views\Center\Trades.cshtml" />
     <Content Include="Views\Center\TradeList.cshtml" />
+    <Content Include="Views\Home\DistributionCheck.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

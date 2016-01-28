@@ -197,7 +197,7 @@ header .right a{ color: #000;}
     padding: 20px;}
 .qrcode-content .img img{    max-width: 100%; }
 .qrcode .tip {
-    padding: 10px; font-size: 1.4em;
+    padding: 10px; font-size: 1.4em;margin-top: 0;
 }
 
 .withdrawals .money{margin: 0 10px;margin-bottom: 15px;margin-top: -7px;}
@@ -208,7 +208,7 @@ header .right a{ color: #000;}
     line-height: 30px;}
 
 
-/*»´≤ø∂©µ•*/
+/*ÂÖ®ÈÉ®ËÆ¢Âçï*/
 .order-list {
   padding: 0px;
   margin: 15px auto;
@@ -308,3 +308,216 @@ header .right a{ color: #000;}
 .color-blue {
   color: #0f85e8;
 }
+
+.premiseInfo {
+        background-color: #fff;
+    }
+
+    .premise {
+        position: relative;
+        margin-bottom: 10px;
+            overflow: hidden;
+    }
+
+        .premise h2 {
+            height: 40px;
+            line-height: 40px;
+            background-color: #EDF1F2;
+            text-indent: 10%;
+            font-size:16px
+        }
+
+    .premiseInfo {
+        padding: 12px 0;
+    }
+
+        .premiseInfo ul li:after {
+            content: "";
+            clear: both;
+            display: block;
+            height: 0;
+        }
+
+        .premiseInfo ul li:first-child {
+            margin-bottom: 18px;
+        }
+
+        .premiseInfo ul li {
+            width: 100%;
+            font-size: 12px;
+            padding: 7px 0 5px 10%;
+        }
+        .premiseInfo ul li p{margin: 0;}
+
+            .premiseInfo ul li p:last-child {
+                float: right;
+                margin-right: 3%;
+                color: #999999;
+            }
+
+            .premiseInfo ul li p:first-child {
+                float: left;
+            }
+
+            .premiseInfo ul li p.success:last-child {
+                color: #55B700;
+            }
+
+            .premiseInfo ul li p:first-child span {
+                display: block;
+                width: 100%;
+            }
+
+            .premiseInfo ul li p span {
+                display: block;
+                text-align: right;
+                height: 15px;
+            }
+
+            .premiseInfo ul li p small {
+                font-size: 0.5em;
+            }
+
+    .progress {
+        position: absolute;
+        left: 10px;
+        top: 13px;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        box-shadow: none;
+        overflow: visible;
+    }
+
+        .progress .radius {
+            position: relative;
+            width: 15px;
+            height: 15px;
+            background-color: #999999;
+            border-radius: 50%;
+            color: #fff;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .progress .line {
+            width: 1px;
+            height: 32px;
+            background-color: #D5D5D5;
+            margin: 0 auto;
+        }
+
+            .progress .line.success {
+                width: 2px;
+            }
+
+        .progress .success {
+            background-color: #55B700;
+        }
+
+        .progress .radius .bgradius {
+            position: absolute;
+            display: none;
+            width: 25px;
+            height: 25px;
+            font-size: 20px;
+            background-color: #55B700;
+            border-radius: 50%;
+            left: -5px;
+            top: -5px;
+        }
+
+        .progress .radius.success.show .bgradius {
+            display: block;
+        }
+
+    .container .btnList {
+        padding: 0 10px;
+        margin-bottom: 20px;
+    }
+
+        .container .btnList a {
+            display: block;
+            width: 100%;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+            .container .btnList a:first-child {
+                margin-bottom: 10px;
+            }
+
+            .container .btnList .btn-danger {
+                background-color: #da4453;
+    border-color: #da4453;
+        padding: 6px 0;
+            font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+        background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+                color: #FFF;
+            }
+
+    .privilegeList {
+        padding: 0 10px;
+    }
+
+        .privilegeList ul li {
+            padding-left: 35px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+            .privilegeList ul li p {
+                position: relative;
+                background-color: #F8F8F8;
+                padding: 5px 10px;
+                border-radius: 4px;
+                border: 1px solid #E6E6E6;
+                color: #666666;
+            }
+
+                .privilegeList ul li p:before, .privilegeList ul li p:after {
+                    position: absolute;
+                    left: -7px;
+                    top: 50%;
+                    margin-top: -10px;
+                    content: "‚óÜ";
+                    color: #F8F8F8;
+                    font-size: 16px;
+                    z-index: 20;
+                }
+
+                .privilegeList ul li p:after {
+                    color: #E6E6E6;
+                    left: -8px;
+                    z-index: 10;
+                }
+
+            .privilegeList ul li i {
+                position: absolute;
+                left: 0;
+                top: 50%;
+                margin-top: -14px;
+                display: block;
+                width: 25px;
+                height: 28px;
+                background-image: url(../images/fxicon.png);
+                background-repeat: no-repeat;
+                background-size: 25px;
+            }
+
+            .privilegeList ul li:nth-of-type(2) i {
+                background-position: 0 -28px;
+            }
+
+            .privilegeList ul li:nth-of-type(3) i {
+                background-position: 0 -56px;
+            }
+
+            .privilegeList ul li:nth-of-type(4) i {
+                background-position: 0 -85px;
+            }

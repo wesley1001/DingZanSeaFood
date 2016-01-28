@@ -41,11 +41,17 @@ namespace BreezeShop.Web.Controllers
         public ActionResult QrCode()
         {
             var user = Member.GetLoginMember();
-            ViewBag.ShareUrl = BreezeShop.Core.YunClient.WebUrl + "home/distributionregister/" + user.UserId;
-            ViewBag.ShareImage = user.Avatar;
-            ViewBag.ShareTitle = "我是" + user.RealName + "，我在用" + GlobeInfo.WebSetting.Name;
 
-            return View(user);
+            if (user.OwnedSupplier != null && user.OwnedSupplier.Any())
+            {
+                ViewBag.ShareUrl = BreezeShop.Core.YunClient.WebUrl + "home/distributionregister/" + user.UserId;
+                ViewBag.ShareImage = user.Avatar;
+                ViewBag.ShareTitle = "我是" + user.RealName + "，我在用" + GlobeInfo.WebSetting.Name;
+
+                return View(user);
+            }
+
+            return RedirectToAction("DistributionCheck", "Home");
         }
 
         public ActionResult MyCashCoupons()
