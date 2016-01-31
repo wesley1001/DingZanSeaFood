@@ -1,6 +1,6 @@
 ﻿@model List<Yun.Item.GoodsDetail>
 @{
-    
+    var webConfig = BreezeShop.Core.DataProvider.GlobeInfo.WebSetting;
 }
 
 <div class="header">
@@ -9,10 +9,10 @@
     </div>
     <ul class="other clearfix">
         <li class="logo">
-            <img src="@Url.Content("~/Content/images/logo.png")"/>
+            <img src="@BreezeShop.Core.FileFactory.ImageExtension.GetUrl("120", webConfig.Logo)"/>
         </li>
         <li>
-            <div class="text">@BreezeShop.Core.DataProvider.GlobeInfo.WebSetting.Name</div>
+            <div class="text">@webConfig.Name</div>
             <ul class="info">
                 <li><a href="@Url.Action("List")"><strong>@ViewData["itemTotal"]</strong><br/>全部商品</a></li>
                 <li class="trade-icon"><a href="@Url.Action("Trades","Center")"><i></i><br/>我的订单</a></li>
