@@ -1,0 +1,43 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.EditOrganizationModel
+
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("AddOrganization", "Permission", FormMethod.Post, new { @class = "form-horizontal", id = "J-Submit-Form" }))
+{
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Name">名字：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Name, new { @class = "col-xs-12 col-sm-5", placeholder = "请输入名字" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Name)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">父部门：</label>
+        <div class="col-xs-12 col-sm-10">
+            @Html.Action("OrganizationDropDown", "Permission", new { id = Model.ParentId })
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Sort">排序：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Sort, new { @class = "col-xs-12 col-sm-5", placeholder = "请输入排序" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Sort)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="Description">描述：</label>
+        <div class="col-sm-10">
+            @Html.TextAreaFor(m => m.Description, new { @class = "col-xs-12 col-sm-8", placeholder = "描述", rows = "7" })
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#J-Submit-Form").unobtrusiveValidate();
+</script>

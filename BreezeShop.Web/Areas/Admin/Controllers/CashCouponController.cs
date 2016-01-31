@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using BreezeShop.Core;
 using BreezeShop.Web.Areas.Admin.Models;
 using Yun.Item.Request;
 using Yun.Marketing.Request;
+using Yun.Response;
 using Yun.User;
 using Yun.User.Request;
 
@@ -14,55 +12,143 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
 {
     public class CashCouponController : AdminAuthController
     {
-        public ActionResult Index(int p = 1)
+        private static DateTime? ConvertBeginTimeStatus(int timeStatus)
         {
-            var page = new PageModel<Yun.Marketing.CashCouponDomain>();
+            switch (timeStatus)
+            {
+                case 2: return DateTime.Now;
+            }
 
-            var req = YunClient.Instance.Execute(new FindCashCouponRequest {PageSize = 20, PageNum = p});
+            return null;
+        }
 
-            page.Items = req.CashCoupons;
+        private static DateTime? ConvertEndTimeStatus(int timeStatus)
+        {
+            switch (timeStatus)
+            {
+                case 1: return DateTime.Now;
+                case 3: return DateTime.Now;
+            }
+
+            return null;
+        }
+
+        public ActionResult Index(string title = "", int timeStatus = 0, int p = 1)
+        {
+            var page = new PageModel<Yun.Marketing.CashCouponCateogry>();
+
+            var req =
+                YunClient.Instance.Execute(new FindCashCouponCategoriesRequest
+                {
+                    PageSize = 20,
+                    PageNum = p,
+                    Name = title,
+                    ValidityPeriod = timeStatus
+                });
+
+            page.Items = req.CashCouponCateogries;
             page.CurrentPage = p;
             page.TotalItems = req.TotalItem;
 
             return View(page);
         }
 
-        public ActionResult Add()
+        public ActionResult Add(int id = 0)
         {
             ViewData["Items"] = YunClient.Instance.Execute(new GetItemsRequest {Fields = "id,itemtitle", PageNum = 1, PageSize = 100}).Items;
 
-            return View();
+            var m = new AddCashCouponModel();
+            if (id <= 0) return View(m);
+
+            var r = YunClient.Instance.Execute(new GetCashCouponCategoryRequest { CategoryId = id }).CashCouponCateogry;
+            m.Description = r.Description;
+            m.ItemsId = r.RelateObjectId;
+            m.Status = r.Status;
+            m.UseCustom = r.UseCustom;
+            m.BeginTime = DateTime.Parse(r.BeginTime);
+            m.EndTime = DateTime.Parse(r.EndTime);
+            m.CashType = r.CouponType;
+            m.Credit = r.Credit;
+            m.MinCredit = r.MinPrice;
+            m.Name = r.Name;
+            m.PerUserMaxQuantity = r.PerUserMaxQuantity;
+            m.Num = r.Quantity;
+
+            return View(m);
         }
 
         [HttpPost]
-        public ActionResult Add(AddCashCouponModel model)
+        public ActionResult Add(AddCashCouponModel model, int id = 0)
         {
             if (ModelState.IsValid)
             {
-                var r = YunClient.Instance.Execute(new GenerateCashCouponRequest
-                {
-                    Num = model.Num,
-                    Name = model.Name,
-                    BeginTime = model.BeginTime,
-                    EndTime = model.EndTime,
-                    Credit = model.Credit,
-                    CouponType = model.CashType,
-                    MinPrice = model.MinCredit,
-                    ItemdsId = model.ItemsId,
-                    Range = string.IsNullOrEmpty(model.ItemsId)?0:1
-                }, Token);
+                IntResultResponse r;
 
-                if (!string.IsNullOrWhiteSpace(r.Result))
+                if (id <= 0)
                 {
-                    TempData["success"] = "代金券生成成功";
+                    r = YunClient.Instance.Execute(new AddCashCouponCategoryRequest
+                    {
+                        Num = model.Num,
+                        Name = model.Name,
+                        BeginTime = model.BeginTime,
+                        EndTime = model.EndTime,
+                        Credit = model.Credit,
+                        CouponType = model.CashType,
+                        MinPrice = model.MinCredit,
+                        Range = string.IsNullOrEmpty(model.ItemsId) ? 0 : 1,
+                        Description = model.Description,
+                        ItemsId = model.ItemsId,
+                        UseCustom = model.UseCustom,
+                        PerUserMaxQuantity = model.PerUserMaxQuantity,
+                        Status = model.Status
+                    }, Token);
+                }
+                else
+                {
+                    r = YunClient.Instance.Execute(new UpdateCashCouponCategoryRequest()
+                    {
+                        Num = model.Num,
+                        Name = model.Name,
+                        BeginTime = model.BeginTime,
+                        EndTime = model.EndTime,
+                        Credit = model.Credit,
+                        CouponType = model.CashType,
+                        MinPrice = model.MinCredit,
+                        Range = string.IsNullOrEmpty(model.ItemsId) ? 0 : 1,
+                        Description = model.Description,
+                        ItemsId = model.ItemsId,
+                        UseCustom = model.UseCustom,
+                        PerUserMaxQuantity = model.PerUserMaxQuantity,
+                        Status = model.Status,
+                        CategoryId = id
+                    }, Token);
+                }
+
+                if (r.Result > 0)
+                {
+                    TempData["success"] = "代金券数据提交成功";
                     return RedirectToAction("Index");
                 }
 
-                ViewData["Items"] = YunClient.Instance.Execute(new GetItemsRequest { Fields = "id,itemtitle", PageNum = 1, PageSize = 100 }).Items;
+
                 TempData["error"] = "代金券生成失败，错误代码：" + r.ErrMsg;
             }
 
+            ViewData["Items"] =
+                YunClient.Instance.Execute(new GetItemsRequest
+                {
+                    Fields = "id,itemtitle",
+                    PageNum = 1,
+                    PageSize = 100
+                }).Items;
             return View(model);
+        }
+
+        public ActionResult DeleteCategory(int id)
+        {
+            var req = YunClient.Instance.Execute(new DeleteCashCouponCategoryRequest {CategoryId = id}, Token).Result;
+
+            return Json(req);
         }
 
         public ActionResult Delete(int id)
@@ -105,6 +191,26 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         public ActionResult Bind(int id, int userid)
         {
             return Json(YunClient.Instance.Execute(new BindCashCouponRequest {Id = id, UserId = userid}).Result);
+        }
+
+        public ActionResult Detail(int id, int p = 1)
+        {
+            var cat = YunClient.Instance.Execute(new GetCashCouponCategoryRequest {CategoryId = id}).CashCouponCateogry;
+            if (cat == null)
+            {
+                TempData["error500"] = "代金券不存在";
+                return RedirectToAction("Error500", "Home");
+            }
+
+            ViewData["CatName"] = cat.Name;
+
+            var page = new PageModel<Yun.Marketing.CashCoupon>();
+            var req = YunClient.Instance.Execute(new FindCashCouponRequest { PageSize = 20, PageNum = p, CategoryId = id});
+            page.Items = req.CashCoupons;
+            page.CurrentPage = p;
+            page.TotalItems = req.TotalItem;
+
+            return View(page);
         }
     }
 }

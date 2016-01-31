@@ -3,6 +3,7 @@
     ViewBag.Title = "新增代金券";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var items = (List<Yun.Item.GoodsDetail>)ViewData["Items"];
+    var selectItems = (Model.ItemsId??"").Split(',');
 }
 @section headerbeforeace{
     <link rel="stylesheet" href="@Url.Content("~/areas/admin/Content/css/bootstrap-datetimepicker.min.css")" />
@@ -18,20 +19,20 @@
         <li>
             <a href="@Url.Action("Index")">代金券列表</a>
         </li>
-        <li class="active">新增代金券</li>
+        <li class="active">添加/编辑代金券</li>
     </ul>
 }
 
 @section pageheader{
     <h1>
-        新增代金券
+        添加/编辑代金券
     </h1>
 }
 
 @using (Html.BeginForm("Add", "CashCoupon", FormMethod.Post, new { @class = "form-horizontal", id = "SubmitForm" }))
 {
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Name">代金券名字：</label>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Name">代金券名称：</label>
         <div class="col-xs-12 col-sm-10">
             <div class="clearfix">@Html.TextBoxFor(m => m.Name, new { @class = "input-large", placeholder = "代金券名字" })</div>
             <div class="help-block">@Html.ValidationMessageFor(m => m.Name)</div>
@@ -39,10 +40,10 @@
     </div>
     <div class="space-4"></div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Num">生成数量：</label>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Num">发放数量：</label>
         <div class="col-xs-12 col-sm-10">
-            <div class="clearfix">@Html.TextBoxFor(m => m.Num, new { @class = "input-large", placeholder = "生成数量" })</div>
-            <div class="help-block">@Html.ValidationMessageFor(m => m.Name)</div>
+            <div class="clearfix">@Html.TextBoxFor(m => m.Num, new { @class = "input-large", placeholder = "0为不限发放数量" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Num)</div>
         </div>
     </div>
     <div class="space-4"></div>
@@ -54,19 +55,67 @@
     </div>
     <div class="space-4"></div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Credit">面值：</label>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">生效时间：</label>
         <div class="col-xs-12 col-sm-10">
-            <div class="clearfix">@Html.TextBoxFor(m => m.Credit, new { @class = "input-mini", placeholder = "面值" })</div>
-            <div class="help-block">@Html.ValidationMessageFor(m => m.Name)</div>
+            <input class="input-medium date-picker" id="BeginTime" type="text" name="BeginTime" data-date-format="yyyy-mm-dd" readonly="readonly" value="@Model.BeginTime">
         </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MinCredit">订单金额：</label>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right">过期时间：</label>
         <div class="col-xs-12 col-sm-10">
-            <div class="clearfix">@Html.TextBoxFor(m => m.MinCredit, new { @class = "input-mini", placeholder = "订单金额" })</div>
+            <input class="input-medium date-picker" id="EndTime" type="text" name="EndTime" data-date-format="yyyy-mm-dd" readonly="readonly" value="@Model.EndTime">
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Credit">代金券面值：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Credit, new { @class = "input-mini", placeholder = "代金券面值" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Credit)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="MinCredit">满？元可以使用：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.MinCredit, new { @class = "input-mini", placeholder = "满？元可以使用" })</div>
             <div class="help-block">@Html.ValidationMessageFor(m => m.MinCredit)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="UseCustom">使用自定义代金券：</label>
+        <div class="col-xs-12 col-sm-10">
+            @Html.DropDownList("UseCustom", new List<SelectListItem>
+                {
+                    new SelectListItem {Text = "否", Value = "False"},
+                    new SelectListItem {Text = "是", Value = "True"}
+                })
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="PerUserMaxQuantity">每人限领：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.PerUserMaxQuantity, new { @class = "input-mini", placeholder = "每个ID可以领取？张" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.PerUserMaxQuantity)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Status">状态：</label>
+        <div class="col-xs-12 col-sm-10">
+            @Html.DropDownList("Status", new List<SelectListItem>
+                {
+                    new SelectListItem {Text = "启用", Value = "0"},
+                    new SelectListItem {Text = "禁用", Value = "1"}
+                })
         </div>
     </div>
     <div class="space-4"></div>
@@ -77,59 +126,41 @@
             <div class="clearfix">@Html.DropDownListFor(m => m.ItemsId, items.Select(e=>new SelectListItem
                                   {
                                       Text = e.ItemTitle,
-                                      Value = e.Id.ToString()
+                                      Value = e.Id.ToString(),
+                                      Selected = selectItems.Contains(e.Id.ToString())
                                   }), new { multiple = "multiple", @class = "input-xlarge" })</div>
         </div>
     </div>
     <div class="space-4"></div>
 
+
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2 no-padding-right">有效期：</label>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Description">描述：</label>
         <div class="col-xs-12 col-sm-10">
-            <div class="input-daterange input-group input-xlarge">
-                <input class="input-sm form-control date-picker" id="BeginTime" type="text" name="BeginTime" data-date-format="yyyy-mm-dd" readonly="readonly">
-                <span class="input-group-addon">
-                    <i class="fa fa-exchange"></i>
-                </span>
-                <input class="input-sm form-control date-picker" id="EndTime" type="text" name="EndTime" data-date-format="yyyy-mm-dd" readonly="readonly">
-            </div>
+            <div class="clearfix">@Html.TextAreaFor(m => m.Description, new { @class = "input-large", placeholder = "可以输入代金券的使用说明" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Description)</div>
         </div>
     </div>
     <div class="space-4"></div>
-
+    
     <div class="clearfix form-actions">
         <div class="col-md-offset-2 col-md-10">
             <button class="btn btn-info" type="submit" id="J-Submit-Btn">
-                <i class="icon-ok bigger-110"></i>提交
-            </button>
-            &nbsp; &nbsp; &nbsp;
-            <button class="btn" type="reset">
-                <i class="icon-undo bigger-110"></i>重置
+                <i class="ace-icon fa fa-check bigger-110"></i>提交
             </button>
         </div>
     </div>
 }
 
 @section specificscripts{
-    <script src="~/Areas/Admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/Areas/Admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-
-
+<script src="@Url.Content("~/Areas/Admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js")"></script>
+<script src="@Url.Content("~/Areas/Admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js")"></script>
 }
 
 @section inlinescripts
 {
 <script type="text/javascript">
-    $('.date-picker').datetimepicker({
-        language: 'zh-CN',
-        weekStart: 1,
-        todayBtn: 1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
+    $(".date-picker").datetimepicker({ format: 'yyyy-mm-dd hh:ii', language: 'zh-CN', autoclose: true, bootcssVer: 3 });
 </script>
 
 }

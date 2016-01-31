@@ -3,7 +3,7 @@
 @model List<Yun.Trade.CartDetail>
 @{
     ViewBag.Title = "购物车";
-    var cashCoupons = ViewData["cashCoupons"] as List<Yun.Marketing.CashCouponDomain>;
+    var cashCoupons = ViewData["cashCoupons"] as List<Yun.Marketing.CashCoupon>;
     var defaultAddress = ViewData["defaultAddress"] as UserAddress;
 }
 

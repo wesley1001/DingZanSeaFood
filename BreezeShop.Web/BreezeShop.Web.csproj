@@ -742,6 +742,7 @@
     <Content Include="Areas\Admin\Content\js\typeahead.jquery.js" />
     <Content Include="Areas\Admin\Content\js\x-editable\ace-editable.js" />
     <Content Include="Areas\Admin\Content\js\x-editable\bootstrap-editable.js" />
+    <Content Include="Areas\Admin\Views\CashCoupon\Index.cshtml" />
     <Content Include="Areas\Admin\Views\WeChat\AddTextReply.cshtml" />
     <Content Include="Content\css\base.css" />
     <Content Include="Content\css\main.css" />
@@ -1016,7 +1017,6 @@
     <Content Include="Areas\Admin\Views\OfficeBuilding\Index.cshtml" />
     <Content Include="Areas\Admin\Views\OfficeBuilding\Add.cshtml" />
     <Content Include="Areas\Admin\Views\OfficeBuilding\Update.cshtml" />
-    <Content Include="Areas\Admin\Views\CashCoupon\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CashCoupon\Add.cshtml" />
     <Content Include="Areas\Admin\Views\CashCoupon\BindUser.cshtml" />
     <Content Include="Areas\Admin\Views\Setting\WxPay.cshtml" />
@@ -1066,6 +1066,14 @@
     <Content Include="Areas\Admin\Views\Report\ItemSalesReport.cshtml" />
     <Content Include="Areas\Admin\Views\Report\MonthSalesStatistics.cshtml" />
     <Content Include="Areas\Admin\Views\Distribution\UserSearch.cshtml" />
+    <Content Include="Areas\Admin\Views\CashCoupon\Detail.cshtml" />
+    <Content Include="Areas\Admin\Views\Permission\AddOrganization.cshtml" />
+    <Content Include="Areas\Admin\Views\Permission\Organization.cshtml" />
+    <Content Include="Areas\Admin\Views\Permission\OrganizationDropDown.cshtml" />
+    <Content Include="Areas\Admin\Views\Permission\OrganizationList.cshtml" />
+    <Content Include="Areas\Admin\Views\Permission\SeeRoleFunctions.cshtml" />
+    <Content Include="Areas\Admin\Views\WeChat\SpecialReply.cshtml" />
+    <Content Include="Areas\Admin\Views\WeChat\SystemReply.cshtml" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
     <Content Include="Views\NotLogin\Article.cshtml" />

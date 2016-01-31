@@ -350,13 +350,13 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
 
         public ActionResult Off(string id)
         {
-            var request = YunClient.Instance.Execute(new OffsheIfItemsRequest {ItemIds = id}, Member.Token);
+            var request = YunClient.Instance.Execute(new OffsheIfItemsRequest {ItemIds = id}, Token);
             return Json(request.Result);
         }
 
         public ActionResult OnsheIf(string id)
         {
-            var request = YunClient.Instance.Execute(new OnsheIfItemRequest { ItemId = id }, Member.Token);
+            var request = YunClient.Instance.Execute(new OnsheIfItemRequest { ItemId = id }, Token);
             return Json(request.Result);
         }
 

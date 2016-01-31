@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "设置部门结构";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">设置部门结构</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        设置部门结构
+    </h1>
+}
+
+<div class="alert alert-block alert-success hide" id="J-SuccessInfo">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="icon-remove"></i>
+    </button>
+    <p>
+        <strong>
+            <i class="icon-ok"></i>
+            成功!
+        </strong>
+        您刚才的操作已成功执行,10秒后该提示将会自动消失！
+    </p>
+</div>
+
+<p>
+    <a class="btn" href="@Url.Action("AddOrganization")" id="J-AddOrganization">
+        <i class="icon-plus bigger-125"></i>
+        新增部门
+    </a>
+</p>
+@Html.Hidden("NestableOutput")
+
+<div id="J-OrganizationList"></div>
+
+
+@section specificscripts{
+    <script src="@Url.Content("~/Areas/Admin/Content/js/bootbox.js")"></script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Areas/Admin/Content/js/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
+    <script type="text/javascript">
+        jQuery.fn.extend({
+            unobtrusiveValidate: function () {
+                return $.validator.unobtrusive.parse(this);
+            }
+        });
+    </script>
+}
+
+@section inlinescripts{
+    <script>
+    function showSuccessMessage() {
+        $("#J-SuccessInfo").removeClass("hide");
+        setTimeout(function () { $("#J-SuccessInfo").addClass("hide"); }, 10000);
+    }
+
+    function editOrganizationPop(element) {
+        $(element).click(function () {
+            $.get($(this).attr("href"), function (html) {
+                bootbox.dialog({
+                    message: html,
+                    title: "设置组织机构",
+                    buttons: {
+                        success: {
+                            label: "提交",
+                            className: "btn-success",
+                            callback: function () {
+                                if ($("#J-Submit-Form").valid()) {
+                                    $.post($("#J-Submit-Form").attr("action"), $("#J-Submit-Form").serialize(), function (r) {
+                                        if (r > 0) {
+                                            showSuccessMessage();
+                                            bootbox.hideAll();
+                                            $.get("@Url.Action("OrganizationList","Permission",new {area="Admin"})", function (fhtml) {
+                                                    $("#J-OrganizationList").empty().append(fhtml);
+                                                });
+                                            } else {
+                                                bootbox.alert("提交失败，请刷新后重新提交");
+                                            }
+                                        });
+                                    }
+                                    return false;
+                                }
+                            },
+                            danger:
+                            {
+                                label: "取消",
+                                className: "btn-danger",
+                                callback: function () { }
+                            }
+                        }
+                    });
+                });
+                return false;
+            });
+        }
+
+        $.get("@Url.Action("OrganizationList","Permission",new {area="Admin"})", function (html) {
+            $("#J-OrganizationList").empty().append(html);
+        });
+
+        editOrganizationPop("#J-AddOrganization");
+    </script>
+}

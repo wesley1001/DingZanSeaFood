@@ -1,0 +1,28 @@
+﻿@model IList<Yun.User.Organizations>
+@{
+    var id = (int)ViewData["Id"];
+}
+
+<select name="OrganizationId" id="OrganizationId">
+    <option value="">无</option>
+    @Do(0, id, 0)
+</select>
+
+
+@helper Do(long parentId, int currentId, int level)
+{
+    var l = level;
+    l++;
+
+    foreach (var m in Model.Where(e => e.ParentId == parentId))
+    {
+        <option value="@m.Id" @(currentId == m.Id ? "selected" : "")>
+            @for (var i = 1; i < l; i++)
+            {
+                @:&nbsp;&nbsp;
+            }
+            @m.Name
+        </option>
+        @Do(m.Id, currentId, l)
+    }
+}

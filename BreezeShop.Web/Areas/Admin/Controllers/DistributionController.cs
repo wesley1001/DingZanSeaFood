@@ -172,6 +172,32 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             return View(page);
         }
 
+
+        public ActionResult CommissionDetails(int p = 1, int tradeId = 0, DateTime? minDateTime = null, DateTime? maxDateTime = null)
+        {
+            var req =
+                YunClient.Instance.Execute(new GetDistributorsHistoryRequest
+                {
+                    PageNum = p,
+                    PageSize = 20,
+                    TradeId = tradeId,
+                    StartDateTime = minDateTime,
+                    EndDateTime = maxDateTime,
+                    TradeStatus = "TRADE_FINISHED"
+                });
+
+            var page = new PageModel<Yun.Distribution.DistributionHistory>
+            {
+                Items = req.DistributionHistory,
+                CurrentPage = p,
+                TotalItems = req.TotalItem,
+                ItemsPerPage = 20
+            };
+
+            return View(page);
+        }
+
+
         /// <summary>
         /// 可以成为分销商的用户搜索
         /// </summary>
@@ -191,7 +217,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         /// <returns></returns>
         public ActionResult UserSearch(string email, string mobile, string nick, DateTime? minregtime, DateTime? maxregtime,
             double? minmoney,
-            double? maxmoney, long? minscore, long? maxscore, double minprepaid = 0, double maxprepaid = 0, string realname = "" ,int p = 1)
+            double? maxmoney, long? minscore, long? maxscore, double minprepaid = 0, double maxprepaid = 0, string realname = "", int p = 1)
         {
             var page = new PageModel<UserDetail>();
             var req = YunClient.Instance.Execute(new FindUsersRequest
@@ -219,31 +245,6 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             return View(page);
         }
 
-
-        public ActionResult CommissionDetails(int p = 1, int tradeId = 0, DateTime? minDateTime = null, DateTime? maxDateTime = null)
-        {
-            var req =
-                YunClient.Instance.Execute(new GetDistributorsHistoryRequest
-                {
-                    PageNum = p,
-                    PageSize = 20,
-                    TradeId = tradeId,
-                    StartDateTime = minDateTime,
-                    EndDateTime = maxDateTime,
-                    TradeStatus = "TRADE_FINISHED"
-                });
-
-            var page = new PageModel<Yun.Distribution.DistributionHistory>
-            {
-                Items = req.DistributionHistory,
-                CurrentPage = p,
-                TotalItems = req.TotalItem,
-                ItemsPerPage = 20
-            };
-
-            return View(page);
-        }
-
         /// <summary>
         /// 成为分销商
         /// </summary>
@@ -251,7 +252,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         /// <param name="parentId"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult BecomeDistributor(string nick ,int parentId = 0)
+        public ActionResult BecomeDistributor(string nick, int parentId = 0)
         {
             var req =
                 YunClient.Instance.Execute(new AuditCooperationRequest

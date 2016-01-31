@@ -8,23 +8,15 @@
     <ul class="breadcrumb">
         <li>
             <i class="ace-icon fa fa-home home-icon"></i>
-            <a href="#">Home</a>
+            <a href="@Url.Action("Index","Home")">首页</a>
         </li>
-
-        <li>
-            <a href="#">Forms</a>
-        </li>
-        <li class="active">Form Elements</li>
+        <li class="active">编辑职员</li>
     </ul>
 }
 
 @section pageheader{
     <h1>
-        Form Elements
-        <small>
-            <i class="icon-double-angle-right"></i>
-            Common form elements and layouts
-        </small>
+        编辑职员
     </h1>
 }
 
@@ -124,7 +116,7 @@
         <div class="col-xs-12 col-sm-10">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <i class="icon-calendar bigger-110"></i>
+                    <i class="fa fa-calendar bigger-110"></i>
                 </span>
                 <input class="input-sm date-picker" id="EntryTime" type="text" name="EntryTime" readonly="readonly" data-date-format="yyyy-mm-dd" value="@Model.Entry">
             </div>
@@ -150,7 +142,7 @@
         <div class="col-xs-12 col-sm-10">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <i class="icon-phone"></i>
+                    <i class="fa fa-phone"></i>
                 </span>
                 @Html.TextBoxFor(m => m.Phone, new { @class = "", placeholder = "请输入手机号码" })
             </div>
@@ -162,7 +154,7 @@
         <div class="col-xs-12 col-sm-10">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <i class="icon-envelope-alt"></i>
+                    <i class="glyphicon glyphicon-envelope"></i>
                 </span>
                 @Html.TextBoxFor(m => m.Email, new { @class = "input-xlarge", placeholder = "请输入邮箱" })
             </div>
@@ -193,7 +185,7 @@
     <div class="clearfix form-actions">
         <div class="col-md-offset-2 col-md-10">
             <button class="btn btn-info" type="submit" id="J-Submit-Btn">
-                <i class="icon-ok bigger-110"></i>提交
+                <i class="ace-icon fa fa-check bigger-110"></i>提交
             </button>
             &nbsp; &nbsp; &nbsp;
             <button class="btn" type="reset">
@@ -222,149 +214,150 @@
 
 @section inlinescripts{
     <script type="text/javascript">
-        function showSuccessMessage() {
-            $("#J-SuccessInfo").removeClass("hide");
-            setTimeout(function () { $("#J-SuccessInfo").addClass("hide"); }, 10000);
-        }
+    function showSuccessMessage() {
+        $("#J-SuccessInfo").removeClass("hide");
+        setTimeout(function () { $("#J-SuccessInfo").addClass("hide"); }, 10000);
+    }
 
-        $('#EntryTime').datetimepicker({
-            language: 'zh-CN',
-            weekStart: 1,
-            todayBtn: 1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0
-        });
+    $('#EntryTime').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        bootcssVer: 3
+    });
 
+    $("#J-ViewRoles").toggleClass("hide", $("input[name='Role']:checked").length <= 0);
+
+    $("input[name='Role']").click(function() {
         $("#J-ViewRoles").toggleClass("hide", $("input[name='Role']:checked").length <= 0);
+    });
 
-        $("input[name='Role']").click(function() {
-            $("#J-ViewRoles").toggleClass("hide", $("input[name='Role']:checked").length <= 0);
-        });
+    $("#J-ViewRoles").click(function() {
+        if ($("input[name='Role']:checked").length > 0) {
+            var ids = "";
+            $("input[name='Role']:checked").each(function() {
+                ids += $(this).val() + ",";
+            });
+            ids = ids.substr(0, ids.length - 1);
 
-        $("#J-ViewRoles").click(function() {
-            if ($("input[name='Role']:checked").length > 0) {
-                var ids = "";
-                $("input[name='Role']:checked").each(function() {
-                    ids += $(this).val() + ",";
-                });
-                ids = ids.substr(0, ids.length - 1);
-
-                $.get("/admin/part/seerolefunctions/" + ids, function(html) {
-                    bootbox.dialog({
-                        message: html,
-                        title: "预览角色功能",
-                        buttons: {
-                            danger:
-                            {
-                                label: "关闭",
-                                className: "btn-danger",
-                                callback: function() {}
-                            }
-                        }
-                    });
-                });
-
-            }
-        });
-
-        $("#J-AddOrganization").click(function() {
-            $.get("/admin/manage/addorganization", function(html) {
+            $.get("@Url.Action("SeeRoleFunctions")" +"/"+ ids, function(html) {
                 bootbox.dialog({
                     message: html,
-                    title: "新增组织机构",
+                    title: "预览角色功能",
                     buttons: {
-                        success: {
-                            label: "提交",
-                            className: "btn-success",
-                            callback: function() {
-                                if ($("#J-Submit-Form").valid()) {
-                                    $.post($("#J-Submit-Form").attr("action"), $("#J-Submit-Form").serialize(), function(r) {
-                                        if (r > 0) {
-                                            var n = $("#Name").val();
-                                            bootbox.hideAll();
-                                            $.get("/admin/part/organizationdropdown", function(fhtml) {
-                                                $("#OrganizationId").remove();
-                                                $("#J-AddOrganization").before(fhtml);
-                                                $("#OrganizationId option").each(function() {
-                                                    if ($(this).text().indexOf(n) > -1) {
-                                                        $("#OrganizationId").val($(this).val());
-                                                        return;
-                                                    }
-                                                });
-                                            });
-                                        } else {
-                                            bootbox.alert("提交失败，请刷新后重新提交");
-                                        }
-                                    });
-                                }
-                                return false;
-                            }
-                        },
                         danger:
                         {
-                            label: "取消",
+                            label: "关闭",
                             className: "btn-danger",
                             callback: function() {}
                         }
                     }
                 });
             });
-        });
 
-        $("#J-ModifyPassword").click(function() {
-            $.get("/admin/part/ModifyPassword/@(ViewContext.RouteData.Values["id"])", function (html) {
-                bootbox.dialog({
-                    message: html,
-                    title: "修改账号密码",
-                    buttons: {
-                        success: {
-                            label: "提交",
-                            className: "btn-success",
-                            callback: function () {
-                                if ($("#J-ContentForm").valid()) {
-                                    $.post($("#J-ContentForm").attr("action"), $("#J-ContentForm").serialize(), function (r) {
-                                        if (r) {
-                                            showSuccessMessage();
-                                            bootbox.hideAll();
-                                        } else {
-                                            bootbox.alert("提交失败，请刷新后重新提交");
-                                        }
-                                    });
-                                }
-                                return false;
+        }
+    });
+
+    $("#J-AddOrganization").click(function() {
+        $.get("/admin/manage/addorganization", function(html) {
+            bootbox.dialog({
+                message: html,
+                title: "新增组织机构",
+                buttons: {
+                    success: {
+                        label: "提交",
+                        className: "btn-success",
+                        callback: function() {
+                            if ($("#J-Submit-Form").valid()) {
+                                $.post($("#J-Submit-Form").attr("action"), $("#J-Submit-Form").serialize(), function(r) {
+                                    if (r > 0) {
+                                        var n = $("#Name").val();
+                                        bootbox.hideAll();
+                                        $.get("@Url.Action("OrganizationDropDown")", function(fhtml) {
+                                            $("#OrganizationId").remove();
+                                            $("#J-AddOrganization").before(fhtml);
+                                            $("#OrganizationId option").each(function() {
+                                                if ($(this).text().indexOf(n) > -1) {
+                                                    $("#OrganizationId").val($(this).val());
+                                                    return;
+                                                }
+                                            });
+                                        });
+                                    } else {
+                                        bootbox.alert("提交失败，请刷新后重新提交");
+                                    }
+                                });
                             }
-                        },
-                        danger:
-                        {
-                            label: "取消",
-                            className: "btn-danger",
-                            callback: function () { }
+                            return false;
                         }
+                    },
+                    danger:
+                    {
+                        label: "取消",
+                        className: "btn-danger",
+                        callback: function() {}
+                    }
+                }
+            });
+        });
+    });
+
+    $("#J-ModifyPassword").click(function() {
+        $.get("@Url.Action("ModifyPassword","Member",new {area="Admin", id = ViewContext.RouteData.Values["id"]})", function (html) {
+            bootbox.dialog({
+                message: html,
+                title: "修改账号密码",
+                buttons: {
+                    success: {
+                        label: "提交",
+                        className: "btn-success",
+                        callback: function () {
+                            if ($("#J-ContentForm").valid()) {
+                                $.post($("#J-ContentForm").attr("action"), $("#J-ContentForm").serialize(), function (r) {
+                                    if (r) {
+                                        showSuccessMessage();
+                                        bootbox.hideAll();
+                                    } else {
+                                        bootbox.alert("提交失败，请刷新后重新提交");
+                                    }
+                                });
+                            }
+                            return false;
+                        }
+                    },
+                    danger:
+                    {
+                        label: "取消",
+                        className: "btn-danger",
+                        callback: function () { }
+                    }
+                }
+            });
+        });
+    });
+
+    $(function() {
+        $("#SubmitForm").off().submit(function() {
+            if ($(this).valid()) {
+                $("#J-Submit-Btn").attr("disabled", true).html("<i class='ace-icon fa fa-check bigger-110'></i>正在提交，请稍后...");
+                $.post($(this).attr("action"), $(this).serialize(), function(r) {
+                    if (r>0) {
+                        window.location.href = "@Url.Action("Employees")";
+                    } else {
+                        $("#J-Submit-Btn").removeAttr("disabled");
+                        bootbox.alert("提交失败，错误代码:" + r);
                     }
                 });
-            });
+            }
+
+            return false;
         });
+    });
 
-        $(function() {
-            $("#SubmitForm").off().submit(function() {
-                if ($(this).valid()) {
-                    $("#J-Submit-Btn").attr("disabled", true).html("<i class='icon-ok bigger-110'></i>正在提交，请稍后...");
-                    $.post($(this).attr("action"), $(this).serialize(), function(r) {
-                        if (r>0) {
-                            window.location.href = "/admin/manage/employees";
-                        } else {
-                            $("#J-Submit-Btn").removeAttr("disabled");
-                            bootbox.alert("提交失败，错误代码:" + r);
-                        }
-                    });
-                }
-
-                return false;
-            });
-        });
-
-    </script>
+</script>
 }

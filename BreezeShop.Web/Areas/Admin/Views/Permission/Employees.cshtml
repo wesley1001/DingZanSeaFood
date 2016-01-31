@@ -10,23 +10,15 @@
     <ul class="breadcrumb">
         <li>
             <i class="ace-icon fa fa-home home-icon"></i>
-            <a href="#">Home</a>
+            <a href="@Url.Action("Index","Home")">首页</a>
         </li>
-
-        <li>
-            <a href="#">Forms</a>
-        </li>
-        <li class="active">Form Elements</li>
+        <li class="active">员工管理</li>
     </ul>
 }
 
 @section pageheader{
     <h1>
-        Form Elements
-        <small>
-            <i class="icon-double-angle-right"></i>
-            Common form elements and layouts
-        </small>
+        员工管理
     </h1>
 }
 
@@ -66,14 +58,12 @@
                         <td>@m.Phone<br />@m.Plane</td>
                         <td>@(m.IsDisabled ? "禁用" : "正常")</td>
                         <td>
-                            <div class="btn-group">
-                                <a class="btn btn-xs btn-info" href="@Url.Action("UpdateEmployee", new { id = m.UserId })">
-                                    <i class="icon-edit bigger-120">编辑</i>
-                                </a>
-                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteEmployee", new { id = m.UserId })">
-                                    <i class="icon-trash bigger-120">删除</i>
-                                </a>
-                            </div>
+                            <a class="btn btn-xs btn-info" href="@Url.Action("UpdateEmployee", new { id = m.UserId })">
+                                编辑
+                            </a>
+                            <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteEmployee", new { id = m.UserId })">
+                                删除
+                            </a>
                         </td>
                     </tr>
                 }

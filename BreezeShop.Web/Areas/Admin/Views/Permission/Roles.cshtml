@@ -14,23 +14,15 @@
     <ul class="breadcrumb">
         <li>
             <i class="ace-icon fa fa-home home-icon"></i>
-            <a href="#">Home</a>
+            <a href="@Url.Action("Index","Home")">首页</a>
         </li>
-
-        <li>
-            <a href="#">Forms</a>
-        </li>
-        <li class="active">Form Elements</li>
+        <li class="active">角色管理</li>
     </ul>
 }
 
 @section pageheader{
     <h1>
-        Form Elements
-        <small>
-            <i class="icon-double-angle-right"></i>
-            Common form elements and layouts
-        </small>
+        角色管理
     </h1>
 }
 
@@ -61,9 +53,8 @@
                 <tr>
                     <th>ID</th>
                     <th>角色名称</th>
-                    <th class="hidden-480">排序</th>
-                    <th class="hidden-480">创建者</th>
-                    <th class="hidden-480">描述</th>
+                    <th>排序</th>
+                    <th>描述</th>
                     <th></th>
                 </tr>
             </thead>
@@ -75,21 +66,18 @@
                         <tr>
                             <td>@m.Id</td>
                             <td>@m.Name</td>
-                            <td class="hidden-480">@m.Sort</td>
-                            <td class="hidden-480">@m.Creator</td>
-                            <td class="hidden-480">@m.Description</td>
+                            <td>@m.Sort</td>
+                            <td>@m.Description</td>
                             <td>
-                                <div class="btn-group">
-                                    <a class="btn btn-xs btn-default function" href="@Url.Action("RoleFunctions", new { id = m.Id })">
-                                        <i class="icon-cog bigger-120">权限管理</i>
-                                    </a>
-                                    <a class="btn btn-xs btn-info edit" href="@Url.Action("AddRole",new {id = m.Id})">
-                                        <i class="icon-edit bigger-120">编辑</i>
-                                    </a>
-                                    <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteRole", new { id = m.Id })">
-                                        <i class="icon-trash bigger-120">删除</i>
-                                    </a>
-                                </div>
+                                <a class="btn btn-xs btn-default function" href="@Url.Action("RoleFunctions", new { id = m.Id })">
+                                    权限管理
+                                </a>
+                                <a class="btn btn-xs btn-info edit" href="@Url.Action("AddRole",new {id = m.Id})">
+                                    编辑
+                                </a>
+                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteRole", new { id = m.Id })">
+                                    删除
+                                </a>
                             </td>
                         </tr>
                     }
@@ -123,7 +111,7 @@
             $(".delete").click(function() {
                 var url = $(this).attr("href");
                 var link = this;
-                bootbox.confirm("确定要删除该商品吗?", function(result) {
+                bootbox.confirm("确定要删除该角色吗?", function(result) {
                     if (result) {
                         $.post(url, function(r) {
                             if (r) {

@@ -11,6 +11,7 @@
 </div>
 <div class="search-list">
     <ul class="category">
+        <li><a href="@Url.Action("ItemData", new {id = 0})">全部</a></li>
         @if (Model != null)
         {
             foreach (var c in Model)
@@ -20,7 +21,7 @@
         }
     </ul>
     <div class="page-container" id="j-item-content">
-        @Html.Action("ItemData",new {id = Model==null?0: Model[0].Id})
+        @Html.Action("ItemData",new { q = Request.QueryString["q"]})
     </div>
 </div>
 
@@ -35,7 +36,7 @@
 
         $(".category li").click(function () {
             $(this).addClass("active").siblings().removeClass("active");
-            $.get($("a", this).attr("href"), { r: Math.round() }, function(html) {
+            $.get($("a", this).attr("href"), { r: Math.round(), q:$("input[name='q']").val() }, function(html) {
                 $("#j-item-content").empty().append(html);
             });
 

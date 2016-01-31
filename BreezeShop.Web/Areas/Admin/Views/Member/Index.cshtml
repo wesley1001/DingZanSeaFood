@@ -7,7 +7,7 @@
 @model BreezeShop.Core.PageModel<Yun.User.UserDetail>
 
 @section headerbeforeace{
-    <link href="~/Areas/Admin/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Areas/Admin/Content/css/bootstrap-datetimepicker.css")" rel="stylesheet" />
 }
 @section breadcrumb{
     <ul class="breadcrumb">
@@ -89,10 +89,22 @@
                             <tr>
                                 <td>@u.UserId</td>
                                 <td>
-                                    @u.Nick<br>
-                                    @u.Email<br>
-                                    @u.Mobile<br>
-                                    @u.RealName
+                                    @if (!string.IsNullOrEmpty(u.Nick))
+                                    {
+                                        @u.Nick<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(u.Email))
+                                    {
+                                        @u.Email<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(u.Mobile))
+                                    {
+                                        @u.Mobile<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(u.RealName))
+                                    {
+                                        @u.RealName
+                                    }
                                 </td>
                                 <td>@u.CreateTime</td>
                                 <td>@u.Money</td>
@@ -109,8 +121,8 @@
 </div>
     @section specificscripts{
     <script src="@Url.Content("~/areas/admin/content/js/bootbox.js")"></script>
-    <script src="~/areas/admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-    <script src="~/areas/admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="@Url.Content("~/areas/admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js")"></script>
+    <script src="@Url.Content("~/areas/admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js")"></script>
     }
 
 

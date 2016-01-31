@@ -55,7 +55,7 @@
         <label class="col-sm-3 control-label no-padding-right"></label>
         <div class="help-block col-sm-5">
             <input type="hidden" value="@Model.Image" name="Image" />
-            <img src="@Model.Image" width="120" />
+            <img src="@BreezeShop.Core.FileFactory.ImageExtension.GetUrl("120", Model.Image) " width="120" />
         </div>
     </div>
     <div class="form-group">

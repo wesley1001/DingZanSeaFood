@@ -25,6 +25,10 @@
     </h1>
 }
 
+@section headerbeforeace{
+<link href="@Url.Content("~/Areas/Admin/Content/css/bootstrap-datetimepicker.css")" rel="stylesheet" />
+}
+
 <div class="col-xs-12">
     @using (Html.BeginForm("Edit", "Article",new{ returnUrl=Request.QueryString["returnUrl"]},FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
     {
@@ -59,6 +63,15 @@
             </select>
         </div>
     </div>
+        <div class="space-4"></div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="Tags">发布时间：</label>
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.PostTime, new { @class = "date-picker", @readonly="readonly" })
+            </div>
+            </div>
     <div class="space-4"></div>
     <div class="form-group">
         <label class="col-sm-3 control-label no-padding-right" for="Tags">标签：</label>
@@ -77,7 +90,7 @@
                 <div class="space-4"></div>
         
         <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right">上传：</label>
+        <label class="col-sm-3 control-label no-padding-right">缩略图：</label>
         <div class="col-sm-4">
             <input type="file" id="id-input-file-2" name="imagefile" />
             @if (!Model.Image.IsEmpty())
@@ -103,7 +116,7 @@
          <div class="clearfix form-actions">
             <div class="col-md-offset-3 col-md-9">
                 <button class="btn btn-info" type="submit">
-                    <i class="icon-ok bigger-110"></i>提交
+                    <i class="ace-icon fa fa-check bigger-110"></i>提交
                 </button>
             </div>
         </div>
@@ -116,11 +129,14 @@
     <script src="@Url.Content("~/areas/admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/areas/admin/Content/js/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
     <script type="text/javascript" src="@Url.Content("~/areas/admin/Content/js/kindeditor/kindeditor-min.js")"></script>
+    <script src="@Url.Content("~/areas/admin/Content/js/datetimepicker/bootstrap-datetimepicker.min.js")"></script>
+    <script src="@Url.Content("~/areas/admin/Content/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js")"></script>
 }
 
     @section inlinescripts{
     <script type="text/javascript">
         $(function () {
+            $(".date-picker").datetimepicker({ format: 'yyyy-mm-dd hh:ii', language: 'zh-CN', autoclose: true, bootcssVer: 3 });
 
             $(".j-deldct").click(function() {
                 $(".help-block").remove();

@@ -1,0 +1,62 @@
+﻿@model IList<Yun.User.Organizations>
+
+@helper MenuHelper(long parentId)
+{
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+
+    <ol class="dd-list">
+        @foreach (var dr in drs)
+        {
+            <li class="dd-item" data-id="@dr.Id">
+                <div class="dd-handle">
+                    @(dr.Name)
+                    <span class="lighter grey">
+                        &nbsp; @dr.Description
+                    </span>
+                    <div class="pull-right action-buttons">
+                        <a class="blue add" href="@Url.Action("AddOrganization", "Permission", new { parent = dr.Id })">
+                            <i class="ace-icon fa fa-plus bigger-130"></i>
+                        </a>
+                        <a class="blue edit" href="@Url.Action("AddOrganization", "Permission", new { id = dr.Id })">
+                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                        </a>
+                        <a class="red delete" href="@Url.Action("DeleteOrganization", "Permission", new { id = dr.Id })">
+                            <i class="ace-icon fa fa-trash bigger-130"></i>
+                        </a>
+                    </div>
+                </div>
+                @MenuHelper(dr.Id)
+            </li>
+        }
+    </ol>
+}
+<div id="nestable">
+    @MenuHelper(0)
+</div>
+
+<script type="text/javascript">
+    $(".delete").off().click(function () {
+        var url = $(this).attr("href");
+        bootbox.confirm("确定要删除吗？", function(result) {
+            if (result) {
+                $.post(url, function (r) {
+                    if (r > 0) {
+                        bootbox.hideAll();
+                        $.get("@Url.Action("OrganizationList","Permission",new {area="Admin"})", function(fhtml) {
+                            $("#J-OrganizationList").empty().append(fhtml);
+                        });
+                    } else {
+                        alert("删除失败！");
+                    }
+                });
+            }
+        });
+        return false;
+    });
+
+    editOrganizationPop(".edit,.add");
+</script>

@@ -29,7 +29,12 @@
         <dt>个人信息</dt>
         <dd>我的分销<span>@(distributorPerformance.PaidTotalBuyer)人；@(distributorPerformance.PaidTradeNum)单</span></dd>
         <dd>我的粉丝<span>@(lowerDistributors.Count)人</span></dd>
-        <dd>缘起<span>@superiorDistributor.RealName</span></dd>
+        <dd>缘起
+        @if (!string.IsNullOrEmpty(superiorDistributor.RealName))
+        {
+            <span>@superiorDistributor.RealName</span>
+        }
+        </dd>
         <dd>累计利润明细<i></i></dd>
     </dl>
 

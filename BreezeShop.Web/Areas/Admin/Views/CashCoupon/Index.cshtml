@@ -1,5 +1,5 @@
 ﻿@using BreezeShop.Web.Helper
-@model BreezeShop.Core.PageModel<Yun.Marketing.CashCouponDomain>
+@model BreezeShop.Core.PageModel<Yun.Marketing.CashCouponCateogry>
 
 @{
     ViewBag.Title = "代金券管理";
@@ -35,42 +35,86 @@
 
 <div class="table-responsive">
     <div class="dataTables_wrapper">
+        <div class="row">
+            <form method="GET" action="@Url.Action("Index", "CashCoupon", new {area = "Admin"})" class="col-sm-12">
+                <div class="form-inline">
+                    <div class="form-group">优惠券名：</div>
+                    <div class="form-group">
+                        <input type="text" class="input-large" name="title" value="@Request.QueryString["title"]"/>
+                    </div>
+                    <div class="form-group">状态：</div>
+                    <div class="form-group">
+                        @Html.DropDownList("timeStatus", new List<SelectListItem>
+                        {
+                            new SelectListItem {Text = "全部", Value = "0", Selected = Request.QueryString["timeStatus"].IsEmpty() || Request.QueryString["timeStatus"] == "0"},
+                            new SelectListItem {Text = "未开始", Value = "1", Selected = Request.QueryString["timeStatus"] == "1"},
+                            new SelectListItem {Text = "进行中", Value = "2", Selected = Request.QueryString["timeStatus"] == "2"},
+                            new SelectListItem {Text = "已结束", Value = "3", Selected = Request.QueryString["timeStatus"] == "3"}
+                        })
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-inline">
+                    <button class="btn btn-purple btn-sm j-trade-btn" type="submit">
+                        <i class="icon-search icon-on-right bigger-110"></i>
+                        搜索
+                    </button>
+                </div>
+            </form>
+        </div>
         <table class="table table-striped table-bordered table-hover dataTable">
             <thead>
-                <tr>
-                    <th>券名字</th>
-                    <th>面值</th>
-                    <th>券号</th>
-                    <th>绑定用户</th>
-                    <th>使用信息</th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th>代金券名称</th>
+                <th>面值</th>
+                <th>使用条件</th>
+                <th>领取条件</th>
+                <th>有效期</th>
+                <th>总数</th>
+                <th>已领取</th>
+                <th>已使用</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var r in Model.Items)
-                {
-                    <tr>
-                        <td>@(r.Name)(@r.CouponType)</td>
-                        <th>@r.Credit</th>
-                        <td>@r.Code</td>
-                        <td>@r.BindUserName<br/>@r.BindTime</td>
-                        <td>@(r.OrderId>0?r.OrderId.ToString():"")</td>
-                        <td>
-                            <div class="btn-group">
-                                @if (r.BindUserId <= 0)
-                                {
-                                    <a class="btn btn-xs btn-info" href="@Url.Action("BindUser", new {id = r.Id})">
-                                        <i class="icon-edit bigger-120">绑定用户</i>
-                                    </a>
-                                }
-
-                                <a class="btn btn-xs btn-danger delete" href="@Url.Action("Delete", new {id = r.Id})">
-                                    <i class="icon-trash bigger-120">删除</i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
+            @foreach (var r in Model.Items)
+            {
+                <tr>
+                    <td>@r.Name</td>
+                    <th>@r.Credit</th>
+                    <td>
+                        @switch (r.Range)
+                        {
+                            case 0:
+                                @:无限制
+                                break;
+                            case 1:
+                                @:部分商品
+                                break;
+                            default:
+                                @:其他
+                                break;
+                        }
+                    </td>
+                    <td>@(r.PerUserMaxQuantity > 0 ? "每人限领" + r.PerUserMaxQuantity + "张" : "无限制")</td>
+                    <td>@(r.BeginTime)至<br/>@(r.EndTime)</td>
+                    <td>@(r.Quantity > 0 ? r.Quantity.ToString(): "无限制")</td>
+                    <td>@r.HasBind</td>
+                    <td>@r.HasUsed</td>
+                    <td>
+                        <a class="btn btn-xs btn-info" href="@Url.Action("Detail", new {id = r.Id})">
+                            明细
+                        </a>
+                        <a class="btn btn-xs btn-info" href="@Url.Action("Add", new {id = r.Id})">
+                            编辑
+                        </a>
+                        <a class="btn btn-xs btn-danger delete" href="@Url.Action("DeleteCategory", new {id = r.Id})">
+                            删除
+                        </a>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
         @Html.Pager("PagerBottom", Model.CurrentPage, Model.TotalItems, "_PagerTemplate", 20)

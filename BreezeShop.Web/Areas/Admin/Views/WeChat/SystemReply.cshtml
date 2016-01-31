@@ -1,0 +1,74 @@
+﻿@model List<Yun.WeiXin.RuleDomain>
+@{
+    ViewBag.Title = "微信特殊回复";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var default_reply = ViewData["default_reply"] as Yun.WeiXin.RuleDomain;
+    var welcome_reply = ViewData["welcome_reply"] as Yun.WeiXin.RuleDomain;
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("SystemReply", "WeChat")">首页</a>
+        </li>
+        <li class="active">微信系统回复设置</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        微信系统回复设置
+    </h1>
+}
+
+@using (Html.BeginForm("SystemReply", "WeChat", new { }, FormMethod.Post, new { @class = "form-horizontal"}))
+{
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="default_reply">欢迎信息关键字：</label>
+        <div class="col-sm-9">
+            <div class="clearfix"><select id="welcome_reply" name="welcome_reply">
+                    <option value="0">请选择回复内容</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(default_reply != null && default_reply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">
+                指定用户添加公众帐号好友时，发送的欢迎信息, 你可以在这里输入关键字, 那么用户添加公众号好友时就相当于发送这个内容至系统系统<br>
+                这个过程是程序模拟的, 比如这里添加关键字: 欢迎关注, 那么用户添加公众号好友时, 系统系统相当于接受了粉丝用户的消息, 内容为"欢迎关注"
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="welcome_reply">默认回复关键字：</label>
+        <div class="col-sm-9">
+            <div class="clearfix">
+                <select id="welcome_reply" name="welcome_reply">
+                    <option value="0">请选择回复内容</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(welcome_reply != null && welcome_reply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">
+                指定系统不知道该如何回复粉丝的消息时，发送的默认信息, 你可以在这里输入关键字, 那么系统不知道该如何回复粉丝的消息时就相当于发送这个内容至系统系统<br>
+                这个过程是程序模拟的, 比如这里添加关键字: ￥9688ERd, 系统不知道该如何回复粉丝的消息, 系统系统相当于接受了粉丝用户的消息, 内容为"￥9688ERd"
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit">
+                <i class="ace-icon fa fa-check bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}

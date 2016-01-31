@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using BreezeShop.Core;
@@ -17,7 +18,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         /// <returns></returns>
         public ActionResult Roles()
         {
-            return View(Manage.GetRoles(0));
+            return View(YunClient.Instance.Execute(new GetRolesRequest(), Token).Roles);
         }
 
         public ActionResult Functions(int type = 0)
@@ -119,7 +120,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
 
         public ActionResult DeleteRole(int id)
         {
-            var req = YunClient.Instance.Execute(new DeleteRoleRequest { Id = id }, Member.Token);
+            var req = YunClient.Instance.Execute(new DeleteRoleRequest { Id = id }, Token);
             return Json(req.Result);
         }
 
@@ -134,7 +135,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                 return PartialView(new AddRoleModel { Sort = 0 });
             }
 
-            var r = YunClient.Instance.Execute(new GetRoleRequest { Id = id }, Member.Token);
+            var r = YunClient.Instance.Execute(new GetRoleRequest { Id = id }, Token);
             if (r != null)
             {
                 return PartialView(new AddRoleModel
@@ -155,7 +156,14 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             {
                 if (id <= 0)
                 {
-                    var r = Manage.AddPermissionRole(model.Name, model.Sort, model.Description, 0);
+                    var r = YunClient.Instance.Execute(new AddRoleRequest
+                    {
+                        Name = model.Name,
+                        Sort = model.Sort,
+                        Description = model.Description,
+                        RoleType = 0
+                    }, Token).Result;
+
                     return Json(r);
                 }
 
@@ -165,7 +173,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                     Id = id,
                     Name = model.Name,
                     Sort = model.Sort,
-                }, Member.Token).Result);
+                }, Token).Result);
             }
 
             return Json(-1);
@@ -185,7 +193,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         public ActionResult RoleFunctions(int id, FormCollection collection)
         {
             var r = YunClient.Instance.Execute(
-                 new SaveRelationRoleFunctionRequest { RoleId = id, FunctionIds = collection["Functions"] }, Member.Token).Result;
+                 new SaveRelationRoleFunctionRequest { RoleId = id, FunctionIds = collection["Functions"] }, Token).Result;
             return Json(r);
         }
 
@@ -228,7 +236,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                     collection["Role"],
                     collection["EntryTime"].Is<DateTime>() ? collection["EntryTime"] : null, model.JobNum,
                     model.OtherName, model.Phone, model.Email, model.Plane, model.WorkPlace,
-                    model.IsFemale == 1, model.DisplayName, id);
+                    model.IsFemale == 1, model.DisplayName, id, model.Remark);
 
                 TempData["success"] = "已成功修改职员信息";
                 return Json(r);
@@ -246,13 +254,13 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                 YunClient.Instance.Execute(new GerPermissionUserRequest
                 {
                     Id = id,
-                }, Member.Token).User;
+                }, Token).User;
 
             if (data != null)
             {
                 r.DisplayName = data.DisplayName;
                 r.Email = data.Email;
-                r.Entry = data.EntryTime;
+                r.Entry = data.EntryTime.Substring(0, data.EntryTime.IndexOf(' '));
                 r.IdCard = data.IdCard;
                 r.IsFemale = data.IsFemale ? 1 : 0;
                 r.JobNum = data.JobNum;
@@ -261,7 +269,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                 r.Phone = data.Phone;
                 r.Plane = data.Plane;
                 r.Remark = data.Description;
-                r.Roleids = data.Roles;
+                r.Roleids = data.Roles != null?data.Roles.Select(e=>(int)e.Key).ToList():null;
                 r.UserName = data.UserName;
                 r.WorkPlace = data.WorkPlace;
                 return View(r);
@@ -273,7 +281,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
 
         public ActionResult DeleteEmployee(int id)
         {
-            return Json(YunClient.Instance.Execute(new DeleteEmployeeRequest { Id = id }, Member.Token).Result);
+            return Json(YunClient.Instance.Execute(new DeleteEmployeeRequest { Id = id }, Token).Result);
         }
 
 
@@ -286,7 +294,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                 RealName = realname,
                 PageNum = p,
                 PageSize = 10
-            }, Member.Token);
+            }, Token);
 
             ViewBag.CurrentPage = p;
             ViewBag.TotalItems = users.TotalItem;
@@ -294,6 +302,93 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             return View(users.Users);
         }
 
+        public ActionResult Organization()
+        {
+            return View();
+        }
 
+        public ActionResult OrganizationList()
+        {
+            return PartialView(YunClient.Instance.Execute(new GetOrganizationsRequest(), Token).Organizations);
+        }
+
+        public ActionResult AddOrganization(int id = 0, int parent = 0)
+        {
+            if (id <= 0)
+            {
+                return PartialView(new EditOrganizationModel
+                {
+                    Sort = 0,
+                    ParentId = parent.ToString()
+                });
+            }
+
+            var o = YunClient.Instance.Execute(new GetOrganizationRequest { Id = id }, Member.Token).Organization;
+            return PartialView(new EditOrganizationModel
+            {
+                Description = o.Description,
+                Name = o.Name,
+                ParentId = o.ParentId.ToString(),
+                Sort = o.Sort,
+            });
+        }
+
+        [HttpPost]
+        public ActionResult AddOrganization(EditOrganizationModel model, FormCollection collection, int id = 0)
+        {
+            if (ModelState.IsValid)
+            {
+                bool r;
+                if (id > 0)
+                {
+                    r = YunClient.Instance.Execute(new UpdateOrganizationRequest
+                    {
+                        Description = model.Description,
+                        Id = id,
+                        Name = model.Name,
+                        ParentId = collection["OrganizationId"].TryTo(0),
+                        Sort = model.Sort
+                    }, Token).Result;
+
+                    return Json(r ? 1 : 0);
+                }
+
+                r = YunClient.Instance.Execute(new AddOrganizationRequest
+                {
+                    Description = model.Description,
+                    Name = model.Name,
+                    ParentId = collection["OrganizationId"].TryTo(0),
+                    Sort = model.Sort
+                }, Token).Result > 0;
+
+                return Json(r ? 1 : 0);
+            }
+
+            return Json(-1);
+        }
+
+        public ActionResult DeleteOrganization(int id)
+        {
+            return Json(YunClient.Instance.Execute(new DeleteOrganizationRequest
+            {
+                Id = id
+            }, Token).Result);
+        }
+
+        public ActionResult OrganizationDropDown(int id = 0)
+        {
+            ViewData["Id"] = id;
+            return PartialView(YunClient.Instance.Execute(new GetOrganizationsRequest(), Token).Organizations);
+        }
+
+        public ActionResult SeeRoleFunctions(string id)
+        {
+            var r = YunClient.Instance.Execute(new GetRoleFunctionsRequest
+            {
+                RoleIds = id
+            }, Token);
+
+            return PartialView(r.Functions);
+        }
     }
 }

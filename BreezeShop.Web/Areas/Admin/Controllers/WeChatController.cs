@@ -32,6 +32,24 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         }
 
         /// <summary>
+        /// 如果未设置微信账号，则跳转到设置界面
+        /// </summary>
+        /// <param name="filterContext"></param>
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var actionName = filterContext.ActionDescriptor.ActionName;
+
+            if (actionName.ToLower() != "index" && _wxAccount == null)
+            {
+                TempData["error"] = "微信账号还未设置，请先设置微信账号的基本信息";
+                filterContext.Result = new RedirectResult(Url.Action("Index", "WeChat"));
+                return;
+            }
+
+            base.OnActionExecuting(filterContext);
+        }
+
+        /// <summary>
         /// 微信公众账号基本信息编辑
         /// </summary>
         /// <returns></returns>
@@ -566,5 +584,91 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             ViewData["Index"] = index;
             return PartialView(model);
         }
+
+        private readonly IDictionary<string, string> _specialReply = new Dictionary<string, string>
+            {
+                {"imageReply", "image"},
+                {"voiceReply", "voice"},
+                {"videoReply", "video"},
+                {"locationReply", "location"},
+                {"locationselectReply", "event_location"},
+                {"linkReply", "link"},
+            };
+
+        private readonly IDictionary<string, string> _systemReply = new Dictionary<string, string>
+            {
+                {"default_reply", "default"},
+                {"welcome_reply", "event_subscribe"}
+            };
+
+        [HttpPost]
+        public ActionResult SystemReply(FormCollection collection)
+        {
+            foreach (var i in _systemReply)
+            {
+                YunClient.Instance.Execute(
+                    new SetMsgReplyRuleRequest
+                    {
+                        AccountId = _wxAccount.Id,
+                        MsgType = i.Value,
+                        RuleId = collection[i.Key].TryTo(0) > 0 ? collection[i.Key] : ""
+                    }, Token);
+            }
+
+            TempData["success"] = "提交成功，已成功保存数据";
+            return RedirectToAction("SystemReply");
+        }
+
+
+        public ActionResult SystemReply()
+        {
+            foreach (var i in _systemReply)
+            {
+                ViewData[i.Key] =
+                    YunClient.Instance.Execute(new GetMsgReplyRuleRequest
+                    {
+                        AccountId = _wxAccount.Id,
+                        MsgType = i.Value
+                    })
+                        .Rules.FirstOrDefault();
+            }
+
+            return View(YunClient.Instance.Execute(new FindRulesRequest {AccountId = _wxAccount.Id}).Rules);
+        }
+
+        public ActionResult SpecialReply()
+        {
+            foreach (var i in _specialReply)
+            {
+                ViewData[i.Key] =
+                    YunClient.Instance.Execute(new GetMsgReplyRuleRequest
+                    {
+                        AccountId = _wxAccount.Id,
+                        MsgType = i.Value
+                    })
+                        .Rules.FirstOrDefault();
+            }
+
+            return View(YunClient.Instance.Execute(new FindRulesRequest {AccountId = _wxAccount.Id}).Rules);
+        }
+            
+        [HttpPost]
+        public ActionResult SpecialReply(FormCollection collection)
+        {
+            foreach (var i in _specialReply)
+            {
+                YunClient.Instance.Execute(
+                    new SetMsgReplyRuleRequest
+                    {
+                        AccountId = _wxAccount.Id,
+                        MsgType = i.Value,
+                        RuleId = collection[i.Key].TryTo(0) > 0 ? collection[i.Key] : ""
+                    }, Token);
+            }
+
+            TempData["success"] = "提交成功，已成功保存数据";
+            return RedirectToAction("SpecialReply");
+        }
+
     }
 }

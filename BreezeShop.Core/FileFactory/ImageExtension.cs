@@ -128,7 +128,7 @@ namespace BreezeShop.Core.FileFactory
         /// <returns></returns>
         public static string GetUrl(string size, string fileName)
         {
-            return _imageTextFileSizeDictionary.ContainsKey(size)
+            return (!string.IsNullOrEmpty(fileName)  && _imageTextFileSizeDictionary.ContainsKey(size))
                 ? GetUrl(_imageTextFileSizeDictionary[size], fileName)
                 : fileName;
         }

@@ -7,7 +7,7 @@
 @model BreezeShop.Core.PageModel<Yun.User.UserDetail>
 
 @section headerbeforeace{
-    <link href="~/areas/admin/content/css/datepicker.css" rel="stylesheet" />
+<link href="@Url.Content("~/Areas/Admin/Content/css/datepicker.css")" rel="stylesheet" />
 }
 @section breadcrumb{
     <ul class="breadcrumb">
@@ -94,19 +94,30 @@
                             <tr>
                                 <td>@u.UserId</td>
                                 <td>
-                                    @u.Nick<br>
-                                    @u.Email<br>
-                                    @u.Mobile<br>
+                                    @if (!string.IsNullOrEmpty(u.Nick))
+                                    {
+                                        @u.Nick<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(u.Email))
+                                    {
+                                        @u.Email<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(u.Mobile))
+                                    {
+                                        @u.Mobile<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(u.RealName))
+                                    {
+                                        @u.RealName
+                                    }
                                 </td>
                                 <td>@u.CreateTime</td>
                                 <td>@u.Money</td>
                                 <td>@u.TradingVolume</td>
                                 <td>
-                                    <div class="btn-group">
-                                        <a class="btn btn-xs btn-info bind" href="@Url.Action("Bind", new {userid = u.UserId, id = ViewContext.RouteData.Values["id"]})">
-                                            <i class="icon-edit bigger-120">绑定</i>
-                                        </a>
-                                    </div>
+                                    <a class="btn btn-xs btn-info bind" href="@Url.Action("Bind", new {userid = u.UserId, id = ViewContext.RouteData.Values["id"]})">
+                                        绑定
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -119,23 +130,26 @@
 </div>
 @section specificscripts{
     <script src="@Url.Content("~/areas/admin/content/js/bootbox.js")"></script>
-    <script src="~/areas/admin/content/js/date-time/bootstrap-datepicker.js"></script>
-    <script src="~/areas/admin/content/js/date-time/bootstrap-datepicker.zh-CN.js"></script>
+    <script src="@Url.Content("~/areas/admin/content/js/date-time/bootstrap-datepicker.js")"></script>
+    <script src="@Url.Content("~/areas/admin/content/js/date-time/bootstrap-datepicker.zh-CN.js")"></script>
 }
 
 @section inlinescripts{
     <script type="text/javascript">
         $('.date-picker').datepicker({ format: 'yyyy-mm-dd hh:ii', language: 'zh-CN', autoclose: true });
 
-        $(".bind").click(function () {
+        $(".bind").click(function() {
             var url = $(this).attr("href");
-            bootbox.confirm("确定要绑定吗?", function (result) {
+            bootbox.confirm("确定要绑定吗?", function(result) {
                 if (result) {
-                    $.post(url, function (r) {
-                        if (r) {
-                            window.location.replace("@Url.Action("Index","CashCoupon")");
+                    $.post(url, function(r) {
+                        if (r > 0) {
+                            bootbox.alert("绑定成功，页面会在1秒钟后自动跳转");
+                            setTimeout(function() {
+                                window.location.replace("@Url.Action("Index", "CashCoupon")");
+                            }, 1000);
                         } else {
-                            bootbox.alert("绑定失败");
+                            bootbox.alert("绑定失败，错误代码："+r);
                         }
                     });
                 }

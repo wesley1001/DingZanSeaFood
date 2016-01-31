@@ -209,7 +209,7 @@ namespace BreezeShop.Core.DataProvider
         /// <returns></returns>
         public static long UpdateUserOrganization(int organizationid, int higheruserid,
             string idcard, string roleids, string entrytime, string jobnum, string othername, string phone, string email,
-            string plane, string workplace, bool isfemale, string displayname, int userId)
+            string plane, string workplace, bool isfemale, string displayname, int userId, string remark)
         {
             var r = YunClient.Instance.Execute(new UpdateEmployeeRequest
             {
@@ -226,7 +226,8 @@ namespace BreezeShop.Core.DataProvider
                 WorkPlace = workplace,
                 DisplayName = displayname,
                 IsFemale = isfemale,
-                UserId = userId
+                UserId = userId,
+                Description = remark
             }, Member.AdminToken);
 
             return r.Result;

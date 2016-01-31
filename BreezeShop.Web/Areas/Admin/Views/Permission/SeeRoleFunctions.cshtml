@@ -1,0 +1,33 @@
+﻿@using Yun.User
+@model IList<Function>
+
+@helper MenuHelper(long parentId, IList<Function> selects)
+{
+    var drs = Model.Where(e => e.ParentId == parentId).ToList();
+    if (drs.Count <= 0)
+    {
+        return;
+    }
+
+    <ol class="dd-list">
+        @foreach (var dr in drs)
+        {
+            <li class="dd-item" data-id="@dr.Id">
+                <div class="dd-handle">
+                    @(dr.Name)
+                </div>
+                @MenuHelper(dr.Id, selects)
+            </li>
+        }
+    </ol>
+}
+
+
+<div class="inline-functions-list">
+    @using (Html.BeginForm("RoleFunctions", "Permission", new { id = ViewContext.RouteData.Values["id"] }, FormMethod.Post, new { id = "J-Submit-Form" }))
+    {
+        <div class="dd" id="nestable">
+            @MenuHelper(0, Model)
+        </div>
+    }
+</div>

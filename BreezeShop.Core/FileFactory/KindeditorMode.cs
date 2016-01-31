@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using BreezeShop.Core.FileFactory.UploadMethod;
 using Utilities.DataTypes.ExtensionMethods;
 using Yun.Util;
 
@@ -92,7 +93,7 @@ namespace BreezeShop.Core.FileFactory
 
                 if (files != null && files.Any())
                 {
-                    return new { error = 0, url = files[0] };
+                    return new { error = 0, url = "/" + FilesUpload.ImageFolder + files[0] };
                 }
             }
 

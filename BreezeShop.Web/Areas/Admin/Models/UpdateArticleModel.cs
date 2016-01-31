@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BreezeShop.Web.Areas.Admin.Models
 {
@@ -26,5 +27,10 @@ namespace BreezeShop.Web.Areas.Admin.Models
         public string Score { get; set; }
 
         public string Status { get; set; }
+
+        /// <summary>
+        /// 发布时间
+        /// </summary>
+        public DateTime PostTime { get; set; }
     }
 }

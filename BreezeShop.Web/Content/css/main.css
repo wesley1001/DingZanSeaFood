@@ -81,7 +81,7 @@ header .right a{ color: #000;}
 .goods-catagete-change .goods-plans dt{background:#FFF;font-weight:700}
 .goods-catagete-change .goods-plans dd{margin:0}
 .goods-catagete-change .sku-choose span{border:1px #c5c8cf solid;height:28px;line-height:28px;background-color:#fff;border-radius:3px;padding:0 8px;margin:0 10px 0 0;display:inline-block;text-align:center;overflow:hidden;vertical-align:middle}
-.goods-catagete-change .sku-choose .bh-sku-selected{background-color:#f60;color:#fff}
+.goods-catagete-change .sku-choose .bh-sku-selected{background-color:#c59e67;color:#fff}
 .buy-act{border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding:12px 10px!important}
 .buy-act .left-label{font-weight:700;float:left;margin-top:5px}
 .buy-act .decrease,.buy-act .increase{background:#FFF;border:1px solid #c5c8cf;text-align:center;height:30px;line-height:26px;float:left;width:30px}
@@ -91,8 +91,8 @@ header .right a{ color: #000;}
 .stock-empty{text-align:center;color:red}
 .goods-detail>dt{background:#FFF;height:35px;line-height:35px}
 .goods-detail>dd{margin:0}
-.goods-detail>dt span{display:inline-block;padding:0 45px;color:#f60}
-.goods-detail .active{border-bottom:1px solid #f60}
+.goods-detail>dt span{display:inline-block;padding:0 45px;color:#c59e67}
+.goods-detail .active{border-bottom:1px solid #c59e67}
 .goods-detail img{max-width:100%!important}
 .goods-detail>.content{margin-bottom:1.5em;padding:1em}
 .goods-detail p,.goods-detail>.content{font-size:1.4em;margin-bottom:1em}
@@ -101,7 +101,7 @@ header .right a{ color: #000;}
 .buy-changes .cart{background:#FFF;color:#000}
 .buy-changes .cart img{width:28px;display:block;margin:auto;padding-top:4px}
 .buy-changes .add-cart,.buy-changes .buy-now{line-height:3.5}
-.buy-changes .buy-now{color:#FFF;background:#f60;border:1px solid #f60}
+.buy-changes .buy-now{color:#FFF;background:#c59e67;border:1px solid #c59e67}
 .buy-changes .add-cart{color:#333;background:#FFF;border:1px solid #e5e5e5}
 #shop-car{padding:10px}
 #shop-car h5{ font-size: 1.4em;margin-bottom: 7px;}
@@ -114,7 +114,7 @@ header .right a{ color: #000;}
 .button-box{text-align:center}
 .shop-btn{border-radius:.4em;border:none;padding:1em 1.7em;margin:0 .8em;color:#fff;font-size:1.2em;display:inline-block;font-size:1.4em}
 .shop-btn a{color:#FFF}
-.shop-btn.redBg{background:#dd5116;color:#FFF;border:1px solid #dd5116}
+.shop-btn.redBg{background:#c59e67;color:#FFF;border:1px solid #c59e67}
 .shop-btn.greenBg{background:#FFF;color:#000;border:1px solid #ccc}
 .order-info{color:#ccc;font-size:1em;margin-bottom:2em}
 .order-info span em{border:1px solid #ccc;border-radius:1em;display:inline-block;padding:.2em .8em;margin:0 .5em}
@@ -134,7 +134,7 @@ header .right a{ color: #000;}
 .isdefault{height:2em;padding:1em;margin:0 1em 1em;border: 1px solid #ccc;background: #FFF;}
 .isdefault span{font-size:1.3rem}
 .isdefault input[type=checkbox]{vertical-align:middle;margin-left:3px}
-.addr-btn{background-color:#dd5116;color:#fff;padding:1em 2em;margin:0 1em 1em;border:none}
+.addr-btn{background-color:#c59e67;color:#fff;padding:1em 2em;margin:0 1em 1em;border:none}
 .edit-address{border-bottom:1px solid #eee;padding:1em 3em;color:#000;font-size:1.4rem}
 .edit-addr-button{display:block;background-color:#ccc;color:#fff;padding:1em 0;text-align:center;width:90%;margin:1em auto}
 .bottom-border{border-bottom:1px solid #b5b5b5}
@@ -151,10 +151,11 @@ header .right a{ color: #000;}
 .article .detail,.article .detail p{font-size:1.2em}
 .article .detail p{line-height:1.8}
 
-.achievement,.index .user-info{background: #dd5116;color: #FFF;font-size: 1.4em;}
+.achievement,.index .user-info{background: #c59e67;color: #FFF;font-size: 1.4em;}
 .index .user-info{ padding: 10px;}
 .index .user-info a{color: #FFF;}
 .index .user-info .avatar{ float: left;width: 80px;height: 80px;}
+.index .user-info .avatar img{border-radius: 40px;}
 .index .user-info .other{ line-height: 1.8;border-bottom: 1px dashed #FFF;padding-bottom: 7px;}
 
 .achievement{ display:-webkit-box;  padding-bottom: 8px;margin-bottom: 15px;}
@@ -167,7 +168,7 @@ header .right a{ color: #000;}
 .list-box dd:last-of-type{ border-bottom: 0;}
 .list-box dd>span{ float: right;
     margin-right: 10px;
-    background: #dd5116;
+    background: #c59e67;
     border-radius: 6px;
     height: 25px;
     line-height: 25px;
@@ -191,7 +192,7 @@ header .right a{ color: #000;}
 .qrcode .user-info>li:first-of-type{ -webkit-box-flex: 4;    text-align: right;}
 .qrcode .user-info>li:last-of-type{ -webkit-box-flex: 8;padding-left: 10px;padding-top: 20px;}
 .qrcode .logo{ text-align: center;margin-bottom: 10px;}
-.qrcode-content{ background: #dd5116;text-align: center;padding: 30px 0 10px 0;color: #ffffff;font-size: 1.4em;}
+.qrcode-content{ background: #c59e67;text-align: center;padding: 30px 0 10px 0;color: #ffffff;font-size: 1.4em;}
 .qrcode-content .img{ margin: 0 55px;
     background: #FFF;
     padding: 20px;}

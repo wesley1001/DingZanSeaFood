@@ -83,25 +83,26 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         /// <returns></returns>
         public ActionResult Add()
         {
-            return View(new AddArticleModel());
+            return View(new AddArticleModel{PostTime = DateTime.Now});
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Add(AddArticleModel model, string status, int categoryId = 0)
+        public ActionResult Add(AddArticleModel model)
         {
             if (ModelState.IsValid)
             {
                 var r = YunClient.Instance.Execute(new AddArchiveRequest
                 {
                     Title = model.Title,
-                    CategoryId = categoryId,
+                    CategoryId = model.Categoryid.TryTo(0),
                     Detail = model.Detail,
                     Sort = model.Sort,
                     Tags = model.Tags,
-                    Status = status,
+                    Status = model.Status,
                     PostMeta = string.IsNullOrEmpty(model.Summary) ? null : string.Format("summary:{0}", model.Summary),
-                    Thumb = FileManage.UploadOneFile()
+                    Thumb = FileManage.UploadOneFile(),
+                    PostTime = model.PostTime.ToUnix()
                 }, Token);
 
                 if (r.Result > 0)
@@ -135,6 +136,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                     Tags = data.Tags.Select(e=>e.Value).ContactString(","),
                     Title = data.Title,
                     Status = data.Status,
+                    PostTime = Convert.ToDateTime(data.PostDateTime)
                 });
             }
 
@@ -144,7 +146,7 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(UpdateArticleModel model, int id, string status, int categoryId)
+        public ActionResult Edit(UpdateArticleModel model, int id)
         {
             if (ModelState.IsValid)
             {
@@ -156,11 +158,12 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
                     Title = model.Title,
                     Detail = model.Detail,
                     Sort = model.Sort,
-                    CategoryId = categoryId,
+                    CategoryId = model.Categoryid.TryTo(0),
                     Tags = model.Tags,
                     PostMeta = string.IsNullOrEmpty(model.Summary) ? null : string.Format("summary:{0}", model.Summary),
-                    Status = status,
-                    Image = string.IsNullOrEmpty(img) ? model.Image : img
+                    Status = model.Status,
+                    Image = string.IsNullOrEmpty(img) ? model.Image : img,
+                    PostTime = model.PostTime.ToUnix()
                 }, Token);
 
                 if (r.Result)

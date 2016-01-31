@@ -10,6 +10,8 @@ using Utilities.DataTypes.ExtensionMethods;
 using Yun.Logistics;
 using Yun.Logistics.Request;
 using Yun.Pay.Request;
+using Yun.Site;
+using Yun.Site.Request;
 
 namespace BreezeShop.Web.Areas.Admin.Controllers
 {
@@ -285,6 +287,23 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             }
 
             return Json(new {result = false, error = "物流模板不存在"});
+        }
+
+        public ActionResult SystemSetHistory(int p = 1)
+        {
+            var r = YunClient.Instance.Execute(new GetOperationRecordRequest
+            {
+                PageNum = p,
+                PageSize = 20,
+            }, Token);
+
+            return View(new PageModel<OperationRecord>
+            {
+                CurrentPage = p,
+                Items = r.Records,
+                ItemsPerPage = 20,
+                TotalItems = r.TotalItem,
+            });
         }
 
     }

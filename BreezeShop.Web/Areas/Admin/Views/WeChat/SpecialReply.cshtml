@@ -1,0 +1,150 @@
+﻿@model List<Yun.WeiXin.RuleDomain>
+@{
+    ViewBag.Title = "特殊回复";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var imageReply = ViewData["imageReply"] as Yun.WeiXin.RuleDomain;
+    var voiceReply = ViewData["voiceReply"] as Yun.WeiXin.RuleDomain;
+    var videoReply = ViewData["videoReply"] as Yun.WeiXin.RuleDomain;
+    var locationReply = ViewData["locationReply"] as Yun.WeiXin.RuleDomain;
+    var locationselectReply = ViewData["locationselectReply"] as Yun.WeiXin.RuleDomain;
+    var linkReply = ViewData["linkReply"] as Yun.WeiXin.RuleDomain;
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("SystemReply", "WeChat")">首页</a>
+        </li>
+        <li class="active">微信特殊回复设置</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        微信特殊回复设置
+    </h1>
+}
+
+<div class="alert alert-info">
+    <p><b>文本以外的消息类型, 计算机很难自行理解. 因此除文本外的其他消息类型, 如果没有文本对话来确定对话语境, 将会将其分配至默认模块</b></p>
+    <p>文本以外的消息类型, 没有语境很难确定其行为方式. 比如: 没有任何对话, 直接发送过来一张图片或者音频, 我们很难根据图片或者音频来判断对方的目的. 针对这种情况, 系统将这里的扩展操作交给第三方模块来实现. 例如: 对方发送过来一张图片, 并且不再任何对话上下文中, 我们会把这张图片的消息交给能够处理图片消息的默认模块中.</p>
+    <p>注意: 这里的操作不会影响对话中的图片或者其他消息. (比如: 我们要求对方发送一张图片来作为头像之后, 对方发送了一张图片, 这样使用对话上下文处理时是不影响的. 这里的处理仅针对没有语境, 没有对话上下文的直接图片或其他类型消息.)</p>
+</div>
+
+<hr/>
+
+@using (Html.BeginForm("SpecialReply", "WeChat", new { }, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="imageReply">图片消息：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                <select id="imageReply" name="imageReply">
+                    <option value="0">不处理(使用系统默认回复)</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(imageReply != null && imageReply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">如果【图片消息】到达时, 并且此时并不在对话上下文中, 将会采用选中的模块来处理. 如果选择"不处理", 那么这个消息将会使用系统默认回复来回复</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="voiceReply">语音消息：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                <select id="voiceReply" name="voiceReply">
+                    <option value="0">不处理(使用系统默认回复)</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(voiceReply != null && voiceReply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">如果【语音消息】到达时, 并且此时并不在对话上下文中, 将会采用选中的模块来处理. 如果选择"不处理", 那么这个消息将会使用系统默认回复来回复</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="videoReply">视频消息：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                <select id="videoReply" name="videoReply">
+                    <option value="0">不处理(使用系统默认回复)</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(videoReply != null && videoReply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">如果【视频消息】到达时, 并且此时并不在对话上下文中, 将会采用选中的模块来处理. 如果选择"不处理", 那么这个消息将会使用系统默认回复来回复</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="locationReply">位置消息：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                <select id="locationReply" name="locationReply">
+                    <option value="0">不处理(使用系统默认回复)</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(locationReply != null && locationReply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">如果【位置消息】到达时, 并且此时并不在对话上下文中, 将会采用选中的模块来处理. 如果选择"不处理", 那么这个消息将会使用系统默认回复来回复</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="locationselectReply">上报地理位置：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                <select id="locationselectReply" name="locationselectReply">
+                    <option value="0">不处理(使用系统默认回复)</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(locationselectReply != null && locationselectReply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">如果【上报地理位置】到达时, 并且此时并不在对话上下文中, 将会采用选中的模块来处理. 如果选择"不处理", 那么这个消息将会使用系统默认回复来回复</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="linkReply">链接消息：</label>
+        <div class="col-sm-10">
+            <div class="clearfix">
+                <select id="linkReply" name="linkReply">
+                    <option value="0">不处理(使用系统默认回复)</option>
+                    @foreach (var m in Model)
+                    {
+                        <option value="@m.Id" @(linkReply != null && linkReply.Id == m.Id ? "selected" : "")>@m.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="help-block">如果【链接消息】到达时, 并且此时并不在对话上下文中, 将会采用选中的模块来处理. 如果选择"不处理", 那么这个消息将会使用系统默认回复来回复</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-2 col-md-10">
+            <button class="btn btn-info" type="submit">
+                <i class="ace-icon fa fa-check bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}

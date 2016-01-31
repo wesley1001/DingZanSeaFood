@@ -43,5 +43,23 @@ namespace BreezeShop.Web.Areas.Admin.Models
         public double MinCredit { get; set; }
 
         public string ItemsId { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Description { get; set; }
+
+
+        /// <summary>
+        /// 是否使用预生成券号
+        /// </summary>
+        public bool UseCustom { get; set; }
+
+        /// <summary>
+        /// 每人限领
+        /// </summary>
+        public int PerUserMaxQuantity { get; set; }
+
+        public int Status { get; set; }
     }
 }

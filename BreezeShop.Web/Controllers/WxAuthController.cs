@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Net.NetworkInformation;
 using System.Web.Mvc;
 using BreezeShop.Core;
 using BreezeShop.Web.Helper;
@@ -46,8 +45,7 @@ namespace BreezeShop.Web.Controllers
 
             if (!string.IsNullOrEmpty(appId) && !string.IsNullOrEmpty(secret))
             {
-                var wx = new WxJsSdk(appId, secret);
-                TempData["JsSdkData"] = wx.getSignPackage();
+                TempData["JsSdkData"] = WxJsSdk.GetData(appId, secret);
             }
 
             base.OnActionExecuting(filterContext);
