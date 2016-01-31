@@ -1,4 +1,5 @@
-﻿@model BreezeShop.Core.Model.WebSetting
+﻿@using BreezeShop.Core.FileFactory
+@model BreezeShop.Core.Model.WebSetting
 @{
     ViewBag.Title = "网站设置";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -23,10 +24,86 @@
 @using (Html.BeginForm("WebSetting", "Setting", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
 {
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="Title">标题：</label>
-        <div class="col-xs-12 col-sm-9">
-            <div class="clearfix">@Html.TextBoxFor(m => m.Name, new {@class = "input-xxlarge", placeholder = "网站名称"})</div>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Title">站点名称：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Name, new { @class = "input-xlarge", placeholder = "站点名称" })</div>
             <div class="help-block">@Html.ValidationMessageFor(m => m.Name)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right">网站LOGO：</label>
+        <div class="col-sm-4">
+            <input type="file" id="id-input-file-2" name="imagefile" />
+            @if (!Model.Logo.IsEmpty())
+            {
+                <span class="help-block">
+                    <img src="@ImageExtension.GetUrl("120", Model.Logo)" />
+                </span>
+            }
+            @Html.HiddenFor(m => m.Logo)
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="CompanyName">公司名称：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.CompanyName, new {@class = "input-xxlarge", placeholder = "公司名称"})</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.CompanyName)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="WebUrl">网站域名：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.WebUrl, new { @class = "input-xlarge", placeholder = "网站域名" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.WebUrl)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Tel">联系电话：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Tel, new { @class = "input-medium", placeholder = "联系电话" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Tel)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="AdminEmail">管理员邮箱：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.AdminEmail, new { @class = "input-large", placeholder = "管理员邮箱" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.AdminEmail)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Icp">ICP备案号：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.Icp, new { @class = "input-medium", placeholder = "ICP备案号" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Icp)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="SeoTitle">SEO标题(首页)：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.SeoTitle, new { @class = "col-xs-12", placeholder = "SEO标题(首页)" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.SeoTitle)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="SeoKeywords">SEO关键字(首页)：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.SeoKeywords, new { @class = "col-xs-12", placeholder = "SEO关键字(首页)" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.SeoKeywords)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="SeoDescription">SEO描述(首页)：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextBoxFor(m => m.SeoDescription, new { @class = "col-xs-12", placeholder = "SEO描述(首页)" })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.SeoDescription)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="StatisticalCode">统计代码：</label>
+        <div class="col-xs-12 col-sm-10">
+            <div class="clearfix">@Html.TextAreaFor(m => m.StatisticalCode, new { @class = "input-xxlarge", placeholder = "统计代码", rows=10 })</div>
+            <div class="help-block">@Html.ValidationMessageFor(m => m.StatisticalCode)</div>
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -36,4 +113,18 @@
             </button>
         </div>
     </div>
+}
+
+@section inlinescripts{
+    <script>
+        $('#id-input-file-2').ace_file_input({
+            no_file: '还没有上传文件哦...',
+            btn_choose: '上传LOGO',
+            btn_change: '上传LOGO',
+            droppable: false,
+            onchange: null,
+            thumbnail: false, //| true | large
+            whitelist: 'gif|png|jpg|jpeg'
+        });
+    </script>
 }

@@ -66,42 +66,35 @@ namespace BreezeShop.Core.DataProvider
             get
             {
                 var path = HttpContext.Current.Server.MapPath("~/app_data/setting.xml");
-                if (System.IO.File.Exists(path))
+                if (!File.Exists(path)) return new WebSetting();
+                var t = File.ReadAllText(path);
+                if (string.IsNullOrWhiteSpace(t)) return new WebSetting();
+                using (var sr = new StringReader(t))
                 {
-                    var t = System.IO.File.ReadAllText(path);
-                    if (!string.IsNullOrWhiteSpace(t))
-                    {
-                        using (var sr = new StringReader(t))
-                        {
-                            var xmldes = new XmlSerializer(typeof(WebSetting));
-                            return (WebSetting)xmldes.Deserialize(sr);
-                        }
-                    }
+                    var xmldes = new XmlSerializer(typeof(WebSetting));
+                    return (WebSetting)xmldes.Deserialize(sr);
                 }
-
-                return new WebSetting();
             }
             set
             {
                 //如果文件夹不存在，则先创建
-                if (!System.IO.File.Exists(HttpContext.Current.Server.MapPath("~/app_data")))
+                if (!File.Exists(HttpContext.Current.Server.MapPath("~/app_data")))
                 {
-                    System.IO.Directory.CreateDirectory(HttpContext.Current.Server.MapPath("~/app_data"));
+                    Directory.CreateDirectory(HttpContext.Current.Server.MapPath("~/app_data"));
                 }
 
-                if (value != null)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        var t = value.GetType();
-                        var xml = new XmlSerializer(t);
-                        xml.Serialize(ms, value);
-                        var arr = ms.ToArray();
-                        var xmlString = Encoding.UTF8.GetString(arr, 0, arr.Length);
-                        ms.Close();
+                if (value == null) return;
 
-                        System.IO.File.WriteAllText(HttpContext.Current.Server.MapPath("~/app_data/setting.xml"), xmlString, Encoding.UTF8);
-                    }
+                using (var ms = new MemoryStream())
+                {
+                    var t = value.GetType();
+                    var xml = new XmlSerializer(t);
+                    xml.Serialize(ms, value);
+                    var arr = ms.ToArray();
+                    var xmlString = Encoding.UTF8.GetString(arr, 0, arr.Length);
+                    ms.Close();
+
+                    File.WriteAllText(HttpContext.Current.Server.MapPath("~/app_data/setting.xml"), xmlString, Encoding.UTF8);
                 }
             }
         }

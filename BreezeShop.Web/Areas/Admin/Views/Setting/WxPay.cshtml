@@ -38,9 +38,9 @@
     </div>
     <div class="space-4"></div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Key">公众号KEY：</label>
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="Key">API密钥：</label>
         <div class="col-xs-12 col-sm-10">
-            <div class="clearfix">@Html.TextBoxFor(m => m.Key, new {@class = "input-xxlarge", placeholder = "请输入公众号KEY"})</div>
+            <div class="clearfix">@Html.TextBoxFor(m => m.Key, new { @class = "input-xxlarge", placeholder = "API密钥" })</div>
             <div class="help-block">@Html.ValidationMessageFor(m => m.Key)</div>
         </div>
     </div>
@@ -58,10 +58,6 @@
         <div class="col-md-offset-2 col-md-10">
             <button class="btn btn-info" type="submit" id="J-Submit-Btn">
                 <i class="ace-icon fa fa-check bigger-110"></i>提交
-            </button>
-            &nbsp; &nbsp; &nbsp;
-            <button class="btn" type="reset">
-                <i class="icon-undo bigger-110"></i>重置
             </button>
         </div>
     </div>

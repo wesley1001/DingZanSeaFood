@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using BreezeShop.Core.FileFactory;
 using Utilities.DataTypes.ExtensionMethods;
 using Yun.Logistics;
 using Yun.Logistics.Request;
@@ -25,6 +26,9 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult WebSetting(WebSetting model)
         {
+            var img = FileManage.UploadOneFile();
+            model.Logo = string.IsNullOrEmpty(img) ? model.Logo : img;
+
             GlobeInfo.WebSetting = model;
             TempData["success"] = "保存成功";
 
