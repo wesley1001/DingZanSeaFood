@@ -34,7 +34,7 @@ namespace BreezeShop.Core.FileFactory
         /// </summary>
         /// <param name="files"></param>
         /// <returns></returns>
-        public static IList<string> Upload(IList<FileItem> files)
+        public static IList<string> Upload(IList<FileItem> files, bool absolutePath = false)
         {
             if (files == null || !files.Any())
             {
@@ -53,12 +53,22 @@ namespace BreezeShop.Core.FileFactory
                 return null;
             }
 
-            //本地
-            return
-                files.Select(file => new PictureCore(file.GetContent(), file.GetFileName()))
+            var resultData = files.Select(file => new PictureCore(file.GetContent(), file.GetFileName()))
                     .Select(instance => instance.Create())
                     .Where(result => !string.IsNullOrWhiteSpace(result))
                     .ToList();
+
+            if (absolutePath)
+            {
+                for (var i = 0; i < resultData.Count; i++)
+                {
+                    resultData[i] = ImageExtension.GetUrl(resultData[i]);
+                }
+            }
+
+            //本地
+            return resultData;
+
         }
 
         public static string UploadOneFile()
@@ -76,9 +86,9 @@ namespace BreezeShop.Core.FileFactory
         /// 上传文件
         /// </summary>
         /// <returns></returns>
-        public static IList<string> Upload()
+        public static IList<string> Upload(bool absolutePath = false)
         {
-            return Upload(GetUploadFile());
+            return Upload(GetUploadFile(), absolutePath);
         }
 
         /// <summary>

@@ -105,6 +105,16 @@
             <div class="clearfix">@Html.TextAreaFor(m => m.StatisticalCode, new { @class = "input-xxlarge", placeholder = "统计代码", rows=10 })</div>
             <div class="help-block">@Html.ValidationMessageFor(m => m.StatisticalCode)</div>
         </div>
+    </div>    
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2 no-padding-right" for="EnabledGlobeItemCat">是否启用全局类目：</label>
+        <div class="col-xs-12 col-sm-10">
+            @Html.DropDownList("EnabledGlobeItemCat", new List<SelectListItem>
+                {
+                    new SelectListItem {Text = "否", Value = "False"},
+                    new SelectListItem {Text = "是", Value = "True"}
+                })
+        </div>
     </div>
     <div class="clearfix form-actions">
         <div class="col-md-offset-3 col-md-9">

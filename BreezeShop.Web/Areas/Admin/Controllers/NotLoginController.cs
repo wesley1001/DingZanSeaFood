@@ -14,9 +14,9 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             return Json(new KindeditorMode().Upload(), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UpdateImages()
+        public ActionResult UpdateImages(bool absolutePath = false)
         {
-            return Json(string.Join(",", FileManage.Upload()));
+            return Json(string.Join(",", FileManage.Upload(absolutePath)));
         }
 
     }

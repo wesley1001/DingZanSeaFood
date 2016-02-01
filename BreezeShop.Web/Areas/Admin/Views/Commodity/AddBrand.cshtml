@@ -1,0 +1,85 @@
+﻿@model BreezeShop.Web.Areas.Admin.Models.AddSpuModel
+
+@{
+    ViewBag.Title = "新增/编辑品牌";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+
+        <li class="active">新增/编辑品牌</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        新增/编辑品牌
+    </h1>
+}
+
+@using (Html.BeginForm("AddBrand", "Commodity", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="Name">品牌名称：</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Name, new { @class = "col-xs-12 col-sm-5", placeholder = "请输入分类名称" })
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Name)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="Sort"> 排序 </label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Sort, new { @class = "input-sm", placeholder = "请输入排序"})
+            <div class="help-block">@Html.ValidationMessageFor(m => m.Sort)</div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right">品牌缩略图：</label>
+        <div class="col-sm-4">
+            <input type="file" id="id-input-file-2" name="fileimage" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-4 col-sm-offset-3">
+            <label>
+                <input name="Display" id="Display" type="checkbox" class="ace" value="1" />
+                <span class="lbl">是否显示</span>
+            </label>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit">
+                <i class="icon-ok bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}
+
+@section specificscripts
+{
+    <script src="@Url.Content("~/areas/admin/Content/js/jquery.validate.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/areas/admin/content/js/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
+}
+
+@section inlinescripts{
+    <script type="text/javascript">
+        $('#id-input-file-2').ace_file_input({
+            no_file: '还没有上传文件哦...',
+            btn_choose: '选择图片',
+            btn_change: '更换图片',
+            droppable: false,
+            onchange: null,
+            thumbnail: false
+        });
+    </script>
+}

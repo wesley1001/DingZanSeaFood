@@ -67,5 +67,11 @@ namespace BreezeShop.Core.Model
         /// 统计代码
         /// </summary>
         public string StatisticalCode { get; set; }
+
+
+        /// <summary>
+        /// 是否启用全局类目
+        /// </summary>
+        public bool EnabledGlobeItemCat { get; set; }
     }
 }

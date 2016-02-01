@@ -24,14 +24,14 @@
     @if (Model == null || Model.menu.button.Count <= 0)
     {
         <a class="btn" href="@Url.Action("EditCustomMenu", new { type = "add" })">
-            <i class="icon-plus bigger-125"></i>
+            <i class="ace-icon fa fa-plus align-top  bigger-125"></i>
             创建自定义菜单
         </a>
     }
 
 
     <a class="btn btn-warning" href="@Url.Action("EditCustomMenu", new {type = "conditional"})">
-        <i class="icon-plus bigger-125"></i>
+        <i class="ace-icon fa fa-plus align-top  bigger-125"></i>
         创建个性化菜单
     </a>
 </p>

@@ -188,6 +188,7 @@
     <Compile Include="Areas\Admin\Models\AddRoleModel.cs" />
     <Compile Include="Areas\Admin\Models\AddShopSeoModel.cs" />
     <Compile Include="Areas\Admin\Models\AddSitePageModel.cs" />
+    <Compile Include="Areas\Admin\Models\AddSpuModel.cs" />
     <Compile Include="Areas\Admin\Models\AddTextModel.cs" />
     <Compile Include="Areas\Admin\Models\CategoryReplyModel.cs" />
     <Compile Include="Areas\Admin\Models\CustomSkuModel.cs" />
@@ -1074,6 +1075,8 @@
     <Content Include="Areas\Admin\Views\Permission\SeeRoleFunctions.cshtml" />
     <Content Include="Areas\Admin\Views\WeChat\SpecialReply.cshtml" />
     <Content Include="Areas\Admin\Views\WeChat\SystemReply.cshtml" />
+    <Content Include="Areas\Admin\Views\Commodity\AddBrand.cshtml" />
+    <Content Include="Areas\Admin\Views\Commodity\Brand.cshtml" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
     <Content Include="Views\NotLogin\Article.cshtml" />

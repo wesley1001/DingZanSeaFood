@@ -919,5 +919,55 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             return prevValue[currentCol];
         }
 
+        private static readonly int _brandSpecialType = 1;
+
+        public ActionResult Brand(int p = 1)
+        {
+            var req = YunClient.Instance.Execute(new GetItemPropValuesRequest
+            {
+                PageNum = p,
+                PageSize = 20,
+                SpecialType = _brandSpecialType,
+            }, Token);
+
+            return View(new PageModel<ItemPropValue>
+            {
+                CurrentPage = p,
+                Items = req.PropValues,
+                ItemsPerPage = 20,
+                TotalItems = req.TotalItem,
+            });
+        }
+
+        /// <summary>
+        /// 新增/编辑品牌
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult AddBrand(int id = 0)
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 新增/编辑品牌
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult AddBrand(AddSpuModel model ,int id = 0)
+        {
+            if (ModelState.IsValid)
+            {
+                
+            }
+
+            return View(model);
+        }
+
+        public ActionResult DeleteItemPropValue(int id)
+        {
+            return Json(true);
+        }
+
     }
 }

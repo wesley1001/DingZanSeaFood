@@ -13,6 +13,7 @@ using Yun.Logistics.Request;
 using Yun.Pay.Request;
 using Yun.Site;
 using Yun.Site.Request;
+using Yun.Trade.Request;
 
 namespace BreezeShop.Web.Areas.Admin.Controllers
 {
@@ -310,5 +311,38 @@ namespace BreezeShop.Web.Areas.Admin.Controllers
             });
         }
 
+        public ActionResult Trade()
+        {
+            ViewData["IntegralRule"] =
+                YunClient.Instance.Execute(new GetIntegralRequest {CompanyId = GlobeInfo.InitiatedCompanyId}, Token)
+                    .IntegralRule;
+
+            ViewData["TradeSetting"] = YunClient.Instance.Execute(new GetTradeSettingRequest(), Token).Setting;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Trade(FormCollection collection)
+        {
+            var confirmHours = collection["ConfirmHours"].TryTo(0);
+            var closeTradeHour = collection["CloseTradeHour"].TryTo(0);
+            var integralEnabled = collection["IntegralEnabled"].TryTo(0);
+            var oneIntegralEqualMoney = collection["OneIntegralEqualMoney"].TryTo(0.0);
+            var tradeEndMoneyToCredit = collection["TradeEndMoneyToCredit"].TryTo(0);
+
+            YunClient.Instance.Execute(
+                new SetTradeSettingRequest {CloseTradeHour = closeTradeHour, ConfirmHours = confirmHours}, Token);
+
+            YunClient.Instance.Execute(new SetIntegralRequest
+            {
+                Enabled = integralEnabled,
+                OneIntegralEqualMoney = oneIntegralEqualMoney,
+                TradeEndMoneyToCredit = tradeEndMoneyToCredit
+            }, Token);
+
+            TempData["success"] = "已成功保存";
+            return RedirectToAction("Trade");
+        }
     }
 }

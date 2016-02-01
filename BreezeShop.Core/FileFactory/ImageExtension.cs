@@ -102,6 +102,22 @@ namespace BreezeShop.Core.FileFactory
             return originalFileName;
         }
 
+        public static string GetUrl(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = YunClient.WebUrl + "/content/images/none-image.png";
+            }
+
+            //输入的文件名是否包http,如果不包含，则需要增加前缀
+            if (!fileName.StartsWith("http"))
+            {
+                fileName = string.Format("{0}{1}{2}", YunClient.WebUrl, FilesUpload.ImageFolder, fileName);
+            }
+
+            return fileName;
+        }
+
         public static string GetUrl(ImageSize? size, string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
