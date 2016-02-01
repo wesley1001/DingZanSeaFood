@@ -1,0 +1,75 @@
+﻿@using Yun.Trade
+@using Yun.Trade.Request
+@{
+    ViewBag.Title = "交易设置";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var integralRule = ViewData["IntegralRule"] as IntegralDomain;
+    var tradeSetting = ViewData["TradeSetting"] as SettingContent;
+}
+
+@section breadcrumb{
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index","Home")">首页</a>
+        </li>
+        <li class="active">交易设置</li>
+    </ul>
+}
+
+@section pageheader{
+    <h1>
+        交易设置
+    </h1>
+}
+
+@using (Html.BeginForm("Trade", "Setting", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="ConfirmHours">自动确认收货时间：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.TextBox("ConfirmHours", tradeSetting == null ? 0 : tradeSetting.ConfirmHours, new { @class = "input-small", placeholder = "小时" })（小时）</div>
+            <div class="help-block">卖家发货后？小时自动确认收货</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="CloseTradeHour">未付款自动关闭：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.TextBox("CloseTradeHour", tradeSetting == null ? 0 : tradeSetting.CloseTradeHour, new { @class = "input-small", placeholder = "小时" })（小时）</div>
+            <div class="help-block">买家未付款，系统默认自动关闭订单的时间</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="IntegralEnabled">启用积分抵扣功能：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.DropDownList("IntegralEnabled", new List<SelectListItem>
+                {
+                    new SelectListItem {Text = "否", Value = "0", Selected = integralRule!=null && integralRule.IntegralEnabled==0},
+                    new SelectListItem {Text = "是", Value = "1", Selected =  integralRule!=null && integralRule.IntegralEnabled==1}
+                })</div>
+            <div class="help-block">再付款时，积分可直接抵扣支付金额</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="OneIntegralEqualMoney">积分抵扣金钱比例：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.TextBox("OneIntegralEqualMoney", integralRule == null ? 0 : integralRule.OneIntegralEqualMoney, new {@class = "input-small", placeholder = "元"})</div>
+            <div class="help-block">在支付时，一个积分可以抵扣多少金额</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="TradeEndMoneyToCredit">交易金额转化比例：</label>
+        <div class="col-xs-12 col-sm-9">
+            <div class="clearfix">@Html.TextBox("TradeEndMoneyToCredit", integralRule == null ? 0 : integralRule.TradeEndMoneyToCredit, new { @class = "input-small", placeholder = "元" })</div>
+            <div class="help-block">在交易完成（买家确认付款时），交易金额和积分的转化比例，一交易金额转化？积分</div>
+        </div>
+    </div>
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+            <button class="btn btn-info" type="submit">
+                <i class="ace-icon fa fa-check bigger-110"></i>提交
+            </button>
+        </div>
+    </div>
+}

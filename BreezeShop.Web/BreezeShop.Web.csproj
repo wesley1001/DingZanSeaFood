@@ -1077,6 +1077,8 @@
     <Content Include="Areas\Admin\Views\WeChat\SystemReply.cshtml" />
     <Content Include="Areas\Admin\Views\Commodity\AddBrand.cshtml" />
     <Content Include="Areas\Admin\Views\Commodity\Brand.cshtml" />
+    <Content Include="Areas\Admin\Views\Setting\SystemSetHistory.cshtml" />
+    <Content Include="Areas\Admin\Views\Setting\Trade.cshtml" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Properties\PublishProfiles\顶赞海鲜FTP.pubxml" />
     <Content Include="Views\NotLogin\Article.cshtml" />
